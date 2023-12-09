@@ -1,76 +1,76 @@
-CREATE SCHEMA MiHistoria;
+CREATE SCHEMA mi_historia;
 
-USE MiHistoria;
+USE mi_historia;
 
-CREATE TABLE User
+CREATE TABLE user
 (
-    UserID              INT             NOT NULL            AUTO_INCREMENT,
-    FirstName           VARCHAR(70),
-    MiddleName          VARCHAR(70),
-    LastName            VARCHAR(70),
-    DOB                 DATE,
-    Email               VARCHAR(255),
-    Password            VARCHAR(255),
-    Image               VARCHAR(255),
-    Private             BOOLEAN         DEFAULT FALSE,
-    PRIMARY KEY (UserID)
+    user_id             INT             NOT NULL            AUTO_INCREMENT,
+    first_name          VARCHAR(70),
+    middle_name         VARCHAR(70),
+    last_name           VARCHAR(70),
+    dob                 DATE,
+    email               VARCHAR(255),
+    password            VARCHAR(255),
+    image               VARCHAR(255),
+    private             BOOLEAN         DEFAULT FALSE,
+    PRIMARY KEY (user_id)
 );
 
-CREATE TABLE Post 
+CREATE TABLE post 
 (
-    PostID              INT             NOT NULL            AUTO_INCREMENT,
-    UserID              INT             NOT NULL,
-    Text                MEDIUMTEXT      NOT NULL,
-    Timestamp           DATETIME        NOT NULL,
-    PRIMARY KEY (PostID),
-    FOREIGN KEY (UserID) REFERENCES User(UserID)
+    post_id             INT             NOT NULL            AUTO_INCREMENT,
+    user_id             INT             NOT NULL,
+    text                MEDIUMTEXT      NOT NULL,
+    timestamp           DATETIME        NOT NULL,
+    PRIMARY KEY (post_id),
+    FOREIGN KEY (user_id) REFERENCES User(user_id)
 );
 
-CREATE TABLE PostMedia
+CREATE TABLE post_media
 (
-    PostID              INT             NOT NULL,
-    Media               VARCHAR(255)    NOT NULL,
-    PRIMARY KEY (PostID, Media),
-    FOREIGN KEY (PostID) REFERENCES Post(PostID)
+    post_id             INT             NOT NULL,
+    media               VARCHAR(255)    NOT NULL,
+    PRIMARY KEY (post_id, media),
+    FOREIGN KEY (post_id) REFERENCES Post(post_id)
 );
 
-CREATE TABLE Comment
+CREATE TABLE comment
 (
-    CommentID           INT             NOT NULL            AUTO_INCREMENT,
-    UserID              INT             NOT NULL,
-    PostID              INT             NOT NULL,
-    Text                TEXT            NOT NULL,
-    Timestamp           DATETIME        NOT NULL,
-    Type                VARCHAR(50)     NOT NULL            DEFAULT 'text',
-    PRIMARY KEY (CommentID, UserID, PostID),
-    FOREIGN KEY (UserID) REFERENCES User(UserID),
-    FOREIGN KEY (PostID) REFERENCES Post(PostID)
+    comment_id          INT             NOT NULL            AUTO_INCREMENT,
+    user_id             INT             NOT NULL,
+    post_id             INT             NOT NULL,
+    text                TEXT            NOT NULL,
+    timestamp           DATETIME        NOT NULL,
+    type                VARCHAR(50)     NOT NULL            DEFAULT 'text',
+    PRIMARY KEY (comment_id),
+    FOREIGN KEY (user_id) REFERENCES User(user_id),
+    FOREIGN KEY (post_id) REFERENCES Post(post_id)
 );
 
-CREATE TABLE LikesPost
+CREATE TABLE likes_post
 (
-    UserID              INT             NOT NULL,
-    PostID              INT             NOT NULL,
-    PRIMARY KEY (UserID, PostID),
-    FOREIGN KEY (UserID) REFERENCES User(UserID),
-    FOREIGN KEY (PostID) REFERENCES Post(PostID)
+    user_id             INT             NOT NULL,
+    post_id             INT             NOT NULL,
+    PRIMARY KEY (user_id, post_id),
+    FOREIGN KEY (user_id) REFERENCES User(user_id),
+    FOREIGN KEY (post_id) REFERENCES Post(post_id)
 );
 
-CREATE TABLE Saves
+CREATE TABLE saves
 (
-    UserID              INT             NOT NULL,
-    PostID              INT             NOT NULL,
-    Timestamp           DATETIME        NOT NULL,
-    PRIMARY KEY (UserID, PostID),
-    FOREIGN KEY (UserID) REFERENCES User(UserID),
-    FOREIGN KEY (PostID) REFERENCES Post(PostID)
+    user_id             INT             NOT NULL,
+    post_id             INT             NOT NULL,
+    timestamp           DATETIME        NOT NULL,
+    PRIMARY KEY (user_id, post_id),
+    FOREIGN KEY (user_id) REFERENCES User(user_id),
+    FOREIGN KEY (post_id) REFERENCES Post(post_id)
 );
 
-CREATE TABLE LikesComment
+CREATE TABLE likes_comment
 (
-    UserID              INT             NOT NULL,
-    CommentID           INT             NOT NULL,
-    PRIMARY KEY (UserID, CommentID),
-    FOREIGN KEY (UserID) REFERENCES User(UserID),
-    FOREIGN KEY (CommentID) REFERENCES Comment(CommentID)
+    user_id             INT             NOT NULL,
+    comment_id          INT             NOT NULL,
+    PRIMARY KEY (user_id, comment_id),
+    FOREIGN KEY (user_id) REFERENCES User(user_id),
+    FOREIGN KEY (comment_id) REFERENCES Comment(comment_id)
 );
