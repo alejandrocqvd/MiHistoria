@@ -70,6 +70,6 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## Contact
 
-Your Name - your.email@example.com
+Alejandro Cardona - alejandrocqvd@gmail.com
 
-Project Link: [https://github.com/yourusername/vite-react-app](https://github.com/yourusername/vite-react-app)
+Project Link: [https://github.com/alejandrocqvd/MiHistoria](https://github.com/alejandrocqvd/MiHistoria)
