@@ -16,11 +16,11 @@ Before running this project, you'll need to have the following installed:
 
 1. Clone the repository:
    ```sh
-   git clone https://your-repository-url.git
+   git clone https://github.com/alejandrocqvd/MiHistoria.git
    ```
 2. Navigate to the project directory:
    ```sh
-   cd vite-react-app
+   cd client
    ```
 3. Install dependencies:
    ```sh
