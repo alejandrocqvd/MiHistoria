@@ -1,5 +1,5 @@
 import './App.css'
-import { createBrowserRouter, RouterProvider } from "react-router-dom"
+import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom'
 import Home from './pages/Home'
 import Register from './pages/login/Register'
 import Login from './pages/login/Login'
@@ -8,39 +8,62 @@ import EditProfile from './pages/profile/EditProfile'
 import Story from './pages/story/Story'
 import EditStory from './pages/story/EditStory'
 import Search from './pages/Search'
+import NotFound from './pages/NotFound'
+import Navbar from './components/Navbar'
+import Footer from './components/Footer'
+
+const Layout = () => {
+  return (
+    <>
+      <Navbar/>
+      <Outlet/>
+      <Footer/>
+    </>
+  )
+}
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Home/>,
+    path: '/',
+    element: <Layout/>,
+    children: [
+      {
+        path: '/',
+        element: <Home/>,
+      },
+      {
+        path: '/profile',
+        element: <Profile/>,
+      },
+      {
+        path: '/profile/edit',
+        element: <EditProfile/>,
+      },
+      {
+        path: '/story/:id',
+        element: <Story/>,
+      },
+      {
+        path: '/story/:id/edit',
+        element: <EditStory/>,
+      },
+      {
+        path: '/search',
+        element: <Search/>,
+      },
+      {
+        path: '*',
+        element: <NotFound/>,
+      },
+    ]
   },
   {
-    path: "/register",
+    path: '/register',
     element: <Register/>,
   },
   {
-    path: "/login",
+    path: '/login',
     element: <Login/>,
-  },
-  {
-    path: "/profile",
-    element: <Profile/>,
-  },
-  {
-    path: "/profile/edit",
-    element: <EditProfile/>,
-  },
-  {
-    path: "/story/:id",
-    element: <Story/>,
-  },
-  {
-    path: "/story/:id/edit",
-    element: <EditStory/>,
-  },
-  {
-    path: "/search",
-    element: <Search/>,
   },
 ])
 
@@ -48,7 +71,9 @@ function App() {
 
   return (
     <>
-      <RouterProvider router={ router } />
+      <div className='flex flex-col w-full h-screen justify-center items-center overflow-hidden text-text'>
+        <RouterProvider router={ router } />
+      </div>
     </>
   )
 }
