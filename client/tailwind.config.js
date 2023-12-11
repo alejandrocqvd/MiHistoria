@@ -7,10 +7,10 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#242424',
-        secondary: '#3A3A3A',
-        tertiary: '#3A3A3A',
-        text: '#E0E0E0',
+        primary: '#1E1E1E',
+        secondary: '#323232',
+        tertiary: '#474747',
+        text: '#FFFFFF',
         important: '#6600cc',
       },
       fontFamily: {
@@ -18,7 +18,7 @@ export default {
         'notable': ['Notable', 'sans-serif'],
       },
       backgroundImage: {
-        'text-gradient': 'linear-gradient(90deg, rgba(153,0,255,1) 0%, rgba(204,128,255,1) 100%)',
+        'gradient': 'linear-gradient(90deg, rgba(102,0,204,1) 0%, rgba(179,0,89,1) 100%)',
       },
       borderColor: {
         'white': '#ffffff',
