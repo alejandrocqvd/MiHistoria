@@ -15,7 +15,7 @@ export const Register = () => {
 
         <h1 className='text-4xl text-center font-bold mb-12'>Register</h1>
 
-        <form className='w-72'>
+        <form className='w-80'>
 
             <div className='flex flex-row w-full pb-4'>
               <input className='w-full py-2 px-4 rounded-2xl mr-2' type='text' placeholder='First Name'></input>

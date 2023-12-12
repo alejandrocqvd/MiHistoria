@@ -14,7 +14,7 @@ export const Login = () => {
 
           <h1 className='text-4xl text-center font-bold mb-12'>Login</h1>
 
-          <form className='w-72'>
+          <form className='w-80'>
 
               <div className='pb-4 relative'>
                 <input className='w-full py-2 px-4 pl-3 pr-10 rounded-2xl' type='email' placeholder='Email' required></input>
