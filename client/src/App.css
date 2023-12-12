@@ -42,6 +42,12 @@
   width: 100%;
 }
 
+.bg-img-login {
+  background-image: url('./assets/login-bg.png');
+  background-size: cover;
+  background-position: center;
+}
+
 @media (min-width: 3500px) {
   html {
     font-size: 200%;

@@ -12,6 +12,7 @@ export default {
         tertiary: '#474747',
         text: '#FFFFFF',
         important: '#6600cc',
+        error: '#DC143C',
       },
       fontFamily: {
         'red-hat-display': ['Red Hat Display', 'sans-serif'],
