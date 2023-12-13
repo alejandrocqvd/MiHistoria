@@ -55,7 +55,7 @@ export const Register = () => {
             </div>
 
             <div className='text-center pb-4'>
-                {error && <p className='text-error'>Something went wrong. Please try again.</p>}
+                {error && <p className='text-error'>Username is already taken.</p>}
             </div>
 
             <div className='text-center'>

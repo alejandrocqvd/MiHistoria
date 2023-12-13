@@ -4,7 +4,7 @@ USE mi_historia;
 
 CREATE TABLE user
 (
-    user_id             INT             NOT NULL            AUTO_INCREMENT,
+    username             INT             NOT NULL            AUTO_INCREMENT,
     first_name          VARCHAR(70),
     middle_name         VARCHAR(70),
     last_name           VARCHAR(70),
@@ -13,17 +13,17 @@ CREATE TABLE user
     password            VARCHAR(255),
     image               VARCHAR(255),
     private             BOOLEAN         DEFAULT FALSE,
-    PRIMARY KEY (user_id)
+    PRIMARY KEY (username)
 );
 
 CREATE TABLE post 
 (
     post_id             INT             NOT NULL            AUTO_INCREMENT,
-    user_id             INT             NOT NULL,
+    username             INT             NOT NULL,
     text                MEDIUMTEXT      NOT NULL,
     timestamp           DATETIME        NOT NULL,
     PRIMARY KEY (post_id),
-    FOREIGN KEY (user_id) REFERENCES User(user_id)
+    FOREIGN KEY (username) REFERENCES User(username)
 );
 
 CREATE TABLE post_media
@@ -37,40 +37,40 @@ CREATE TABLE post_media
 CREATE TABLE comment
 (
     comment_id          INT             NOT NULL            AUTO_INCREMENT,
-    user_id             INT             NOT NULL,
+    username             INT             NOT NULL,
     post_id             INT             NOT NULL,
     text                TEXT            NOT NULL,
     timestamp           DATETIME        NOT NULL,
     type                VARCHAR(50)     NOT NULL            DEFAULT 'text',
     PRIMARY KEY (comment_id),
-    FOREIGN KEY (user_id) REFERENCES User(user_id),
+    FOREIGN KEY (username) REFERENCES User(username),
     FOREIGN KEY (post_id) REFERENCES Post(post_id)
 );
 
 CREATE TABLE likes_post
 (
-    user_id             INT             NOT NULL,
+    username             INT             NOT NULL,
     post_id             INT             NOT NULL,
-    PRIMARY KEY (user_id, post_id),
-    FOREIGN KEY (user_id) REFERENCES User(user_id),
+    PRIMARY KEY (username, post_id),
+    FOREIGN KEY (username) REFERENCES User(username),
     FOREIGN KEY (post_id) REFERENCES Post(post_id)
 );
 
 CREATE TABLE saves
 (
-    user_id             INT             NOT NULL,
+    username             INT             NOT NULL,
     post_id             INT             NOT NULL,
     timestamp           DATETIME        NOT NULL,
-    PRIMARY KEY (user_id, post_id),
-    FOREIGN KEY (user_id) REFERENCES User(user_id),
+    PRIMARY KEY (username, post_id),
+    FOREIGN KEY (username) REFERENCES User(username),
     FOREIGN KEY (post_id) REFERENCES Post(post_id)
 );
 
 CREATE TABLE likes_comment
 (
-    user_id             INT             NOT NULL,
+    username             INT             NOT NULL,
     comment_id          INT             NOT NULL,
-    PRIMARY KEY (user_id, comment_id),
-    FOREIGN KEY (user_id) REFERENCES User(user_id),
+    PRIMARY KEY (username, comment_id),
+    FOREIGN KEY (username) REFERENCES User(username),
     FOREIGN KEY (comment_id) REFERENCES Comment(comment_id)
 );

@@ -11,6 +11,7 @@ import Search from './pages/Search'
 import NotFound from './pages/NotFound'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
+import { FAQ } from './pages/story/FAQ'
 
 const Layout = () => {
   return (
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
         element: <Search/>,
       },
       {
+        path: '/faq',
+        element: <FAQ/>,
+      },
+      {
         path: '*',
         element: <NotFound/>,
       },
@@ -71,7 +76,7 @@ function App() {
 
   return (
     <>
-      <div className='flex flex-col w-full h-screen justify-center items-center overflow-hidden text-text'>
+      <div className='flex flex-col w-full justify-center items-center overflow-hidden text-text'>
         <RouterProvider router={ router } />
       </div>
     </>
