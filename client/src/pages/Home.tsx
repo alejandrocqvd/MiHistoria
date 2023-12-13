@@ -47,14 +47,14 @@ export const Home = () => {
       </div>
 
       <h1 className='text-5xl font-bold mb-16 mt-28'>What To Do</h1>
-      <div className='flex flex-col md:flex-row justify-stretch items-stretch w-9/12 mb-24'>
+      <div className='flex flex-col lg:flex-row justify-stretch items-stretch w-9/12 mb-24'>
         <a href={'./explore'} 
           className='flex-1 flex flex-col justify-between items-center w-full p-16 mb-8 text-center bg-[#292929] shadow-xl rounded-xl hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out'>
             <h1 className='text-4xl font-semibold mb-8'>Read Human Experiences</h1>
             <img src={globeIcon} className='h-24 w-auto mb-8' />
             <p>See the collection of personal narratives that take you though the intricate experiences of people from any corner of the world.</p>
         </a>
-        <a href={'./story/:id'} className='flex-1 flex flex-col justify-between items-center w-full md:mx-20 p-16 mb-8 text-center bg-[#292929] shadow-xl hover:shadow-2xl rounded-xl hover:scale-105 transition duration-300 ease-in-out'>
+        <a href={'./story/:id'} className='flex-1 flex flex-col justify-between items-center w-full lg:mx-20 p-16 mb-8 text-center bg-[#292929] shadow-xl hover:shadow-2xl rounded-xl hover:scale-105 transition duration-300 ease-in-out'>
             <h1 className='text-4xl font-semibold mb-8'>Write <span className='underline'>Your</span> Story</h1>
             <img src={bookIcon} className='h-24 w-auto mb-8' />
             <p>Let the world hear your story. Travel back in your time to recollect and write down your life.</p>
