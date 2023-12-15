@@ -11,7 +11,8 @@ import Search from './pages/Search'
 import NotFound from './pages/NotFound'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
-import { FAQ } from './pages/story/FAQ'
+import { Help } from './pages/Help'
+import { Legal } from './pages/Legal'
 
 const Layout = () => {
   return (
@@ -53,8 +54,12 @@ const router = createBrowserRouter([
         element: <Search/>,
       },
       {
-        path: '/faq',
-        element: <FAQ/>,
+        path: '/help',
+        element: <Help/>,
+      },
+      {
+        path: '/legal',
+        element: <Legal/>,
       },
       {
         path: '*',
