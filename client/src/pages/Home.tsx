@@ -30,7 +30,7 @@ export const Home = () => {
       </div>
 
       <div className='flex flex-col justify-center items-center w-9/12 py-16 md:px-48 px-8 bg-[#292929] shadow-xl rounded-xl'>
-        <h1 className='text-5xl font-bold mb-12 text-center'>What is MiHistoria?</h1>
+        <h1 className='text-5xl font-bold mb-12 text-center text-important'>What is MiHistoria?</h1>
         <p className='text-xl flex-1 mr-6 text-center'>
           In an digital world full of fleeting moments and endless posts, MiHistoria offers something different. 
           Here, each user gets one chance, <span className='font-bold'>one post, to share their life story.</span> Our app is built on the belief that every person's 
@@ -38,84 +38,84 @@ export const Home = () => {
         </p>
       </div>
       <div className='flex flex-col justify-center items-center w-9/12 mt-10 mb-24 py-16 md:px-48 px-8 bg-[#292929] shadow-xl rounded-xl'>
-        <p className='text-xl mb-24 text-center'>
+        <p className='text-xl mb-20 text-center'>
           We invite you to join this community and share your story, your entire story, in one post. Or delve into the intricate and beautiful 
           lives of others, learning, emphasizing, and connecting in a way that transcends traditional social media boundaries.
         </p>
-        <h1 className='text-4xl font-extralight pb-2 text-center italic'>"There is no greater agony than bearing the untold story inside you"</h1>
+        <h1 className='text-4xl font-extralight pb-2 text-center italic text-important'>"There is no greater agony than bearing the untold story inside you"</h1>
         <h1 className='text-2xl font-semibold mt-6 text-center'>- Maya Angelou</h1>
       </div>
 
-      <h1 className='text-5xl font-bold mb-16 mt-28'>What To Do</h1>
+      <h1 className='text-5xl font-bold mb-16 mt-28 text-important'>What To Do</h1>
       <div className='flex flex-col lg:flex-row justify-stretch items-stretch w-9/12 mb-24'>
         <a href={'./explore'} 
           className='flex-1 flex flex-col justify-between items-center w-full p-16 mb-8 text-center bg-[#292929] shadow-xl rounded-xl hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out'>
-            <h1 className='text-4xl font-semibold mb-8'>Read Human Experiences</h1>
+            <h1 className='text-4xl font-bold mb-8'>Read Human Experiences</h1>
             <img src={globeIcon} className='h-24 w-auto mb-8' />
-            <p>See the collection of personal narratives that take you though the intricate experiences of people from any corner of the world.</p>
+            <p className='font-semibold'>See the collection of personal narratives that take you though the intricate experiences of people from any corner of the world.</p>
         </a>
         <a href={'./story/:id'} className='flex-1 flex flex-col justify-between items-center w-full lg:mx-20 p-16 mb-8 text-center bg-[#292929] shadow-xl hover:shadow-2xl rounded-xl hover:scale-105 transition duration-300 ease-in-out'>
-            <h1 className='text-4xl font-semibold mb-8'>Write <span className='underline'>Your</span> Story</h1>
+            <h1 className='text-4xl font-bold mb-8'>Write <span className='underline'>Your</span> Story</h1>
             <img src={bookIcon} className='h-24 w-auto mb-8' />
-            <p>Let the world hear your story. Travel back in your time to recollect and write down your life.</p>
+            <p className='font-semibold'>Let the world hear your story. Travel back in your time to recollect and write down your life.</p>
         </a>
         <a href={'./profile/:id/settings'} className='flex-1 flex flex-col justify-between items-center w-full p-16 mb-8 text-center bg-[#292929] shadow-xl hover:shadow-2xl rounded-xl hover:scale-105 transition duration-300 ease-in-out'>
-            <h1 className='text-4xl font-semibold mb-8'>Be yourself or be anonymous</h1>
+            <h1 className='text-4xl font-bold mb-8'>Be yourself or be anonymous</h1>
             <img src={privacyIcon} className='h-24 w-auto mb-8' />
-            <p>No need to expose your identity, feel free to write anonymously and tell your truth with no filter.</p>
+            <p className='font-semibold'>No need to expose your identity, feel free to write anonymously and tell your truth with no filter.</p>
         </a>
       </div>
 
-      <h1 className='text-5xl font-bold mb-16 mt-28'>Our Top Stories</h1>
+      <h1 className='text-5xl font-bold mb-16 mt-28 text-important'>Our Top Stories</h1>
       <div className='flex flex-col justify-center items-stretch h-auto w-9/12 mb-32'>
         
         <a href='./story/:id' className='flex flex-row justify-center items-center mb-4 h-24 p-8 bg-[#292929] shadow-xl rounded-xl hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out'>
           <div className='flex-1 flex flex-col justify-items-center h-full'>
-            <h1 className='text-3xl text-center'>Title</h1>
+            <h1 className='text-3xl text-center text-important font-bold'>Title</h1>
           </div>
           <div className='flex-1 flex flex-row justify-center items-center rounded-xl'>
             <img src={homeBg} className='h-20' />
-            <h2 className='text-xl ml-8'>Author</h2>
+            <h2 className='text-xl ml-8 font-semibold'>Author</h2>
           </div>
         </a>
 
         <a href='./story/:id' className='flex flex-row justify-center items-center mb-4 h-24 p-8 bg-[#292929] shadow-xl rounded-xl hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out'>
           <div className='flex-1 flex flex-col justify-items-center h-full'>
-            <h1 className='text-3xl text-center'>Title</h1>
+            <h1 className='text-3xl text-center text-important font-bold'>Title</h1>
           </div>
           <div className='flex-1 flex flex-row justify-center items-center rounded-xl'>
             <img src={homeBg} className='h-20' />
-            <h2 className='text-xl ml-8'>Author</h2>
+            <h2 className='text-xl ml-8 font-semibold'>Author</h2>
           </div>
         </a>
 
         <a href='./story/:id' className='flex flex-row justify-center items-center mb-4 h-24 p-8 bg-[#292929] shadow-xl rounded-xl hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out'>
           <div className='flex-1 flex flex-col justify-items-center h-full'>
-            <h1 className='text-3xl text-center'>Title</h1>
+            <h1 className='text-3xl text-center text-important font-bold'>Title</h1>
           </div>
           <div className='flex-1 flex flex-row justify-center items-center rounded-xl'>
             <img src={homeBg} className='h-20' />
-            <h2 className='text-xl ml-8'>Author</h2>
+            <h2 className='text-xl ml-8 font-semibold'>Author</h2>
           </div>
         </a>
 
         <a href='./story/:id' className='flex flex-row justify-center items-center mb-4 h-24 p-8 bg-[#292929] shadow-xl rounded-xl hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out'>
           <div className='flex-1 flex flex-col justify-items-center h-full'>
-            <h1 className='text-3xl text-center'>Title</h1>
+            <h1 className='text-3xl text-center text-important font-bold'>Title</h1>
           </div>
           <div className='flex-1 flex flex-row justify-center items-center rounded-xl'>
             <img src={homeBg} className='h-20' />
-            <h2 className='text-xl ml-8'>Author</h2>
+            <h2 className='text-xl ml-8 font-semibold'>Author</h2>
           </div>
         </a>
 
         <a href='./story/:id' className='flex flex-row justify-center items-center mb-4 h-24 p-8 bg-[#292929] shadow-xl rounded-xl hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out'>
           <div className='flex-1 flex flex-col justify-items-center h-full'>
-            <h1 className='text-3xl text-center'>Title</h1>
+            <h1 className='text-3xl text-center text-important font-bold'>Title</h1>
           </div>
           <div className='flex-1 flex flex-row justify-center items-center rounded-xl'>
             <img src={homeBg} className='h-20' />
-            <h2 className='text-xl ml-8'>Author</h2>
+            <h2 className='text-xl ml-8 font-semibold'>Author</h2>
           </div>
         </a>
 

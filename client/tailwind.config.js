@@ -11,7 +11,7 @@ export default {
         secondary: '#292929',
         tertiary: '#474747',
         text: '#FFFFFF',
-        important: '#6600cc',
+        important: '#8f00b3',
         error: '#DC143C',
       },
       fontFamily: {
