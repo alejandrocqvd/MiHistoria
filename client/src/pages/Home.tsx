@@ -30,7 +30,7 @@ export const Home = () => {
       </div>
 
       <div className='flex flex-col justify-center items-center w-9/12 py-16 md:px-48 px-8 bg-[#292929] shadow-xl rounded-xl'>
-        <h1 className='text-5xl font-bold mb-12 text-center text-important'>What is MiHistoria?</h1>
+        <h1 className='text-5xl font-bold mb-12 text-center pb-2 bg-clip-text text-transparent bg-gradient'>What is MiHistoria?</h1>
         <p className='text-xl flex-1 mr-6 text-center'>
           In an digital world full of fleeting moments and endless posts, MiHistoria offers something different. 
           Here, each user gets one chance, <span className='font-bold'>one post, to share their life story.</span> Our app is built on the belief that every person's 
@@ -46,7 +46,7 @@ export const Home = () => {
         <h1 className='text-2xl font-semibold mt-6 text-center'>- Maya Angelou</h1>
       </div>
 
-      <h1 className='text-5xl font-bold mb-16 mt-28 text-important'>What To Do</h1>
+      <h1 className='text-5xl font-bold mb-12 mt-28 pb-2 bg-clip-text text-transparent bg-gradient'>What To Do</h1>
       <div className='flex flex-col lg:flex-row justify-stretch items-stretch w-9/12 mb-24'>
         <a href={'./explore'} 
           className='flex-1 flex flex-col justify-between items-center w-full p-16 mb-8 text-center bg-[#292929] shadow-xl rounded-xl hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out'>
@@ -66,12 +66,12 @@ export const Home = () => {
         </a>
       </div>
 
-      <h1 className='text-5xl font-bold mb-16 mt-28 text-important'>Our Top Stories</h1>
+      <h1 className='text-5xl font-bold mb-12 mt-28 pb-2 bg-clip-text text-transparent bg-gradient'>Explore Top Stories</h1>
       <div className='flex flex-col justify-center items-stretch h-auto w-9/12 mb-32'>
         
         <a href='./story/:id' className='flex flex-row justify-center items-center mb-4 h-24 p-8 bg-[#292929] shadow-xl rounded-xl hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out'>
           <div className='flex-1 flex flex-col justify-items-center h-full'>
-            <h1 className='text-3xl text-center text-important font-bold'>Title</h1>
+            <h1 className='text-3xl text-center font-bold'>Title</h1>
           </div>
           <div className='flex-1 flex flex-row justify-center items-center rounded-xl'>
             <img src={homeBg} className='h-20' />
@@ -81,7 +81,7 @@ export const Home = () => {
 
         <a href='./story/:id' className='flex flex-row justify-center items-center mb-4 h-24 p-8 bg-[#292929] shadow-xl rounded-xl hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out'>
           <div className='flex-1 flex flex-col justify-items-center h-full'>
-            <h1 className='text-3xl text-center text-important font-bold'>Title</h1>
+            <h1 className='text-3xl text-center font-bold'>Title</h1>
           </div>
           <div className='flex-1 flex flex-row justify-center items-center rounded-xl'>
             <img src={homeBg} className='h-20' />
@@ -91,7 +91,7 @@ export const Home = () => {
 
         <a href='./story/:id' className='flex flex-row justify-center items-center mb-4 h-24 p-8 bg-[#292929] shadow-xl rounded-xl hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out'>
           <div className='flex-1 flex flex-col justify-items-center h-full'>
-            <h1 className='text-3xl text-center text-important font-bold'>Title</h1>
+            <h1 className='text-3xl text-center font-bold'>Title</h1>
           </div>
           <div className='flex-1 flex flex-row justify-center items-center rounded-xl'>
             <img src={homeBg} className='h-20' />
@@ -101,7 +101,7 @@ export const Home = () => {
 
         <a href='./story/:id' className='flex flex-row justify-center items-center mb-4 h-24 p-8 bg-[#292929] shadow-xl rounded-xl hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out'>
           <div className='flex-1 flex flex-col justify-items-center h-full'>
-            <h1 className='text-3xl text-center text-important font-bold'>Title</h1>
+            <h1 className='text-3xl text-center font-bold'>Title</h1>
           </div>
           <div className='flex-1 flex flex-row justify-center items-center rounded-xl'>
             <img src={homeBg} className='h-20' />
@@ -111,7 +111,7 @@ export const Home = () => {
 
         <a href='./story/:id' className='flex flex-row justify-center items-center mb-4 h-24 p-8 bg-[#292929] shadow-xl rounded-xl hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out'>
           <div className='flex-1 flex flex-col justify-items-center h-full'>
-            <h1 className='text-3xl text-center text-important font-bold'>Title</h1>
+            <h1 className='text-3xl text-center font-bold'>Title</h1>
           </div>
           <div className='flex-1 flex flex-row justify-center items-center rounded-xl'>
             <img src={homeBg} className='h-20' />
