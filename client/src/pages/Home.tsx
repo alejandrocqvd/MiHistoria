@@ -42,7 +42,7 @@ export const Home = () => {
           We invite you to join this community and share your story, your entire story, in one post. Or delve into the intricate and beautiful 
           lives of others, learning, emphasizing, and connecting in a way that transcends traditional social media boundaries.
         </p>
-        <h1 className='text-4xl font-extralight pb-2 text-center italic text-important'>"There is no greater agony than bearing the untold story inside you"</h1>
+        <h1 className='text-3xl font-normal pb-2 text-center italic text-important'>"There is no greater agony than bearing the untold story inside you"</h1>
         <h1 className='text-2xl font-semibold mt-6 text-center'>- Maya Angelou</h1>
       </div>
 
