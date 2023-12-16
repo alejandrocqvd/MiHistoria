@@ -7,12 +7,12 @@ import Profile from './pages/profile/Profile'
 import EditProfile from './pages/profile/EditProfile'
 import Story from './pages/story/Story'
 import EditStory from './pages/story/EditStory'
-import Search from './pages/Search'
 import NotFound from './pages/NotFound'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
-import { Help } from './pages/Help'
-import { Legal } from './pages/Legal'
+import Help from './pages/Help'
+import Legal from './pages/Legal'
+import Explore from './pages/Explore'
 
 const Layout = () => {
   return (
@@ -50,8 +50,8 @@ const router = createBrowserRouter([
         element: <EditStory/>,
       },
       {
-        path: '/search',
-        element: <Search/>,
+        path: '/explore',
+        element: <Explore/>,
       },
       {
         path: '/help',

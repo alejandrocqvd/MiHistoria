@@ -5,3 +5,5 @@ export const Legal = () => {
     <div>Legal</div>
   )
 }
+
+export default Legal

@@ -25,7 +25,7 @@ export const Navbar = () => {
       <div className={`fixed top-20 w-full bg-secondary md:hidden ${isOpen ? 'block' : 'hidden'}`}>
         <Link className='block p-4 hover:bg-tertiary hover:font-semibold' to='./'>Home</Link>
         <Link className='block p-4 hover:bg-tertiary hover:font-semibold' to='./explore'>Explore</Link>
-        <Link className='block p-4 hover:bg-tertiary hover:font-semibold' to='./story:id'>Your Story</Link>
+        <Link className='block p-4 hover:bg-tertiary hover:font-semibold' to='./story/:id'>Your Story</Link>
         <Link className='block p-4 hover:bg-tertiary hover:font-semibold' to='./login'>Login</Link>
       </div>
     </>
