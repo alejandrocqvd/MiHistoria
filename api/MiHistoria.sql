@@ -19,7 +19,8 @@ CREATE TABLE user
 CREATE TABLE post 
 (
     post_id             INT             NOT NULL            AUTO_INCREMENT,
-    username             INT             NOT NULL,
+    username             INT            NOT NULL,
+    title               VARCHAR(255)    NOT NULL
     text                MEDIUMTEXT      NOT NULL,
     timestamp           DATETIME        NOT NULL,
     PRIMARY KEY (post_id),
