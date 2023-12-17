@@ -58,7 +58,7 @@ export const Explore = () => {
               </div>
               <p className='flex-shrink-0'>John Seed</p>
             </a>
-            <button className='w-full mb-4 px-6 py-3 bg-important rounded-xl hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out font-semibold'>
+            <button className='w-full mb-4 px-6 py-3 bg-gradient rounded-xl hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out font-semibold'>
               See More
             </button>
           </div>
@@ -72,7 +72,7 @@ export const Explore = () => {
               </div>
               <p className='flex-shrink-0'>John Seed</p>
             </a>
-            <button className='w-full mb-4 px-6 py-3 bg-important rounded-xl hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out font-semibold'>
+            <button className='w-full mb-4 px-6 py-3 bg-gradient rounded-xl hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out font-semibold'>
               See More
             </button>
           </div>
@@ -86,7 +86,7 @@ export const Explore = () => {
               </div>
               <p className='flex-shrink-0'>John Seed</p>
             </a>
-            <button className='w-full mb-4 px-6 py-3 bg-important rounded-xl hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out font-semibold'>
+            <button className='w-full mb-4 px-6 py-3 bg-gradient rounded-xl hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out font-semibold'>
               See More
             </button>
           </div>

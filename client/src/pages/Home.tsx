@@ -14,7 +14,7 @@ export const Home = () => {
         <div className='text-6xl font-bold text-center md:text-left'>
           <h1 className='my-10 py-5'>Speak your mind.</h1>
           <h1 className='my-10 py-5'>Tell your truth.</h1>
-          <h1 className='my-10 py-5'>Write your story, <span className=' bg-clip-text text-transparent bg-gradient font-extrabold underline'>here.</span></h1>
+          <h1 className='my-10 py-5'>Write your story, <span className='bg-clip-text text-transparent bg-gradient font-extrabold underline'>here.</span></h1>
           <div className='flex flex-row justify-start items-center'>
             <button className='hidden md:flex justify-center items-center h-10 w-auto p-4 mr-8 bg-gradient text-sm rounded-xl shadow-lg font-bold transition duration-200 ease-in-out hover:scale-105'>
               <Link to='./register'>Start your journey</Link>
@@ -42,7 +42,7 @@ export const Home = () => {
           We invite you to join this community and share your story, your entire story, in one post. Or delve into the intricate and beautiful 
           lives of others, learning, emphasizing, and connecting in a way that transcends traditional social media boundaries.
         </p>
-        <h1 className='text-3xl font-normal pb-2 text-center italic text-important'>"There is no greater agony than bearing the untold story inside you"</h1>
+        <h1 className='text-3xl font-normal pb-2 text-center italic bg-clip-text text-transparent bg-gradient'>"There is no greater agony than bearing the untold story inside you"</h1>
         <h1 className='text-2xl font-semibold mt-6 text-center'>- Maya Angelou</h1>
       </div>
 
