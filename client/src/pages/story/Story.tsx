@@ -50,7 +50,7 @@ const Story = () => {
 
       <div className='flex flex-col justify-center items center w-1/2 mb-6'>
         <h1 className='text-2xl font-semibold mb-6'>Comments</h1>
-        <div className='pb-4 relative'>
+        <div className='pb-4 relative mb-4'>
           <input className='w-full py-2 px-4 pl-3 pr-10 rounded-2xl bg-tertiary' type='textarea' placeholder='Comment...' required></input>
           <button className='absolute inset-y-0 right-0 px-5 pt-3 flex items-center text-sm'>
             <FontAwesomeIcon className='absolute inset-y-0 right-0 px-5 pt-3 flex items-center text-sm' icon={faPaperPlane} />
