@@ -13,6 +13,7 @@ import Footer from './components/Footer'
 import Help from './pages/Help'
 import Legal from './pages/Legal'
 import Explore from './pages/Explore'
+import StoryPage from './pages/story/StoryPage'
 
 const Layout = () => {
   return (
@@ -44,6 +45,12 @@ const router = createBrowserRouter([
       {
         path: '/story/:id',
         element: <Story/>,
+        children: [
+          {
+            path: 'page/:pageNumber',
+            element: <StoryPage/>,
+          }
+        ]
       },
       {
         path: '/story/:id/edit',
