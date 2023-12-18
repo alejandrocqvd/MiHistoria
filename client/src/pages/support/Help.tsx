@@ -1,6 +1,8 @@
 const Help = () => {
   return (
-    <div>Help</div>
+    <div className='mt-32'>
+      Help
+    </div>
   )
 }
 
