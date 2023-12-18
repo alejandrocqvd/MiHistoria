@@ -21,9 +21,6 @@ export default {
       backgroundImage: {
         'gradient': 'linear-gradient(90deg, rgba(102,0,204,1) 0%, rgba(179,0,89,1) 100%)',
       },
-      borderColor: {
-        'white': '#ffffff',
-      },
     },
   },
   plugins: [],
