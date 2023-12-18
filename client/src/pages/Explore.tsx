@@ -50,6 +50,20 @@ const Explore = () => {
           </div>
 
           <div className={ searching ? 'hidden' : 'flex flex-col justify-center items-center mb-12'}>
+            <h1 className='text-3xl font-semibold mb-8'>Saved Stories</h1>
+            <a href='./story/:id' className='flex flex-row justify-between items-center w-full mb-4 px-6 py-3 bg-secondary rounded-xl hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out'>
+              <div className='flex flex-row justify-center items-center overflow-hidden'>
+                <img src={homeBg} className='h-16 w-auto rounded-xl mr-6' />
+                <h1 className='text-xl font-semibold overflow-hidden text-ellipsis line-clamp-1'>Once Upon A Time In Hollywood</h1>
+              </div>
+              <p className='flex-shrink-0'>John Seed</p>
+            </a>
+            <button className='w-full mb-4 px-6 py-3 bg-gradient rounded-xl hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out font-semibold'>
+              See More
+            </button>
+          </div>
+
+          <div className={ searching ? 'hidden' : 'flex flex-col justify-center items-center mb-12'}>
             <h1 className='text-3xl font-semibold mb-8'>Top Stories This Month</h1>
             <a href='./story/:id' className='flex flex-row justify-between items-center w-full mb-4 px-6 py-3 bg-secondary rounded-xl hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out'>
               <div className='flex flex-row justify-center items-center overflow-hidden'>
