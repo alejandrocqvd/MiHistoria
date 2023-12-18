@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
 import homeBg from '../assets/home-bg.png'
 import { Link } from 'react-router-dom'
 import globeIcon from '../assets/globe-icon.png'
 import bookIcon from '../assets/book-icon.png'
 import privacyIcon from '../assets/privacy-icon.png'
+import { useState } from 'react'
 
 const Home = () => {
   const [currentUser, setCurrentUser] = useState(false)

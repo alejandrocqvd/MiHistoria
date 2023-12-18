@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import storyBg from '../../assets/login-bg.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEye, faEyeSlash, faEnvelope, faUser } from '@fortawesome/free-solid-svg-icons'
+import { faEye, faEyeSlash, faEnvelope} from '@fortawesome/free-solid-svg-icons'
 
 const EditProfile = () => {
   const [passwordHidden1, setPasswordHidden1] = useState<boolean>(true)
