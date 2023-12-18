@@ -1,11 +1,33 @@
-import React, { useState } from 'react'
 import storyBg from '../../assets/login-bg.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHeart as solidHeart, faBookmark as solidBookmark, faShareAlt, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
-import { faHeart as regularHeart, faBookmark as regularBookmark } from '@fortawesome/free-regular-svg-icons';
-import { Outlet } from 'react-router-dom';
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
+import { Outlet } from 'react-router-dom'
+import Comment from '../../components/Comment.tsx'
 
 const Story = () => {
+  const dummyComments = [
+    {
+      comment_id: "1",
+      text: "This is the first comment.",
+      timestamp: "2021-12-17T12:00:00Z",
+      author: {
+        username: "user1",
+        first_name: "John",
+        last_name: "Doe"
+      }
+    },
+    {
+      comment_id: "2",
+      text: "This is the second comment.",
+      timestamp: "2021-12-18T13:00:00Z",
+      author: {
+        username: "user2",
+        first_name: "Jane",
+        last_name: "Doe"
+      }
+    },
+  ]
+
   return (
     <div className='flex flex-col justify-center items-center mt-20 w-9/12'>
 
@@ -36,20 +58,9 @@ const Story = () => {
           </button>
         </div>
 
-        <div className='flex flex-col justify-items-center bg-secondary rounded-xl p-4 mb-2'>
-          <div className='flex flex-row justify-between items-center'>
-            <div className='flex flex-row justify-start items-center mb-2'>
-              <img src={storyBg} className='h-8 rounded-xl w-8' />
-              <a href={'./story/:id'} className='text-lg ml-4 font-semibold'>First Name Last Name</a>
-            </div>
-            <div className='flex flex-row justify-end items-center'>
-              <button className='hover-underline-animation mr-4 font-semibold'>Edit</button>
-              <button className='hover-underline-animation font mr-4 font-semibold'>Delete</button>
-              <p>Date and Time</p>
-            </div>
-          </div>
-          <p className='px-2'>Comment that comments on the post!</p>
-        </div>
+        {dummyComments.map(comment => (
+          <Comment key={comment.comment_id} commentData={comment} />
+        ))}
 
       </div>
 

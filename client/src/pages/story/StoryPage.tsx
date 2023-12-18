@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHeart as solidHeart, faBookmark as solidBookmark, faShareAlt, faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { faHeart as solidHeart, faBookmark as solidBookmark } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as regularHeart, faBookmark as regularBookmark } from '@fortawesome/free-regular-svg-icons';
 
 const StoryPage = () => {
@@ -26,7 +26,7 @@ const StoryPage = () => {
             <FontAwesomeIcon icon={saved ? solidBookmark : regularBookmark} className='mr-1' /> 6k
           </button>
           <button className='w-28 shadow-md ml-4 text-center rounded-xl bg-gradient font-bold px-4 py-2'>Edit</button>
-          <button className='w-32 shadow-md ml-4 text-center rounded-xl bg-error font-bold px-4 py-2 hover:bg-red-950'>Delete Story</button>
+          <button className='w-32 shadow-md ml-4 text-center rounded-xl bg-error font-bold px-4 py-2 hover:bg-[#9A0E2A]'>Delete Story</button>
         </div>
 
         <div className='flex flex-row justify-between items-start w-full mb-6'>
