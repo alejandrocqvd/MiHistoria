@@ -54,12 +54,12 @@ const Home = () => {
             <img src={globeIcon} className='h-24 w-auto mb-8' />
             <p className='font-semibold'>See the collection of personal narratives that take you though the intricate experiences of people from any corner of the world.</p>
         </a>
-        <a href={'./story/:id'} className='flex-1 flex flex-col justify-between items-center w-full lg:mx-20 p-16 mb-8 text-center bg-[#292929] shadow-xl hover:shadow-2xl rounded-xl hover:scale-105 transition duration-300 ease-in-out'>
+        <a href={'./story/:id/page/1'} className='flex-1 flex flex-col justify-between items-center w-full lg:mx-20 p-16 mb-8 text-center bg-[#292929] shadow-xl hover:shadow-2xl rounded-xl hover:scale-105 transition duration-300 ease-in-out'>
             <h1 className='text-4xl font-bold mb-8'>Write <span className='underline'>Your</span> Story</h1>
             <img src={bookIcon} className='h-24 w-auto mb-8' />
             <p className='font-semibold'>Let the world hear your story. Travel back in your time to recollect and write down your life.</p>
         </a>
-        <a href={'./profile/:id/settings'} className='flex-1 flex flex-col justify-between items-center w-full p-16 mb-8 text-center bg-[#292929] shadow-xl hover:shadow-2xl rounded-xl hover:scale-105 transition duration-300 ease-in-out'>
+        <a href={'./profile'} className='flex-1 flex flex-col justify-between items-center w-full p-16 mb-8 text-center bg-[#292929] shadow-xl hover:shadow-2xl rounded-xl hover:scale-105 transition duration-300 ease-in-out'>
             <h1 className='text-4xl font-bold mb-8'>Be yourself or be anonymous</h1>
             <img src={privacyIcon} className='h-24 w-auto mb-8' />
             <p className='font-semibold'>No need to expose your identity, feel free to write anonymously and tell your truth with no filter.</p>

@@ -18,7 +18,7 @@ const StoryPage = () => {
   return (
     <div className='flex flex-col justify-start items-center'>
 
-        <div className='flex flex-row justify-center items-center mb-6'>
+        <div className='flex flex-row justify-center items-center mb-12'>
           <button onClick={handleLike} className={`w-28 shadow-md text-center rounded-xl bg-secondary px-4 py-2 ${ liked ? 'text-red-600' : null}`}>
             <FontAwesomeIcon icon={liked ? solidHeart : regularHeart} className='mr-1' /> 24k
           </button>
@@ -90,7 +90,7 @@ const StoryPage = () => {
             <em>- J. Robert Oppenheimer</em>
         </p>
 
-        <div className='flex flex-row justify-between items-start w-full my-6'>
+        <div className='flex flex-row justify-between items-start w-full mt-6 mb-12'>
             <div className='flex flex-row justify-between items-start'>
                 <button className='bg-secondary p-2 rounded-xl shadow-md mr-2 w-32'>Previous Page</button>
                 <button className='bg-secondary p-2 rounded-xl shadow-md mr-2 w-32'>Next Page</button>

@@ -33,15 +33,15 @@ const Story = () => {
 
       <div className='flex flex-col h-auto w-full md:w-1/2'>
 
-        <h1 className='text-4xl text-center font-bold my-6'>Username</h1>
-        <div className='flex-1 flex flex-row justify-center items-center rounded-xl mb-6'>
-          <img src={storyBg} className='h-16 rounded-xl w-16' />
-          <h2 className='text-2xl ml-8 font-semibold'>First Name Last Name</h2>
-          <h2 className='text-2xl ml-8 font-normal'>65 Years Old</h2>
-        </div>
-
+        <h1 className='text-5xl text-center font-bold my-12'>Once Upon a Time in Hollywood</h1>
         <img src={storyBg} className='h-72 w-full rounded-xl mb-6' />
-        <h1 className='text-4xl text-center font-bold mb-6'>Title</h1>
+
+        <h1 className='text-3xl text-center font-bold mb-6'>By Username</h1>
+        <div className='flex-1 flex flex-row justify-center items-center rounded-xl mb-8'>
+          <img src={storyBg} className='h-12 rounded-xl w-12' />
+          <h2 className='text-xl ml-8 font-semibold'>First Name Last Name</h2>
+          <h2 className='text-xl ml-8 font-normal'>65 Years Old</h2>
+        </div>
         
       </div>
 
