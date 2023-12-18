@@ -6,7 +6,6 @@ import Login from './pages/login/Login'
 import Profile from './pages/profile/Profile'
 import EditProfile from './pages/profile/EditProfile'
 import Story from './pages/story/Story'
-import EditStory from './pages/story/EditStory'
 import NotFound from './pages/NotFound'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
@@ -14,6 +13,7 @@ import Help from './pages/Help'
 import Legal from './pages/Legal'
 import Explore from './pages/Explore'
 import StoryPage from './pages/story/StoryPage'
+import EditStoryPage from './pages/story/EditStoryPage'
 
 const Layout = () => {
   return (
@@ -49,12 +49,12 @@ const router = createBrowserRouter([
           {
             path: 'page/:pageNumber',
             element: <StoryPage/>,
-          }
+          },
+          {
+            path: 'page/:pageNumber/edit',
+            element: <EditStoryPage/>,
+          },
         ]
-      },
-      {
-        path: '/story/:id/edit',
-        element: <EditStory/>,
       },
       {
         path: '/explore',
