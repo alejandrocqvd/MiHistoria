@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import homeBg from '../assets/home-bg.png'
 
-export const Explore = () => {
+const Explore = () => {
   // useStates for search parameters
   const [searchStories, setSearchStories] = useState<boolean>(false)
   const [searchUsers, setSearchUsers] = useState<boolean>(false)

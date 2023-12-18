@@ -5,7 +5,7 @@ import globeIcon from '../assets/globe-icon.png'
 import bookIcon from '../assets/book-icon.png'
 import privacyIcon from '../assets/privacy-icon.png'
 
-export const Home = () => {
+const Home = () => {
   const [currentUser, setCurrentUser] = useState(false)
 
   return (

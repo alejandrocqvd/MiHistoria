@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const Help = () => {
+const Help = () => {
   return (
     <div>Help</div>
   )

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash, faEnvelope } from '@fortawesome/free-solid-svg-icons'
 
-export const Login = () => {
+const Login = () => {
   const [passwordHidden, setPasswordHidden] = useState<boolean>(true)
   const [error, setError] = useState<boolean>(false)
 
