@@ -6,17 +6,6 @@ import { faHeart as regularHeart, faBookmark as regularBookmark } from '@fortawe
 import { Outlet } from 'react-router-dom';
 
 const Story = () => {
-  // States and functions for liking and saving the story
-  const [liked, setLiked] = useState<Boolean>(false)
-  const [saved, setSaved] = useState<Boolean>(false)
-
-  const handleLike = () => {
-    setLiked(!liked)
-  }
-  const handleSave = () => {
-    setSaved(!saved)
-  }
-
   return (
     <div className='flex flex-col justify-center items-center mt-20 w-9/12'>
 
@@ -31,24 +20,14 @@ const Story = () => {
 
         <img src={storyBg} className='h-72 w-full rounded-xl mb-6' />
         <h1 className='text-4xl text-center font-bold mb-6'>Title</h1>
-
-        <div className='flex flex-row justify-center items-center mb-6'>
-          <button onClick={handleLike} className={`text-center rounded-xl bg-secondary px-4 py-2 ${ liked ? 'text-red-600' : null}`}>
-            <FontAwesomeIcon icon={liked ? solidHeart : regularHeart} className='mr-1' /> 24k
-          </button>
-          <button onClick={handleSave} className={`mx-4 text-center rounded-xl bg-secondary px-4 py-2 ${ saved ? 'text-amber-500' : null}`}>
-            <FontAwesomeIcon icon={saved ? solidBookmark : regularBookmark} className='mr-1' /> 6k
-          </button>
-          <button className='text-center rounded-xl bg-secondary px-4 py-2'>
-            <FontAwesomeIcon icon={faShareAlt} className='mr-1' /> Share
-          </button>
-        </div>
         
       </div>
 
-      <Outlet />
+      <div className='justify-items-center h-auto w-full md:w-1/2 rounded-xl'>
+        <Outlet />
+      </div>
 
-      <div className='flex flex-col justify-center items center w-1/2 mb-6'>
+      <div className='flex flex-col justify-center items center w-full md:w-1/2 mb-6'>
         <h1 className='text-2xl font-semibold mb-6'>Comments</h1>
         <div className='pb-4 relative mb-4'>
           <input className='w-full py-2 px-4 pl-3 pr-10 rounded-2xl bg-tertiary' type='textarea' placeholder='Comment...' required></input>
@@ -63,7 +42,11 @@ const Story = () => {
               <img src={storyBg} className='h-8 rounded-xl w-8' />
               <a href={'./story/:id'} className='text-lg ml-4 font-semibold'>First Name Last Name</a>
             </div>
-            <p>Date and Time</p>
+            <div className='flex flex-row justify-end items-center'>
+              <button className='hover-underline-animation mr-4 font-semibold'>Edit</button>
+              <button className='hover-underline-animation font mr-4 font-semibold'>Delete</button>
+              <p>Date and Time</p>
+            </div>
           </div>
           <p className='px-2'>Comment that comments on the post!</p>
         </div>
