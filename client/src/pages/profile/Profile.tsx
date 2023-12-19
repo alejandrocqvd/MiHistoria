@@ -47,8 +47,8 @@ const Profile = () => {
       </div>
 
       <div className='flex flex-col justify-items-center w-9/12 md:w-4/12 mb-12'>
-        <h1 className='text-5xl font-bold mb-8 text-center'>Your Story</h1>
-        <a href='../story/:id/page/1' className='flex flex-row justify-center items-center w-full h-24 p-8 bg-secondary shadow-xl rounded-xl hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out'>
+        <h1 className='text-4xl font-bold mb-8 text-center'>Your Story</h1>
+        <a href='../story/:id/page/1' className='flex flex-row justify-center items-center w-full h-auto p-8 bg-secondary shadow-xl rounded-xl hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out'>
           <div className='flex flex-row justify-between items-center overflow-hidden w-full'>
             <img src={storyBg} className='h-20 flex-shrink-0 rounded-xl' />
             <h1 className='text-3xl text-center font-bold overflow-hidden text-ellipsis line-clamp-1'>Title</h1>
@@ -57,16 +57,16 @@ const Profile = () => {
       </div>
 
       <div className='flex flex-col justify-items-center w-9/12 md:w-4/12 mb-12'>
-        <h1 className='text-5xl font-bold mb-8 text-center'>Saved Stories</h1>
-        <a href='../story/:id/page/1' className='flex flex-col justify-center items-center w-full h-auto p-8 bg-secondary shadow-xl rounded-xl hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out'>
+        <h1 className='text-4xl font-bold mb-8 text-center'>Saved Stories</h1>
+        <div className='flex flex-col justify-center items-center w-full h-auto p-8 bg-secondary shadow-xl rounded-xl'>
           <div className='flex flex-row justify-between items-center overflow-hidden w-full'>
             <img src={storyBg} className='h-20 flex-shrink-0 rounded-xl' />
-            <h1 className='text-3xl text-center font-bold overflow-hidden text-ellipsis line-clamp-1'>Title</h1>
-            <button onClick={handleSave} className={`w-12 shadow-md justify-items-center text-center rounded-xl bg-gradient pl-3 pr-2 py-2 ${ saved ? 'text-amber-500' : null}`}>
+            <a href={'./story/1/page/1'} className='text-3xl text-center font-bold overflow-hidden text-ellipsis line-clamp-1'>Title</a>
+            <button onClick={handleSave} className={`w-12 shadow-md justify-items-center text-center rounded-xl bg-gradient pl-3 pr-2 py-2 hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out ${ saved ? 'text-amber-500' : null}`}>
               <FontAwesomeIcon icon={saved ? solidBookmark : regularBookmark} className='mr-1' />
             </button>
           </div>
-        </a>
+        </div>
       </div>
     </>
   )
