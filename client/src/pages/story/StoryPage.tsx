@@ -1,47 +1,47 @@
-import { useState } from "react"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faHeart as solidHeart, faBookmark as solidBookmark } from '@fortawesome/free-solid-svg-icons';
-import { faHeart as regularHeart, faBookmark as regularBookmark } from '@fortawesome/free-regular-svg-icons';
+import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart as solidHeart, faBookmark as solidBookmark } from "@fortawesome/free-solid-svg-icons";
+import { faHeart as regularHeart, faBookmark as regularBookmark } from "@fortawesome/free-regular-svg-icons";
 
 const StoryPage = () => {
   // States and functions for liking and saving the story
-  const [liked, setLiked] = useState<Boolean>(false)
-  const [saved, setSaved] = useState<Boolean>(false)
+  const [liked, setLiked] = useState<Boolean>(false);
+  const [saved, setSaved] = useState<Boolean>(false);
 
   const handleLike = () => {
-    setLiked(!liked)
+    setLiked(!liked);
   }
   const handleSave = () => {
-    setSaved(!saved)
+    setSaved(!saved);
   }
 
   return (
-    <div className='flex flex-col justify-start items-center'>
+    <div className="flex flex-col justify-start items-center">
 
-        <div className='flex flex-row justify-center items-center mb-12'>
-          <button onClick={handleLike} className={`w-28 shadow-md text-center rounded-xl bg-secondary px-4 py-2 ${ liked ? 'text-red-600' : null}`}>
-            <FontAwesomeIcon icon={liked ? solidHeart : regularHeart} className='mr-1' /> 24k
+        <div className="flex flex-row justify-center items-center mb-12">
+          <button onClick={handleLike} className={`w-28 shadow-md text-center rounded-xl bg-secondary px-4 py-2 ${ liked ? "text-red-600" : null}`}>
+            <FontAwesomeIcon icon={liked ? solidHeart : regularHeart} className="mr-1" /> 24k
           </button>
-          <button onClick={handleSave} className={`w-28 shadow-md ml-4 text-center rounded-xl bg-secondary px-4 py-2 ${ saved ? 'text-amber-500' : null}`}>
-            <FontAwesomeIcon icon={saved ? solidBookmark : regularBookmark} className='mr-1' /> 6k
+          <button onClick={handleSave} className={`w-28 shadow-md ml-4 text-center rounded-xl bg-secondary px-4 py-2 ${ saved ? "text-amber-500" : null}`}>
+            <FontAwesomeIcon icon={saved ? solidBookmark : regularBookmark} className="mr-1" /> 6k
           </button>
-          <button className='w-28 shadow-md ml-4 text-center rounded-xl bg-gradient font-bold px-4 py-2'>Edit</button>
-          <button className='w-32 shadow-md ml-4 text-center rounded-xl bg-error font-bold px-4 py-2 hover:bg-[#9A0E2A]'>Delete Story</button>
+          <button className="w-28 shadow-md ml-4 text-center rounded-xl bg-gradient font-bold px-4 py-2">Edit</button>
+          <button className="w-32 shadow-md ml-4 text-center rounded-xl bg-error font-bold px-4 py-2 hover:bg-[#9A0E2A]">Delete Story</button>
         </div>
 
-        <div className='flex flex-row justify-between items-start w-full mb-6'>
-            <div className='flex flex-row justify-between items-start'>
-                <button className='bg-secondary p-2 rounded-xl shadow-md mr-2 w-32'>Previous Page</button>
-                <button className='bg-secondary p-2 rounded-xl shadow-md mr-2 w-32'>Next Page</button>
+        <div className="flex flex-row justify-between items-start w-full mb-6">
+            <div className="flex flex-row justify-between items-start">
+                <button className="bg-secondary p-2 rounded-xl shadow-md mr-2 w-32">Previous Page</button>
+                <button className="bg-secondary p-2 rounded-xl shadow-md mr-2 w-32">Next Page</button>
             </div>
-            <div className='flex flex-row justify-between items-center bg-secondary p-2 rounded-xl shadow-md mr-2 w-32 px-4'>
+            <div className="flex flex-row justify-between items-center bg-secondary p-2 rounded-xl shadow-md mr-2 w-32 px-4">
                 <h1>Page:</h1>
-                <select className='bg-secondary'>
-                    <option value='1'>1</option>
-                    <option value='2'>2</option>
-                    <option value='3'>3</option>
-                    <option value='4'>4</option>
-                    <option value='5'>5</option>
+                <select className="bg-secondary">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
                 </select>
             </div>
         </div>
@@ -54,7 +54,7 @@ const StoryPage = () => {
         </p>
         <p>
             My work in theoretical physics garnered attention, and I found myself immersed in the 
-            burgeoning field of quantum mechanics. <a href='https://www.nobelprize.org/prizes/physics/'>Nobel Prize</a> 
+            burgeoning field of quantum mechanics. <a href="https://www.nobelprize.org/prizes/physics/">Nobel Prize</a> 
             laureates were among my peers and mentors. This period was a formative time in my life, 
             shaping my scientific pursuits.
         </p>
@@ -75,14 +75,14 @@ const StoryPage = () => {
             In the post-war years, I found myself at a crossroads, advocating for international control 
             of atomic energy and striving to promote peaceful uses of nuclear technology. 
             My political affiliations and stance on nuclear disarmament, however, led to a 
-            controversial and public <a href='https://www.atomicheritage.org/history/oppenheimer-security-hearing'>security hearing</a> 
+            controversial and public <a href="https://www.atomicheritage.org/history/oppenheimer-security-hearing">security hearing</a> 
             in 1954, dramatically altering the course of my career.
         </p>
         <p>
             As I reflect on my journey, I am struck by the profound ways in which the pursuit of knowledge 
             can intersect with the complexities of ethics, politics, and human destiny. 
-            The words from the <a href='https://www.bhagavadgita.org.in/'>Bhagavad Gita</a> 
-            resonate deeply with me: 'Now I am become Death, the destroyer of worlds.' 
+            The words from the <a href="https://www.bhagavadgita.org.in/">Bhagavad Gita</a> 
+            resonate deeply with me: "Now I am become Death, the destroyer of worlds." 
             These words, uttered at the Trinity test site, encapsulate the paradox of scientific 
             advancement and its potential consequences.
         </p>
@@ -90,31 +90,31 @@ const StoryPage = () => {
             <em>- J. Robert Oppenheimer</em>
         </p>
 
-        <div className='flex flex-row justify-between items-start w-full mt-6 mb-12'>
-            <div className='flex flex-row justify-between items-start'>
-                <button className='bg-secondary p-2 rounded-xl shadow-md mr-2 w-32'>Previous Page</button>
-                <button className='bg-secondary p-2 rounded-xl shadow-md mr-2 w-32'>Next Page</button>
+        <div className="flex flex-row justify-between items-start w-full mt-6 mb-12">
+            <div className="flex flex-row justify-between items-start">
+                <button className="bg-secondary p-2 rounded-xl shadow-md mr-2 w-32">Previous Page</button>
+                <button className="bg-secondary p-2 rounded-xl shadow-md mr-2 w-32">Next Page</button>
             </div>
-            <div className='flex flex-row justify-between items-center bg-secondary p-2 rounded-xl shadow-md mr-2 w-32 px-4'>
+            <div className="flex flex-row justify-between items-center bg-secondary p-2 rounded-xl shadow-md mr-2 w-32 px-4">
                 <h1>Page:</h1>
-                <select className='bg-secondary'>
-                    <option value='1'>1</option>
-                    <option value='2'>2</option>
-                    <option value='3'>3</option>
-                    <option value='4'>4</option>
-                    <option value='5'>5</option>
+                <select className="bg-secondary">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
                 </select>
             </div>
         </div>
 
-        <div className='flex flex-row justify-center items-center mb-10'>
-            <button onClick={handleLike} className={`w-28 shadow-md text-center rounded-xl bg-secondary px-4 py-2 ${ liked ? 'text-red-600' : null}`}>
-            <FontAwesomeIcon icon={liked ? solidHeart : regularHeart} className='mr-1' /> 24k
+        <div className="flex flex-row justify-center items-center mb-10">
+            <button onClick={handleLike} className={`w-28 shadow-md text-center rounded-xl bg-secondary px-4 py-2 ${ liked ? "text-red-600" : null}`}>
+            <FontAwesomeIcon icon={liked ? solidHeart : regularHeart} className="mr-1" /> 24k
             </button>
-            <button onClick={handleSave} className={`w-28 shadow-md ml-4 text-center rounded-xl bg-secondary px-4 py-2 ${ saved ? 'text-amber-500' : null}`}>
-            <FontAwesomeIcon icon={saved ? solidBookmark : regularBookmark} className='mr-1' /> 6k
+            <button onClick={handleSave} className={`w-28 shadow-md ml-4 text-center rounded-xl bg-secondary px-4 py-2 ${ saved ? "text-amber-500" : null}`}>
+            <FontAwesomeIcon icon={saved ? solidBookmark : regularBookmark} className="mr-1" /> 6k
             </button>
-            <button className='w-28 shadow-md ml-4 text-center rounded-xl bg-gradient font-bold px-4 py-2'>Edit</button>
+            <button className="w-28 shadow-md ml-4 text-center rounded-xl bg-gradient font-bold px-4 py-2">Edit</button>
         </div>
 
     </div>
