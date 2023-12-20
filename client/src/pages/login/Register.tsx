@@ -1,11 +1,81 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash, faEnvelope, faUser } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
-const Register = () => {
+interface FormData {
+  first_name: string;
+  last_name: string;
+  username: string;
+  email: string;
+  dob: string;
+  password: string;
+};
+
+const Register: React.FC = () => {
   const [passwordHidden1, setPasswordHidden1] = useState<boolean>(true);
   const [passwordHidden2, setPasswordHidden2] = useState<boolean>(true);
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [error, setError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [inputs, setInputs] = useState<FormData>({
+    first_name: "",
+    last_name: "",
+    username: "",
+    email: "",
+    dob: "",
+    password: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputs(prev => ({...prev, [e.target.name]: e.target.value}));
+  };
+
+  const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setConfirmPassword(e.target.value);
+  }
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    // Calculate age
+    const birthday = new Date(inputs.dob);
+    const ageDifMs = Date.now() - birthday.getTime();
+    const ageDate = new Date(ageDifMs);
+    const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+    
+    // Check if user is older than 16 years
+    if (age < 16) {
+      setError(true);
+      setErrorMessage("You must be at least 16 years old to register.");
+      return;
+    }
+
+    console.log(inputs.password);
+    console.log(confirmPassword);
+
+    // Check if passwords match
+    if (inputs.password !== confirmPassword) {
+      setError(true);
+      setErrorMessage("Passwords do not match.");
+      return;
+    }
+
+    setError(false);
+    setErrorMessage("");
+
+    // Attempt form submission
+    try {
+      const res = await axios.post("/api/auth/register", inputs);
+      console.log(res);
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        setError(true);
+        setErrorMessage(error.response.data);
+      }
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -15,47 +85,96 @@ const Register = () => {
 
         <h1 className="text-4xl text-center font-bold mb-12">Register</h1>
 
-        <form className="w-80">
+        <form onSubmit={handleSubmit} className="w-80">
 
             <div className="flex flex-row w-full pb-4">
-              <input className="w-full py-2 px-4 rounded-2xl mr-2" type="text" placeholder="First Name"></input>
-              <input className="w-full py-2 px-4 rounded-2xl ml-2" type="text" placeholder="Last Name"></input>
+              <input 
+                name="first_name"
+                onChange={handleChange}
+                className="w-full py-2 px-4 rounded-2xl mr-2" 
+                type="text" 
+                placeholder="First Name">
+              </input>
+              <input 
+                name="last_name"
+                onChange={handleChange}
+                className="w-full py-2 px-4 rounded-2xl ml-2" 
+                type="text" 
+                placeholder="Last Name">
+              </input>
             </div>
 
             <div className="pb-4 relative">
-              <input className="w-full py-2 px-4 pl-3 pr-10 rounded-2xl" type="text" placeholder="Username" required></input>
+              <input 
+                name="username"
+                onChange={handleChange}
+                className="w-full py-2 px-4 pl-3 pr-10 rounded-2xl" 
+                type="text" placeholder="Username" 
+                required>
+              </input>
               <FontAwesomeIcon className="absolute inset-y-0 right-0 px-5 pt-3 flex items-center text-sm" icon={faUser} />
             </div>
 
             <div className="pb-4 relative">
-                <input className="w-full py-2 px-4 pl-3 pr-10 rounded-2xl" type="email" placeholder="Email" required></input>
+                <input 
+                  name="email"
+                  onChange={handleChange}
+                  className="w-full py-2 px-4 pl-3 pr-10 rounded-2xl" 
+                  type="email" 
+                  placeholder="Email" required>
+                </input>
                 <FontAwesomeIcon className="absolute inset-y-0 right-0 px-5 pt-3 flex items-center text-sm" icon={faEnvelope} />
               </div>
 
             <div className="w-full pb-4">
-              <input className="w-full py-2 px-4 rounded-2xl" type="date" placeholder="Date of Birth"></input>
+              <input 
+                name="dob"
+                onChange={handleChange}
+                className="w-full py-2 px-4 rounded-2xl" 
+                type="date" 
+                placeholder="Date of Birth"
+                required>
+              </input>
             </div>
 
             <div className="pb-4 relative">
-              <input className="w-full py-2 px-4 pl-3 pr-10 rounded-2xl" type={passwordHidden1 ? "password" : "text"} placeholder="Password" required></input>
+              <input 
+                name="password"
+                onChange={handleChange}
+                className="w-full py-2 px-4 pl-3 pr-10 rounded-2xl" 
+                type={passwordHidden1 ? "password" : "text"} 
+                placeholder="Password" 
+                required>
+              </input>
               <button className="absolute inset-y-0 right-0 px-5 pb-4 flex items-center text-sm" type="button" onClick={() => setPasswordHidden1(passwordHidden1 => !passwordHidden1)}>
                 {passwordHidden1 ? <FontAwesomeIcon icon={faEyeSlash} /> : <FontAwesomeIcon icon={faEye} />}
               </button>           
             </div>
 
             <div className="pb-4 relative">
-              <input className="w-full py-2 px-4 pl-3 pr-10 rounded-2xl" type={passwordHidden2 ? "password" : "text"} placeholder="Confirm Password" required></input>
+              <input 
+                onChange={handleConfirmPasswordChange}
+                className="w-full py-2 px-4 pl-3 pr-10 rounded-2xl" 
+                type={passwordHidden2 ? "password" : "text"} 
+                placeholder="Confirm Password" 
+                required>
+              </input>
               <button className="absolute inset-y-0 right-0 px-5 pb-4 flex items-center text-sm" type="button" onClick={() => setPasswordHidden2(passwordHidden2 => !passwordHidden2)}>
                 {passwordHidden2 ? <FontAwesomeIcon icon={faEyeSlash} /> : <FontAwesomeIcon icon={faEye} />}
               </button>            
             </div>
 
             <div className="flex justify-center items-center pt-4 pb-4">
-              <button className="flex justify-center items-center h-10 w-24 bg-gradient rounded-xl shadow-lg font-bold transition duration-200 ease-in-out hover:scale-105">Register</button>
+              <button 
+                type="submit"
+                className="flex justify-center items-center h-10 w-24 bg-gradient rounded-xl shadow-lg font-bold transition duration-200 ease-in-out hover:scale-105"
+              >
+                  Register
+              </button>
             </div>
 
             <div className="text-center pb-4">
-                {error && <p className="text-error">Username is already taken.</p>}
+                {error && <p className="text-error">{errorMessage}</p>}
             </div>
 
             <div className="text-center">

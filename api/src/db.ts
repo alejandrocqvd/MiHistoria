@@ -5,7 +5,7 @@ const pool = mysql.createPool({
     host: "localhost",
     user: "root",
     password: "DDegasi[545]?",
-    database: "mihistoria"
+    database: "mi_historia"
 });
 
 type Callback = (error: Error | null, connection: PoolConnection | null) => void;
