@@ -4,11 +4,11 @@ USE mi_historia;
 
 CREATE TABLE user
 (
-    username            INT             NOT NULL            AUTO_INCREMENT,
+    username            VARCHAR(255)    NOT NULL,
     first_name          VARCHAR(70),
     last_name           VARCHAR(70),
     dob                 DATE,
-    email               VARCHAR(255)    NOT NULL,
+    email               VARCHAR(255)    NOT NULL            UNIQUE,
     password            VARCHAR(255)    NOT NULL,
     image               VARCHAR(255),
     is_private          BOOLEAN         DEFAULT FALSE,
@@ -18,7 +18,7 @@ CREATE TABLE user
 CREATE TABLE story
 (
     story_id            INT             NOT NULL            AUTO_INCREMENT,
-    username            INT             NOT NULL,
+    username            VARCHAR(255)    NOT NULL,
     title               VARCHAR(255)    NOT NULL,
     timestamp           DATETIME        NOT NULL,
     PRIMARY KEY (story_id),
@@ -37,7 +37,7 @@ CREATE TABLE page
 CREATE TABLE comment
 (
     comment_id          INT             NOT NULL            AUTO_INCREMENT,
-    username            INT             NOT NULL,
+    username            VARCHAR(255)    NOT NULL,
     story_id            INT             NOT NULL,
     text                TEXT            NOT NULL,
     timestamp           DATETIME        NOT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE comment
 
 CREATE TABLE likes_story
 (
-    username             INT             NOT NULL,
+    username             VARCHAR(255)    NOT NULL,
     story_id             INT             NOT NULL,
     PRIMARY KEY (username, story_id),
     FOREIGN KEY (username) REFERENCES user(username),
@@ -57,7 +57,7 @@ CREATE TABLE likes_story
 
 CREATE TABLE saves
 (
-    username             INT             NOT NULL,
+    username             VARCHAR(255)    NOT NULL,
     story_id             INT             NOT NULL,
     timestamp            DATETIME        NOT NULL,
     PRIMARY KEY (username, story_id),
@@ -67,7 +67,7 @@ CREATE TABLE saves
 
 CREATE TABLE likes_comment
 (
-    username            INT             NOT NULL,
+    username            VARCHAR(255)    NOT NULL,
     comment_id          INT             NOT NULL,
     PRIMARY KEY (username, comment_id),
     FOREIGN KEY (username) REFERENCES User(username),
