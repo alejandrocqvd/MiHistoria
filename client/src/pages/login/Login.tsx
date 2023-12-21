@@ -1,14 +1,12 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { AuthContext } from "../../context/authContext";
 
 
-/**
- * Interface for holding and managing form data in the Login component.
- * All properties match the input fields.
- */
+
+// Interface for holding and managing form data in the Login component.
 interface FormData {
   email: string;
   password: string;
@@ -41,6 +39,14 @@ const Login = () => {
   // useNavigate used to go to homepage after authentication.
   const navigate = useNavigate();
 
+  // Authorization context and saving the login function.
+  const authContext = useContext(AuthContext);
+  if (!authContext) {
+    setError(true);
+    setErrorMessage("Internal Error: AuthContext is undefined.");
+  }
+  const { login } = authContext!;
+
   /**
    * Handles input changes for login form.
    * @param e - The React change event.
@@ -62,17 +68,11 @@ const Login = () => {
 
     // Attempt form submission. Display error message if any.
     try {
-      const res = await axios.post("/api/auth/login", inputs);
-      console.log(res);
+      await login(inputs);
       navigate("/");
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        setError(true);
-        setErrorMessage(error.response.data.error);
-      } else {
-        setError(true);
-        setErrorMessage("An unexpected error occurred.")
-      }
+      setError(true);
+      setErrorMessage("Incorrect email or password.");
       console.log(error);
     }
   }

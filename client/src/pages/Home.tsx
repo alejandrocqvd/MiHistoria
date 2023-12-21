@@ -3,10 +3,11 @@ import { Link } from "react-router-dom";
 import globeIcon from "../assets/globe-icon.png";
 import bookIcon from "../assets/book-icon.png";
 import privacyIcon from "../assets/privacy-icon.png";
-import { useState } from "react";
+import { useContext } from "react";
+import { AuthContext } from "../context/authContext";
 
 const Home = () => {
-  const [currentUser, setCurrentUser] = useState(false);
+  const { currentUser } = useContext(AuthContext)!;
 
   return (
     <>
@@ -17,10 +18,10 @@ const Home = () => {
           <h1 className="my-10 py-5">Write your story, <span className="bg-clip-text text-transparent bg-gradient font-extrabold underline">here.</span></h1>
           <div className="flex flex-row justify-start items-center">
             <button className="hidden md:flex justify-center items-center h-10 w-auto p-4 mr-8 bg-gradient text-sm rounded-xl shadow-lg font-bold transition duration-200 ease-in-out hover:scale-105">
-              <Link to="./register">Start your journey</Link>
+              <Link to={ currentUser ? "./story/:id" : "./register"}>Start your journey</Link>
             </button>
             <button className="hidden md:flex justify-center items-center h-10 w-auto p-4 text-sm border-2 rounded-xl shadow-lg font-bold transition duration-200 ease-in-out hover:scale-105">
-              { currentUser ? <Link to="./story:id">Continue your story</Link> : <Link to="./login">Continue your story</Link>}
+              <Link to={ currentUser ? "./story:id" : "./login"}>Continue your story</Link>
             </button>
           </div>
         </div>
@@ -54,12 +55,12 @@ const Home = () => {
             <img src={globeIcon} className="h-24 w-auto mb-8" />
             <p className="font-semibold">See the collection of personal narratives that take you though the intricate experiences of people from any corner of the world.</p>
         </a>
-        <a href={"./story/:id/page/1"} className="flex-1 flex flex-col justify-between items-center w-full lg:mx-20 p-16 mb-8 text-center bg-[#292929] shadow-xl hover:shadow-2xl rounded-xl hover:scale-105 transition duration-300 ease-in-out">
+        <a href={ currentUser ? "./story/:id/page/1" : "./login"} className="flex-1 flex flex-col justify-between items-center w-full lg:mx-20 p-16 mb-8 text-center bg-[#292929] shadow-xl hover:shadow-2xl rounded-xl hover:scale-105 transition duration-300 ease-in-out">
             <h1 className="text-4xl font-bold mb-8">Write <span className="underline">Your</span> Story</h1>
             <img src={bookIcon} className="h-24 w-auto mb-8" />
             <p className="font-semibold">Let the world hear your story. Travel back in your time to recollect and write down your life.</p>
         </a>
-        <a href={"./profile"} className="flex-1 flex flex-col justify-between items-center w-full p-16 mb-8 text-center bg-[#292929] shadow-xl hover:shadow-2xl rounded-xl hover:scale-105 transition duration-300 ease-in-out">
+        <a href={ currentUser ? "./profile/edit" : "./login"} className="flex-1 flex flex-col justify-between items-center w-full p-16 mb-8 text-center bg-[#292929] shadow-xl hover:shadow-2xl rounded-xl hover:scale-105 transition duration-300 ease-in-out">
             <h1 className="text-4xl font-bold mb-8">Be yourself or be anonymous</h1>
             <img src={privacyIcon} className="h-24 w-auto mb-8" />
             <p className="font-semibold">No need to expose your identity, feel free to write anonymously and tell your truth with no filter.</p>

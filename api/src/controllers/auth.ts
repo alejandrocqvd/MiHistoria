@@ -93,6 +93,16 @@ export const login = (req: Request, res: Response) => {
     });
 }
 
+/**
+ * Handles the user logging out. Clears the cookie from the browser.
+ * 
+ * @param {Request} req - The HTTP request object, containing the user's registration data.
+ * @param {Response} res - The HTTP response object used to send back the appropriate response to the client.
+ * @returns {Response} A response to the client with either a success or error message.
+ */
 export const logout = (req: Request, res: Response) => {
-    // Implementation here
+    res.clearCookie("access_token", {
+        sameSite: "none",
+        secure: true,
+    }).status(200).json("User has been logged out.");
 }

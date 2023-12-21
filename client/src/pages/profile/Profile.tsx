@@ -4,14 +4,34 @@ import { faLock, faBookmark as solidBookmark } from "@fortawesome/free-solid-svg
 import { faBookmark as regularBookmark } from "@fortawesome/free-regular-svg-icons";
 import { useState } from "react";
 
+// Interface for holding and managing the user's profile data.
+interface ProfileData {
+  username: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  dob: string;
+  is_private: string;
+  img: string;
+}
 
+/**
+ * Profile component for user's to view their profile information.
+ * This component displays the user's information, their story, and their saved stories.
+ * @returns Profile page (/profile)
+ */
 const Profile = () => {
+  // State variables:
+  // - saved
   const [saved, setSaved] = useState<Boolean>(false);
   
   const handleSave = () => {
     setSaved(!saved);
   }
 
+  /**
+   * Renders the profile page with all relevant information.
+   */
   return (
     <>
       <div className="flex flex-col justify-items-center mt-32 w-9/12">
