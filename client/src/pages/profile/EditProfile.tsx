@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import storyBg from "../../assets/login-bg.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash, faEnvelope} from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope} from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
