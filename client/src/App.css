@@ -51,8 +51,8 @@
 .switch {
   position: relative;
   display: inline-block;
-  width: 60px;
-  height: 34px;
+  width: 3.75em;
+  height: 2.125em;
 }
 
 .switch input { 
@@ -70,16 +70,16 @@
   bottom: 0;
   background-color: #474747;
   transition: .4s;
-  border-radius: 34px;
+  border-radius: 2.125em;
 }
 
 .slider:before {
   position: absolute;
   content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
+  height: 1.625em;
+  width: 1.625em;
+  left: 0.25em;
+  bottom: 0.25em;
   background-color: white;
   transition: .2s;
   border-radius: 50%;
