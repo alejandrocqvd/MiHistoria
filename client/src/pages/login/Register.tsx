@@ -5,10 +5,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 
-/**
- * Interface for holding and managing form data in the Register component.
- * All properties match the input fields, excluding confirm password since it is not submitted.
- */
+// Interface for holding and managing form data in the Register component.
 interface FormData {
   first_name: string;
   last_name: string;
