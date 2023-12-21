@@ -37,8 +37,8 @@ const Profile = () => {
   const authContext = useContext(AuthContext);
   const { currentUser } = authContext!;
 
-  // Fetching user's username from local storage.
-  const storedData = localStorage.getItem('user');
+  // Fetching user's username from session storage.
+  const storedData = sessionStorage.getItem('user');
   const username = storedData ? JSON.parse(storedData).user_info.username : null;
 
   /**

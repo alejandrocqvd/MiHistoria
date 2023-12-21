@@ -79,7 +79,7 @@ const EditProfile = () => {
     // Attempt form submission. Display error message if any.
     try {
       await axios.post("/api/users/edit", inputs);
-      navigate("/");
+      navigate("./profile");
     } catch (error) {
       setError(true);
       setErrorMessage("Email is already taken.");

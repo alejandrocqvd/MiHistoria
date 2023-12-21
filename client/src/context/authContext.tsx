@@ -31,7 +31,7 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   // State to hold the currently logged-in user
   const [currentUser, setCurrentUser] = useState<User | null>(
-    JSON.parse(localStorage.getItem("user") || 'null')
+    JSON.parse(sessionStorage.getItem("user") || 'null')
   );
 
   // Function to log in a user
@@ -46,9 +46,9 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({ childre
     setCurrentUser(null);
   }
 
-  // Effect to update localStorage whenever the current user changes
+  // Effect to update sessionStorage whenever the current user changes
   useEffect(() => {
-    localStorage.setItem("user", JSON.stringify(currentUser));
+    sessionStorage.setItem("user", JSON.stringify(currentUser));
   }, [currentUser]);
 
   // Providing the authentication context to child components
