@@ -4,14 +4,11 @@ import { faEye, faEyeSlash, faEnvelope } from "@fortawesome/free-solid-svg-icons
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/authContext";
 
-
-
 // Interface for holding and managing form data in the Login component.
 interface FormData {
   email: string;
   password: string;
 }
-
 
 /**
  * Login component for handling user authentication.
@@ -34,7 +31,7 @@ const Login = () => {
   const [inputs, setInputs] = useState<FormData>({
     email: "",
     password: "",
-  })
+  });
 
   // useNavigate used to go to homepage after authentication.
   const navigate = useNavigate();
@@ -52,7 +49,7 @@ const Login = () => {
    * @param e - The React change event.
    */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputs(prev => ({...prev, [e.target.name]: e.target.value}));
+    setInputs(prev => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
   /**
