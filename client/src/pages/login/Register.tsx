@@ -60,7 +60,7 @@ const Register: React.FC = () => {
   }
 
   /**
-   * Handles changes in the confirm password input field
+   * Handles changes in the confirm password input field.
    * @param e - The React change event.
    */
   const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -104,13 +104,9 @@ const Register: React.FC = () => {
       console.log(res);
       navigate("/login");
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        setError(true);
-        setErrorMessage(error.response.data.error);
-      } else {
-        setError(true);
-        setErrorMessage("An unexpected error occurred.")
-      }
+      setError(true);
+      if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error); 
+      else setErrorMessage("An unexpected error occurred.");
       console.log(error);
     }
   }

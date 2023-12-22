@@ -65,13 +65,9 @@ const Profile = () => {
         });
         setProfile(res.data.data);
       } catch (error) {
-        if (axios.isAxiosError(error) && error.response) {
-          setError(true);
-          setErrorMessage(error.response.data.error);
-        } else {
-          setError(true);
-          setErrorMessage("An unexpected error occurred.");
-        }
+        setError(true);
+        if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error);
+        else setErrorMessage("An unexpected error occurred.");
         console.log(error);
       }
     }
