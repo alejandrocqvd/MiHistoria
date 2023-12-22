@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import storyBg from "../../assets/login-bg.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope} from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { AuthContext } from "../../context/authContext";
 
 // Interface for holding and managing form data in the EditProfile component
 interface FormData {
@@ -41,6 +42,9 @@ const EditProfile = () => {
   // useNavigate used to go back to user profile after updating their profile.
   const navigate = useNavigate();
 
+  // Using authContext's logout function to log the user out after they delete their account.
+  const { logout } = useContext(AuthContext)!;
+
   /**
    * Converts the received date of birth from API to proper format.
    * @param dob - User's date of birth as a string.
@@ -62,7 +66,10 @@ const EditProfile = () => {
    * @param e - The React change event.
    */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputs(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    setInputs(prev => ({...prev, [e.target.name]: e.target.value}));
+    if (e.target.name === 'dob') {
+      setInputs(prev => ({...prev, [e.target.name]: formatDOB(e.target.value)}));
+    }
   }
 
   /**
@@ -79,11 +86,32 @@ const EditProfile = () => {
     // Attempt form submission. Display error message if any.
     try {
       await axios.post("/api/users/edit", inputs);
-      navigate("./profile");
+      navigate("/profile");
     } catch (error) {
       setError(true);
       setErrorMessage("Email is already taken.");
       console.log(error);
+    }
+  }
+
+  /**
+   * Handles the deletion of a user's profile.
+   */
+  const handleDelete = async () => {
+    const isConfirmed = window.confirm("Are you sure you want to delete your account?");
+
+    if (isConfirmed) {
+      try {
+        await axios.delete("/api/users/delete", {
+          withCredentials: true
+        });
+        await logout();
+        navigate("/");
+      } catch (error) {
+        setError(true);
+        setErrorMessage("Failed to delete account.");
+        console.log(error);
+      }
     }
   }
 
@@ -94,7 +122,11 @@ const EditProfile = () => {
         const res = await axios.get("/api/users/profile", {
           withCredentials: true
         })
-        setInputs(res.data.data);
+        const formattedData = {
+          ...res.data.data,
+          dob: formatDOB(res.data.data.dob)
+        };
+        setInputs(formattedData);
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
           setError(true);
@@ -107,7 +139,6 @@ const EditProfile = () => {
       }
     }
     fetchData();
-    console.log(inputs);
   }, []);
 
   /**
@@ -134,7 +165,7 @@ const EditProfile = () => {
               onChange={handleChange}
               className="w-full py-2 px-4 rounded-2xl mr-2 bg-secondary" 
               type="text" 
-              value={ inputs.first_name }
+              value={inputs.first_name}
               placeholder="First Name">
             </input>
           </div>   
@@ -145,7 +176,7 @@ const EditProfile = () => {
               onChange={handleChange}
               className="w-full py-2 px-4 rounded-2xl ml-2 bg-secondary" 
               type="text" 
-              value={ inputs.last_name }
+              value={inputs.last_name}
               placeholder="Last Name">
             </input>
           </div>       
@@ -158,7 +189,7 @@ const EditProfile = () => {
               onChange={handleChange}
               className="w-full py-2 px-4 pl-3 pr-10 rounded-2xl bg-secondary" 
               type="email" 
-              value={ inputs.email }
+              value={inputs.email}
               placeholder="Email" 
               required>
             </input>
@@ -172,7 +203,7 @@ const EditProfile = () => {
             onChange={handleChange}
             className="w-full py-2 px-4 rounded-2xl bg-secondary" 
             type="date" 
-            value={ formatDOB(inputs.dob) }
+            value={inputs.dob}
             placeholder="Date of Birth">
           </input>
         </div>
@@ -192,7 +223,7 @@ const EditProfile = () => {
         </div>
 
         <div className="text-center">
-            {error && <p className="text-error">{ errorMessage }</p>}
+            {error && <p className="text-error">{errorMessage}</p>}
         </div>
 
         <div className="flex flex-col md:flex-row justify-center items-center pt-4 pb-4 mb-10">
@@ -207,6 +238,7 @@ const EditProfile = () => {
             >Save Profile
           </button>
           <button 
+            onClick={handleDelete}
             className="w-40 shadow-md text-center rounded-xl bg-error font-bold px-4 py-2 hover:bg-[#9A0E2A]"
             >Delete Account
           </button>
