@@ -51,7 +51,7 @@ export const register = (req: Request, res: Response) => {
             null,
             false,
         ];
-        db.query(q, [v], (error, data) => {
+        db.query(q, [v], (error) => {
             if (error) return res.json(error);
             return res.status(201).json({ message: "User successfully created." });
         });
