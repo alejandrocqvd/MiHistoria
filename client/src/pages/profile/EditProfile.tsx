@@ -134,7 +134,6 @@ const EditProfile = () => {
         const userRes = await axios.get("/api/users/username", {
           withCredentials: true
         });
-        console.log(userRes);
         setUsername(userRes.data.data);
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
