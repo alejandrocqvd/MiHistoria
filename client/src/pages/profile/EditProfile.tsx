@@ -39,6 +39,9 @@ const EditProfile = () => {
     is_private: false
   });
 
+  // - username: String holding the user's username
+  const [username, setUsername] = useState<string>("");
+
   // useNavigate used to go back to user profile after updating their profile.
   const navigate = useNavigate();
 
@@ -48,7 +51,7 @@ const EditProfile = () => {
   /**
    * Converts the received date of birth from API to proper format.
    * @param dob - User's date of birth as a string.
-   * @returns the users's date of birth properly formatted as a string.
+   * @returns the users's date of birth properly formatted as a YYYY-MM-DD.
    */
   const formatDOB = (dob: string): string => {
     // Parse the string to a Date object
@@ -121,12 +124,18 @@ const EditProfile = () => {
       try {
         const res = await axios.get("/api/users/profile", {
           withCredentials: true
-        })
+        });
         const formattedData = {
           ...res.data.data,
           dob: formatDOB(res.data.data.dob)
         };
         setInputs(formattedData);
+
+        const userRes = await axios.get("/api/users/username", {
+          withCredentials: true
+        });
+        console.log(userRes);
+        setUsername(userRes.data.data);
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
           setError(true);
@@ -151,7 +160,7 @@ const EditProfile = () => {
         <h1 className="text-5xl font-bold text-center mb-12">Edit Profile</h1>
         <div className="flex flex-col md:flex-row justify-center items-center mb-12">
           <img src={storyBg} className="h-28 w-auto rounded-xl" />
-          <h1 className="text-4xl font-semibold m-8">Username</h1>
+          <h1 className="text-4xl font-semibold m-8">{username}</h1>
         </div>
       </div>
 

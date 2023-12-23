@@ -142,3 +142,27 @@ export const deleteProfile = (req: Request, res: Response) => {
         res.status(400).json({ error: "Invalid token." });
     }
 }
+
+/**
+ * Handles fetching the user's username.
+ * 
+ * @param {Request} req - Contains cookies with the JWT token.
+ * @param {Response} res - Object used to send back the appropriate response to the client.
+ * @returns A response and if successful, returns the user's username.
+ */
+export const getUsername = (req: Request, res: Response) => {
+    try {
+        // Get JWT.
+        const token = req.cookies["access_token"];
+        if (!token) return res.status(401).json({ error: "Access denied, no token provided." });
+        
+        // Verify the token and save username.
+        const decoded = jwt.verify(token, "jwtkey") as JwtPayload;
+        if (!decoded.username) return res.status(401).json({ error: "Invalid token." });
+        const username = decoded.username;
+
+        return res.status(200).json({ message: "Successfully fetched user username", data: username });
+    } catch (error) {
+        res.status(400).json({ error: "Invalid token." });
+    }
+}
