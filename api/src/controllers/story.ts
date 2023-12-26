@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { db } from "../db";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { RowDataPacket } from "mysql2";
-import bcrypt from "bcryptjs";
 import sanitizeHtml from "sanitize-html";
 
 /**
