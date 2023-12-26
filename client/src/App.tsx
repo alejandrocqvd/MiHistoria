@@ -53,11 +53,11 @@ const router = createBrowserRouter([
         element: <Story/>,
         children: [
           {
-            path: 'page/:pageNumber',
+            path: 'page/:page_number',
             element: <StoryPage/>,
           },
           {
-            path: 'page/:pageNumber/edit',
+            path: 'page/:page_number/edit',
             element: <RequireAuth><EditStoryPage/></RequireAuth>,
           },
         ]
