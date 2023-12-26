@@ -79,11 +79,13 @@ const Story = () => {
 
         const res = await axios.post("/api/stories/story", data);
         // Check if the response has data for a story
-        if (res.data.data) {
-          setStory(res.data.data);
-          setExists(true);
-        } else {
-          setExists(false);
+        if (!exists) {
+          if (res.data.data) {
+            setStory(res.data.data);
+            setExists(true);
+          } else {
+            setExists(false);
+          }
         }
       } catch (error) {
         setError(true);
