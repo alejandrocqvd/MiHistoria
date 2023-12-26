@@ -1,6 +1,54 @@
 import { Editor } from "@tinymce/tinymce-react";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 const EditStoryPage = () => {
+  // State variables:
+  // - error: Boolean indicating if there is an error during form submission.
+  const [error, setError] = useState<boolean>(false);
+
+  // - errorMessage: String containing the error message to display.
+  const [errorMessage, setErrorMessage] = useState<string>("");
+
+  // - text: String containing HTML for page text.
+  const [text, setText] = useState<string>("");
+
+  // Use the useParams hook to get URL parameters.
+  const params = useParams() as {
+    id: string;
+    page_number: string;
+  };
+
+  // useEffect fetches the story page's text through an API request to the back end.
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { id, page_number } = params;
+
+        if (!id || !page_number) {
+          setError(true);
+          setErrorMessage("Invalid parameters.");
+          return;
+        }
+
+        const data = {
+          username: id,
+          page_number: page_number
+        };
+
+        const res = await axios.post("/api/stories/page", data);
+        setText(res.data.data);
+      } catch (error) {
+        setError(true);
+        if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error);
+        else setErrorMessage("An unexpected error occurred.");
+        console.log(error);
+      }
+    }
+    fetchData();
+  }, [params]);
+
   return (
     <div className="flex flex-col justify-items-center">
 
@@ -16,7 +64,7 @@ const EditStoryPage = () => {
             { value: "Email", title: "Email" },
           ],
         }}
-        initialValue="Start writing your life story here!"
+        initialValue={text}
       />
 
       <div className="flex flex-row justify-between items-center my-6">

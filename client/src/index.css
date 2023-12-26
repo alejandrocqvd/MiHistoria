@@ -9,36 +9,82 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-.hover-underline-animation {
-  position: relative;
-  color: rgba(255, 255, 255, 0.87);
+/* Header tags styling */
+h1, h2, h3, h4, h5, h6 {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    margin-bottom: 0.5em;
+    margin-top: 0.5em;
 }
 
-.hover-underline-animation::after {
-  content: '';
-  position: absolute;
-  width: 0;
-  height: 2px;
-  bottom: -5px;
-  left: 0;
-  background-color: rgba(255, 255, 255, 0.87);
-  visibility: hidden;
-  transition: all 0.2s ease-in-out;
+h1 {
+    font-size: 2.25rem;
+    font-weight: 700;
 }
 
-.hover-underline-animation:hover::after {
-  visibility: visible;
-  width: 100%;
+h2 {
+    font-size: 1.875rem;
+    font-weight: 600;
 }
 
+h3 {
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+h4 {
+    font-size: 1.25rem;
+    font-weight: 500;
+}
+
+h5 {
+    font-size: 1.125rem;
+    font-weight: 500;
+}
+
+h6 {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+/* List styling */
+ul, ol {
+    margin-bottom: 1em;
+    padding-left: 2em;
+}
+
+li {
+    margin-bottom: 0.5em;
+}
+
+/* Blockquote styling */
+blockquote {
+    border-left: 4px solid #cbd5e0;
+    padding-left: 1em;
+    margin-left: 0;
+    margin-right: 0;
+    font-style: italic;
+}
+
+/* Table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #cbd5e0;
+    padding: 0.5em 1em;
+}
+
+th {
+    background-color: #f7fafc;
+}

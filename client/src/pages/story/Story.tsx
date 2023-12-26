@@ -33,14 +33,14 @@ const Story = () => {
 
       <div className="flex flex-col h-auto w-full md:w-1/2">
 
-        <h1 className="text-5xl text-center font-bold my-12">Once Upon a Time in Hollywood</h1>
+        <p className="text-5xl text-center font-bold my-12">Once Upon a Time in Hollywood</p>
         <img src={storyBg} className="h-72 w-full rounded-xl mb-6" />
 
-        <h1 className="text-3xl text-center font-bold mb-6">By Username</h1>
+        <p className="text-3xl text-center font-bold mb-6">By Username</p>
         <div className="flex-1 flex flex-row justify-center items-center rounded-xl mb-8">
           <img src={storyBg} className="h-12 rounded-xl w-12" />
-          <h2 className="text-xl ml-8 font-semibold">First Name Last Name</h2>
-          <h2 className="text-xl ml-8 font-normal">65 Years Old</h2>
+          <p className="text-xl ml-8 font-semibold">First Name Last Name</p>
+          <p className="text-xl ml-8 font-normal">65 Years Old</p>
         </div>
         
       </div>
@@ -50,7 +50,7 @@ const Story = () => {
       </div>
 
       <div className="flex flex-col justify-center items center w-full md:w-1/2 mb-6">
-        <h1 className="text-2xl font-semibold mb-6">Comments</h1>
+        <p className="text-2xl font-semibold mb-6">Comments</p>
         <div className="pb-4 relative mb-4">
           <input className="w-full py-2 px-4 pl-3 pr-10 rounded-2xl bg-tertiary" type="textarea" placeholder="Comment..." required></input>
           <button className="absolute inset-y-0 right-0 px-5 pt-3 flex items-center text-sm">

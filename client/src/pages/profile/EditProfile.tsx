@@ -156,10 +156,10 @@ const EditProfile = () => {
   return (
     <>
       <div className="flex flex-col justify-items-center mt-32 w-9/12">
-        <h1 className="text-5xl font-bold text-center mb-12">Edit Profile</h1>
+        <p className="text-5xl font-bold text-center mb-12">Edit Profile</p>
         <div className="flex flex-col md:flex-row justify-center items-center mb-12">
           <img src={storyBg} className="h-28 w-auto rounded-xl" />
-          <h1 className="text-4xl font-semibold m-8">{username}</h1>
+          <p className="text-4xl font-semibold m-8">{username}</p>
         </div>
       </div>
 
@@ -167,7 +167,7 @@ const EditProfile = () => {
 
         <div className="flex flex-row w-full pb-4">
           <div className="flex-col justify-start items-center w-full">
-            <h1 className="mb-2 mx-2 font-semibold text-xl">First Name</h1>
+            <p className="mb-2 mx-2 font-semibold text-xl">First Name</p>
             <input 
               name="first_name"
               onChange={handleChange}
@@ -178,7 +178,7 @@ const EditProfile = () => {
             </input>
           </div>   
           <div className="flex flex-col justify-start items-start w-full">
-            <h1 className="mb-2 mx-5 font-semibold text-xl">Last Name</h1>
+            <p className="mb-2 mx-5 font-semibold text-xl">Last Name</p>
             <input 
               name="last_name"
               onChange={handleChange}
@@ -190,7 +190,7 @@ const EditProfile = () => {
           </div>       
         </div>
 
-        <h1 className="mb-2 mx-2 font-semibold text-xl">Email</h1>
+        <p className="mb-2 mx-2 font-semibold text-xl">Email</p>
         <div className="pb-4 relative">
             <input 
               name="email"
@@ -204,7 +204,7 @@ const EditProfile = () => {
             <FontAwesomeIcon className="absolute inset-y-0 right-0 px-5 pt-3 flex items-center text-sm" icon={faEnvelope} />
         </div>
 
-        <h1 className="mb-2 mx-2 font-semibold text-xl">Date of Birth</h1>
+        <p className="mb-2 mx-2 font-semibold text-xl">Date of Birth</p>
         <div className="w-full pb-4">
           <input 
             name="dob"
@@ -217,7 +217,7 @@ const EditProfile = () => {
         </div>
 
         <div className="flex flex-row justify-between items-center my-4">
-          <h1 className="mb-2 mx-2 font-semibold text-xl">Private Account</h1>
+          <p className="mb-2 mx-2 font-semibold text-xl">Private Account</p>
           <div className="switch-container">
             <label className="switch">
               <input 

@@ -13,9 +13,9 @@ const Home = () => {
     <>
       <div className="flex justify-center md:justify-between items-center h-screen w-9/12 mb-24">
         <div className="text-6xl font-bold text-center md:text-left">
-          <h1 className="my-10 py-5">Speak your mind.</h1>
-          <h1 className="my-10 py-5">Tell your truth.</h1>
-          <h1 className="my-10 py-5">Write your story, <span className="bg-clip-text text-transparent bg-gradient font-extrabold underline">here.</span></h1>
+          <p className="my-10 py-5">Speak your mind.</p>
+          <p className="my-10 py-5">Tell your truth.</p>
+          <p className="my-10 py-5">Write your story, <span className="bg-clip-text text-transparent bg-gradient font-extrabold underline">here.</span></p>
           <div className="flex flex-row justify-start items-center">
             <button className="hidden md:flex justify-center items-center h-10 w-auto p-4 mr-8 bg-gradient text-sm rounded-xl shadow-lg font-bold transition duration-200 ease-in-out hover:scale-105">
               <Link to={ currentUser ? "./story/:id" : "./register"}>Start your journey</Link>
@@ -31,7 +31,7 @@ const Home = () => {
       </div>
 
       <div className="flex flex-col justify-center items-center w-9/12 py-16 md:px-48 px-8 bg-[#292929] shadow-xl rounded-xl">
-        <h1 className="text-5xl font-bold mb-12 text-center pb-2 bg-clip-text text-transparent bg-gradient">What is MiHistoria?</h1>
+        <p className="text-5xl font-bold mb-12 text-center pb-2 bg-clip-text text-transparent bg-gradient">What is MiHistoria?</p>
         <p className="text-xl flex-1 mr-6 text-center">
           In an digital world full of fleeting moments and endless posts, MiHistoria offers something different. 
           Here, each user gets one chance, <span className="font-bold">one post, to share their life story.</span> Our app is built on the belief that every person"s 
@@ -43,11 +43,11 @@ const Home = () => {
           We invite you to join this community and share your story, your entire story, in one post. Or delve into the intricate and beautiful 
           lives of others, learning, emphasizing, and connecting in a way that transcends traditional social media boundaries.
         </p>
-        <h1 className="text-3xl font-normal pb-2 text-center italic bg-clip-text text-transparent bg-gradient">"There is no greater agony than bearing the untold story inside you"</h1>
-        <h1 className="text-2xl font-semibold mt-6 text-center">- Maya Angelou</h1>
+        <p className="text-3xl font-normal pb-2 text-center italic bg-clip-text text-transparent bg-gradient">"There is no greater agony than bearing the untold story inside you"</p>
+        <p className="text-2xl font-semibold mt-6 text-center">- Maya Angelou</p>
       </div>
 
-      <h1 className="text-5xl font-bold mb-12 mt-28 pb-2 bg-clip-text text-transparent bg-gradient">What To Do</h1>
+      <p className="text-5xl font-bold mb-12 mt-28 pb-2 bg-clip-text text-transparent bg-gradient">What To Do</p>
       <div className="flex flex-col lg:flex-row justify-stretch items-stretch w-9/12 mb-24">
         <a href={"./explore"} 
           className="flex-1 flex flex-col justify-between items-center w-full p-16 mb-8 text-center bg-[#292929] shadow-xl rounded-xl hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out">
@@ -67,56 +67,56 @@ const Home = () => {
         </a>
       </div>
 
-      <h1 className="text-5xl font-bold mb-12 mt-28 pb-2 bg-clip-text text-transparent bg-gradient">Explore Top Stories</h1>
+      <p className="text-5xl font-bold mb-12 mt-28 pb-2 bg-clip-text text-transparent bg-gradient">Explore Top Stories</p>
       <div className="flex flex-col justify-center items-stretch h-auto w-9/12 mb-32">
         
         <a href="./story/:id" className="flex flex-row justify-center items-center mb-4 h-24 p-8 bg-[#292929] shadow-xl rounded-xl hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out">
           <div className="flex-1 flex flex-col justify-items-center h-full">
-            <h1 className="text-3xl text-center font-bold">Title</h1>
+            <p className="text-3xl text-center font-bold">Title</p>
           </div>
           <div className="flex-1 flex flex-row justify-center items-center rounded-xl">
             <img src={homeBg} className="h-20" />
-            <h2 className="text-xl ml-8 font-semibold">Author</h2>
+            <p className="text-xl ml-8 font-semibold">Author</p>
           </div>
         </a>
 
         <a href="./story/:id" className="flex flex-row justify-center items-center mb-4 h-24 p-8 bg-[#292929] shadow-xl rounded-xl hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out">
           <div className="flex-1 flex flex-col justify-items-center h-full">
-            <h1 className="text-3xl text-center font-bold">Title</h1>
+            <p className="text-3xl text-center font-bold">Title</p>
           </div>
           <div className="flex-1 flex flex-row justify-center items-center rounded-xl">
             <img src={homeBg} className="h-20" />
-            <h2 className="text-xl ml-8 font-semibold">Author</h2>
+            <p className="text-xl ml-8 font-semibold">Author</p>
           </div>
         </a>
 
         <a href="./story/:id" className="flex flex-row justify-center items-center mb-4 h-24 p-8 bg-[#292929] shadow-xl rounded-xl hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out">
           <div className="flex-1 flex flex-col justify-items-center h-full">
-            <h1 className="text-3xl text-center font-bold">Title</h1>
+            <p className="text-3xl text-center font-bold">Title</p>
           </div>
           <div className="flex-1 flex flex-row justify-center items-center rounded-xl">
             <img src={homeBg} className="h-20" />
-            <h2 className="text-xl ml-8 font-semibold">Author</h2>
+            <p className="text-xl ml-8 font-semibold">Author</p>
           </div>
         </a>
 
         <a href="./story/:id" className="flex flex-row justify-center items-center mb-4 h-24 p-8 bg-[#292929] shadow-xl rounded-xl hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out">
           <div className="flex-1 flex flex-col justify-items-center h-full">
-            <h1 className="text-3xl text-center font-bold">Title</h1>
+            <p className="text-3xl text-center font-bold">Title</p>
           </div>
           <div className="flex-1 flex flex-row justify-center items-center rounded-xl">
             <img src={homeBg} className="h-20" />
-            <h2 className="text-xl ml-8 font-semibold">Author</h2>
+            <p className="text-xl ml-8 font-semibold">Author</p>
           </div>
         </a>
 
         <a href="./story/:id" className="flex flex-row justify-center items-center mb-4 h-24 p-8 bg-[#292929] shadow-xl rounded-xl hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out">
           <div className="flex-1 flex flex-col justify-items-center h-full">
-            <h1 className="text-3xl text-center font-bold">Title</h1>
+            <p className="text-3xl text-center font-bold">Title</p>
           </div>
           <div className="flex-1 flex flex-row justify-center items-center rounded-xl">
             <img src={homeBg} className="h-20" />
-            <h2 className="text-xl ml-8 font-semibold">Author</h2>
+            <p className="text-xl ml-8 font-semibold">Author</p>
           </div>
         </a>
 

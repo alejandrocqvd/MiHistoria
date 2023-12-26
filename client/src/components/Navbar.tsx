@@ -18,7 +18,7 @@ export const Navbar = () => {
     <>
       <nav className='flex fixed justify-between items-center h-16 w-full top-0 px-12 py-10 bg-primary z-50'>
         <div>
-          <Link to='./'><h2 className='text-3xl px-4 font-notable font-extrabold bg-clip-text text-transparent bg-gradient'>MiHistoria</h2></Link>
+          <Link to='./'><p className='text-3xl px-4 font-notable font-extrabold bg-clip-text text-transparent bg-gradient'>MiHistoria</p></Link>
         </div>
         <div className='hidden md:flex flex-grow justify-center items-center font-bold'>
           <Link className='hover-underline-animation m-14' to='./'>Home</Link>

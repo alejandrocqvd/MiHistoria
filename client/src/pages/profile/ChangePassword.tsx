@@ -81,11 +81,11 @@ const ChangePassword = () => {
   return (
     <div className="flex flex-col justify-center items-center h-screen w-9/12">
 
-      <h1 className="text-5xl font-bold text-center mb-12">Change Password</h1>
+      <p className="text-5xl font-bold text-center mb-12">Change Password</p>
 
       <form onSubmit={handleSubmit} className="w-9/12 md:w-4/12">
 
-        <h1 className="mb-2 mx-2 font-semibold text-xl">New Password</h1>
+        <p className="mb-2 mx-2 font-semibold text-xl">New Password</p>
         <div className="pb-4 relative">
           <input 
             name="password"
@@ -103,7 +103,7 @@ const ChangePassword = () => {
           </button>           
         </div>
 
-        <h1 className="mb-2 mx-2 font-semibold text-xl">Confirm Password</h1>
+        <p className="mb-2 mx-2 font-semibold text-xl">Confirm Password</p>
         <div className="pb-4 relative">
           <input 
             onChange={handleConfirmPasswordChange}

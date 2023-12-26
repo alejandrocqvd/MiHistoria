@@ -29,7 +29,7 @@ const Explore = () => {
       <div className="flex flex-col justify-center items-center h-auto w-9/12 mb-24 mt-32">
 
         <div className="flex flex-col w-full md:w-1/2">
-          <h1 className="text-center mb-12 font-bold text-5xl bg-clip-text text-transparent bg-gradient">{getSearchTitle()}</h1>
+          <p className="text-center mb-12 font-bold text-5xl bg-clip-text text-transparent bg-gradient">{getSearchTitle()}</p>
 
           <div className="w-full relative">
             <input type="text" placeholder="Search..." className="w-full rounded-xl py-4 md:py-3 px-6 bg-secondary shadow-lg" onChange={handleSearchChange}></input>
@@ -50,11 +50,11 @@ const Explore = () => {
           </div>
 
           <div className={ searching ? "hidden" : "flex flex-col justify-center items-center mb-12"}>
-            <h1 className="text-3xl font-semibold mb-8">Saved Stories</h1>
+            <p className="text-3xl font-semibold mb-8">Saved Stories</p>
             <a href="./story/:id" className="flex flex-row justify-between items-center w-full mb-4 px-6 py-3 bg-secondary rounded-xl hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out">
               <div className="flex flex-row justify-center items-center overflow-hidden">
                 <img src={homeBg} className="h-16 w-auto rounded-xl mr-6" />
-                <h1 className="text-xl font-semibold overflow-hidden text-ellipsis line-clamp-1">Once Upon A Time In Hollywood</h1>
+                <p className="text-xl font-semibold overflow-hidden text-ellipsis line-clamp-1">Once Upon A Time In Hollywood</p>
               </div>
               <p className="flex-shrink-0">John Seed</p>
             </a>
@@ -64,11 +64,11 @@ const Explore = () => {
           </div>
 
           <div className={ searching ? "hidden" : "flex flex-col justify-center items-center mb-12"}>
-            <h1 className="text-3xl font-semibold mb-8">Top Stories This Month</h1>
+            <p className="text-3xl font-semibold mb-8">Top Stories This Month</p>
             <a href="./story/:id" className="flex flex-row justify-between items-center w-full mb-4 px-6 py-3 bg-secondary rounded-xl hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out">
               <div className="flex flex-row justify-center items-center overflow-hidden">
                 <img src={homeBg} className="h-16 w-auto rounded-xl mr-6" />
-                <h1 className="text-xl font-semibold overflow-hidden text-ellipsis line-clamp-1">Once Upon A Time In Hollywood</h1>
+                <p className="text-xl font-semibold overflow-hidden text-ellipsis line-clamp-1">Once Upon A Time In Hollywood</p>
               </div>
               <p className="flex-shrink-0">John Seed</p>
             </a>
@@ -78,11 +78,11 @@ const Explore = () => {
           </div>
           
           <div className={ searching ? "hidden" : "flex flex-col justify-center items-center mb-12"}>
-            <h1 className="text-3xl font-semibold mb-8">Top Stories of All Time</h1>
+            <p className="text-3xl font-semibold mb-8">Top Stories of All Time</p>
             <a href="./story/:id" className="flex flex-row justify-between items-center w-full mb-4 px-6 py-3 bg-secondary rounded-xl hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out">
               <div className="flex flex-row justify-center items-center overflow-hidden">
                 <img src={homeBg} className="h-16 w-auto rounded-xl mr-6" />
-                <h1 className="text-xl font-semibold overflow-hidden text-ellipsis line-clamp-1">Once Upon A Time In Hollywood</h1>
+                <p className="text-xl font-semibold overflow-hidden text-ellipsis line-clamp-1">Once Upon A Time In Hollywood</p>
               </div>
               <p className="flex-shrink-0">John Seed</p>
             </a>
@@ -92,11 +92,11 @@ const Explore = () => {
           </div>
 
           <div className={ searching ? "hidden" : "flex flex-col justify-center items-center mb-12"}>
-            <h1 className="text-3xl font-semibold mb-8">New Stories</h1>
+            <p className="text-3xl font-semibold mb-8">New Stories</p>
             <a href="./story/:id" className="flex flex-row justify-between items-center w-full mb-4 px-6 py-3 bg-secondary rounded-xl hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out">
               <div className="flex flex-row justify-center items-center overflow-hidden">
                 <img src={homeBg} className="h-16 w-auto rounded-xl mr-6" />
-                <h1 className="text-xl font-semibold overflow-hidden text-ellipsis line-clamp-1">Once Upon A Time In Hollywood</h1>
+                <p className="text-xl font-semibold overflow-hidden text-ellipsis line-clamp-1">Once Upon A Time In Hollywood</p>
               </div>
               <p className="flex-shrink-0">John Seed</p>
             </a>

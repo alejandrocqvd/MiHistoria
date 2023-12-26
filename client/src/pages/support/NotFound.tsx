@@ -1,7 +1,7 @@
 const NotFound = () => {
   return (
     <div className="flex flex-col h-96 justify-items-center mt-32 mb-24 w-9/12 md:w-3/12">
-      <h1 className="font-semibold text-5xl text-center mb-12">404 Not Found!</h1>
+      <a className="font-semibold text-5xl text-center mb-12">404 Not Found!</a>
       <p className="mb-6">
         Sorry, we couldn"t find the page you were looking for. It might have been removed, had its name changed, or is temporarily unavailable. 
         But don"t worry, there are plenty more stories to explore!
