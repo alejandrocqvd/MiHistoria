@@ -120,3 +120,27 @@ export const updatePage = (req: Request, res: Response) => {
         res.status(400).json({ error: "Invalid token." });
     }
 }
+
+/**
+ * Handles retrieving a story's basic information.
+ * 
+ * @param {Request} req - Contains the ID of the story.
+ * @param {Response} res - Object used to send back the appropriate response to the client.
+ * @returns A response and if successful, returns story details.
+ */
+export const getStory = (req: Request, res: Response) => {
+    const { username } = req.body;
+
+    // Query to get story information, author information, save count, and like count.
+    const q = `SELECT u.username, u.first_name, u.last_name, u.dob, u.image AS user_image, s.title, s.image AS story_image
+                FROM story AS s
+                LEFT JOIN user AS u ON u.username = s.username
+                WHERE s.username = ?`;
+    db.query(q, username, (error, data) => {
+        // Error checking
+        if (error) return res.status(500).json({ error: error });
+        
+        const typedData = data as RowDataPacket[];
+        return res.status(200).json({ message: "Successfully fetched story information. ", data: typedData[0] });
+    });
+}

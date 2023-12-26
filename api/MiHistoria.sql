@@ -19,6 +19,7 @@ CREATE TABLE story
 (
     username            VARCHAR(255)    NOT NULL,
     title               VARCHAR(255)    NOT NULL,
+    image               VARCHAR(255),
     timestamp           DATETIME,
     PRIMARY KEY (username),
     FOREIGN KEY (username) REFERENCES user(username)
@@ -79,7 +80,7 @@ VALUES
 
 INSERT INTO story
 VALUES
-("alejandrocqvd", "Once Upon a Time in Hollywood", null);
+("alejandrocqvd", "Once Upon a Time in Hollywood", null, null);
 
 INSERT INTO page
 VALUES

@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 
 const StoryPage = () => {
   // State variables:
-  // - error: Boolean indicating if there is an error during form submission.
+  // - error: Boolean indicating if there is an error.
   const [error, setError] = useState<boolean>(false);
 
   // - errorMessage: String containing the error message to display.
