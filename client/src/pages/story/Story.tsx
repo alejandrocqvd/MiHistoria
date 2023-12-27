@@ -126,11 +126,10 @@ const Story = () => {
       {!exists ? (
         sessionUsername === params.id ? (
           <div className="flex flex-col justify-center items-center h-screen w-full text-center">
-            <p className="text-4xl font-bold mb-12">You haven't written a story yet!</p>
+            <p className="text-4xl font-bold mb-10">You haven't written a story yet!</p>
             <Link 
-              to={"./page/1/edit"} 
-              onClick={() => {setExists(true)}} 
-              className="w-72 shadow-md ml-4 text-center rounded-xl bg-gradient font-bold px-4 py-2 transition duration-200 ease-in-out hover:scale-105"
+              to={"/story/write"} 
+              className="w-72 shadow-md ml-4 mb-24 text-center rounded-xl bg-gradient font-bold px-4 py-2 transition duration-200 ease-in-out hover:scale-105"
               >Start Writing Your Story
             </Link>
           </div>
@@ -143,14 +142,16 @@ const Story = () => {
         <>
           <div className="flex flex-col h-auto w-full md:w-1/2">
 
-            <p className="text-5xl text-center font-bold my-12">{story?.title}</p>
+            <p className="text-5xl text-center font-bold my-12 rounded-xl">Title</p>
             <img src={storyBg} className="h-72 w-full rounded-xl mb-6" />
 
-            <p className="text-3xl text-center font-bold mb-6">By {story?.username}</p>
-            <div className="flex-1 flex flex-row justify-center items-center rounded-xl mb-8">
-              <img src={storyBg} className="h-12 rounded-xl w-12" />
-              <p className="text-xl ml-8 font-semibold">{story?.first_name + " " + story?.last_name}</p>
-              <p className="text-xl ml-8 font-normal">{calculateAge(story?.dob ?? "")} Years Old</p>
+            <div className={story?.username ? "flex" : "hidden"}>
+              <p className="text-3xl text-center font-bold mb-6">By {story?.username ?? "You"}</p>
+              <div className="flex-1 flex flex-row justify-center items-center rounded-xl mb-8">
+                <img src={storyBg} className="h-12 rounded-xl w-12" />
+                <p className="text-xl ml-8 font-semibold">{story?.first_name + " " + story?.last_name}</p>
+                <p className="text-xl ml-8 font-normal">{calculateAge(story?.dob ?? "")} Years Old</p>
+              </div>
             </div>
 
           </div>

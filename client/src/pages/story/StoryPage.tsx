@@ -48,7 +48,7 @@ const StoryPage = () => {
         const data = {
           username: id,
           page_number: page_number
-        };
+        }
 
         const res = await axios.post("/api/stories/page", data);
         setText(res.data.data);

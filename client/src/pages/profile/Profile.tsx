@@ -122,7 +122,7 @@ const Profile = () => {
             <a href={ currentUser ? "../story/" + username + "/page/1" : "/"} className="flex flex-row justify-center items-center w-full h-auto p-8 bg-secondary shadow-xl rounded-xl hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out">
               <div className="flex flex-row justify-between items-center overflow-hidden w-full">
                 <img src={storyBg} className="h-20 flex-shrink-0 rounded-xl" />
-                <p className="text-3xl text-center font-bold overflow-hidden text-ellipsis line-clamp-1">Title</p>
+                <p className="text-3xl text-center font-bold overflow-hidden text-ellipsis line-clamp-1">Start Writing</p>
               </div>
             </a>
           </div>

@@ -1,0 +1,122 @@
+import { useState } from "react";
+import { Editor as TinyMCEEditor } from "@tinymce/tinymce-react";
+import { Editor as TinyMCEEditorInstance } from "tinymce";
+import axios from "axios";
+
+const WriteStory = () => {
+  // State variables:
+  // - error: Boolean indicating if there is an error during form submission.
+  const [error, setError] = useState<boolean>(false);
+
+  // - errorMessage: String containing the error message to display.
+  const [errorMessage, setErrorMessage] = useState<string>("");
+
+  // - text: String containing HTML for page text.
+  const [text, setText] = useState<string>("");
+
+  // - title: String containing the title of the story.
+  const [title, setTitle] = useState<string>("");
+
+  // - published: Boolean indicating if the story is public or private.
+  const [published, setPublished] = useState<boolean>(false);
+
+  const handleTextChange = (content: string, editor: TinyMCEEditorInstance) => {
+    setText(content);
+  }
+
+  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(event.target.value);
+  }
+
+  const handleSave = async () => {
+    // Reset error states.
+    setError(false);
+    setErrorMessage("");
+
+    const data = {
+      title: title,
+      text: text
+    }
+
+    // Attempt story saving. Display error if any.
+    try {
+      await axios.post("/api/stories/save", data);
+    } catch (error) {
+      setError(true);
+      if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error); 
+      else setErrorMessage("An unexpected error occurred.");
+      console.log(error);
+    }
+    
+  }
+
+  const handlePublish = async () => {
+    // Reset error states.
+    setError(false);
+    setErrorMessage("");
+
+    // Attempt story publishing. Display error if any.
+    try {
+      await axios.post("/api/story/publish", { private: false });
+    } catch (error) {
+      setError(true);
+      if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error); 
+      else setErrorMessage("An unexpected error occurred.");
+      console.log(error);
+    }
+  }
+
+  const handleUnpublish = async () => {
+    // Reset error states.
+    setError(false);
+    setErrorMessage("");
+
+    // Attempt story unpublishing. Display error if any.
+    try {
+      await axios.post("/api/story/unpublish", { private: true });
+    } catch (error) {
+      setError(true);
+      if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error); 
+      else setErrorMessage("An unexpected error occurred.");
+      console.log(error);
+    }
+  }
+
+  return (
+    <div className="flex flex-col justify-items-center w-9/12 md:w-1/2 mt-24 h-screen">
+
+      <input 
+        type="text" 
+        onChange={handleTitleChange}
+        placeholder="Title..." 
+        className="text-5xl text-center font-bold my-8 pb-1 rounded-xl bg-tertiary">
+      </input>
+
+      <TinyMCEEditor
+        apiKey="cl0f7stppfmnuulii3hvi4dhnko97k32vvg06zrd6n8ealln"
+        init={{
+          plugins: "tinycomments mentions anchor autolink charmap codesample image link lists media searchreplace visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed permanentpen footnotes advtemplate advtable advcode editimage tableofcontents mergetags powerpaste tinymcespellchecker autocorrect a11ychecker typography inlinecss",
+          toolbar: "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media | align lineheight | tinycomments | checklist numlist bullist indent outdent | removeformat",
+          tinycomments_mode: "embedded",
+          tinycomments_author: "Author name",
+          mergetags_list: [
+            { value: "First.Name", title: "First Name" },
+            { value: "Email", title: "Email" },
+          ],
+          height: 600,
+          content_style: "body { overflow-y: auto; }",
+        }}
+        onEditorChange={handleTextChange}
+        initialValue={text}
+      />
+
+      <div className="flex flex-row justify-center items-center my-6">
+        <button onClick={handleSave} className="bg-gradient rounded-xl shadow-md font-bold p-2 w-32 mr-2">Save Story</button>
+        <button onClick={published ? handleUnpublish : handlePublish} className="bg-gradient rounded-xl shadow-md font-bold p-2 w-32 ml-2">{published ? "Unpublish Story" : "Publish Story"}</button>
+      </div>
+
+    </div>
+  )
+}
+
+export default WriteStory;

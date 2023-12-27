@@ -16,6 +16,7 @@ import StoryPage from './pages/story/StoryPage'
 import EditStoryPage from './pages/story/EditStoryPage'
 import RequireAuth from './pages/support/RequireAuth'
 import ChangePassword from './pages/profile/ChangePassword'
+import WriteStory from './pages/story/WriteStory'
 
 const Layout = () => {
   return (
@@ -56,11 +57,11 @@ const router = createBrowserRouter([
             path: 'page/:page_number',
             element: <StoryPage/>,
           },
-          {
-            path: 'page/:page_number/edit',
-            element: <RequireAuth><EditStoryPage/></RequireAuth>,
-          },
         ]
+      },
+      {
+        path: '/story/write',
+        element: <RequireAuth><WriteStory/></RequireAuth>,
       },
       {
         path: '/explore',

@@ -23,7 +23,7 @@ export const Navbar = () => {
         <div className='hidden md:flex flex-grow justify-center items-center font-bold'>
           <Link className='hover-underline-animation m-14' to='./'>Home</Link>
           <Link className='hover-underline-animation m-14' to='./explore'>Explore</Link>
-          <Link className='hover-underline-animation m-14' to={ currentUser ? './story/:id' : './register'}>Your Story</Link>
+          <Link className='hover-underline-animation m-14' to={ currentUser ? `./story/write` : './register'}>Your Story</Link>
           { currentUser ? <Link className='hover-underline-animation m-14' to='./profile'>Profile</Link> : null}
         </div>
         <div className="hidden md:flex justify-center items-center h-10 w-24 ml-32 p-4 bg-gradient rounded-xl shadow-lg font-bold transition duration-200 ease-in-out hover:scale-105">

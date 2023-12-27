@@ -144,3 +144,57 @@ export const getStory = (req: Request, res: Response) => {
         return res.status(200).json({ message: "Successfully fetched story information. ", data: typedData[0] });
     });
 }
+
+/**
+ * Handles creating or updating a story.
+ * 
+ * @param {Request} req - Contains the information of the story and the user.
+ * @param {Response} res - Object used to send back the appropriate response to the client.
+ * @returns A response and if successful, saves or creates a story.
+ */
+export const saveStory = (req: Request, res: Response) => {
+    const { title, text } = req.body;
+
+    try {
+        // Get JWT.
+        const token = req.cookies["access_token"];
+        if (!token) return res.status(401).json({ error: "Access denied, no token provided." });
+        
+        // Verify the token and save username.
+        const decoded = jwt.verify(token, "jwtkey") as JwtPayload;
+        if (!decoded.username) return res.status(401).json({ error: "Invalid token." });
+        const username = decoded.username;
+
+        // Check if story already exists
+        const q = `SELECT * FROM story WHERE username = ?`;
+        db.query(q, [username], (error, data) => {
+            // Error checking.
+            if (error) return res.status(500).json({ error: error });
+            const typedData = data as RowDataPacket[];
+
+            // If the story already exists, update it's content.
+            if (typedData.length) {
+                const q = `UPDATE story 
+                            SET title = ?, text = ?, image = ?
+                            WHERE username = ?`;
+                db.query(q, [title, text, null, username], (error) => {
+                    // Error checking.
+                    if (error) return res.status(500).json({ error });
+
+                    return res.status(200).json({ message: "Story successfully updated." });
+                });
+            } else {
+                const q = `INSERT INTO story (username, title, text, image, timestamp)
+                            VALUES (?, ?, ?, ?, ?)`;
+                db.query(q, [username, title, text, null, null], (error) => {
+                    // Error checking,
+                    if (error) return res.status(500).json({ error });
+
+                    return res.status(201).json({ message: "Story successfully created. "});
+                });
+            }
+        });
+    } catch (error) {
+        res.status(400).json({ error: "Invalid token." });
+    }
+}
