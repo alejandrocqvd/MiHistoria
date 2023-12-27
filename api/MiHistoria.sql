@@ -19,8 +19,9 @@ CREATE TABLE story
 (
     username            VARCHAR(255)    NOT NULL,
     title               VARCHAR(255)    NOT NULL,
+    text                MEDIUMTEXT,
     image               VARCHAR(255),
-    timestamp           DATETIME,
+    timestamp           DATETIME        DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (username),
     FOREIGN KEY (username) REFERENCES user(username)
 );
