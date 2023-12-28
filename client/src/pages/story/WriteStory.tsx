@@ -40,6 +40,7 @@ const WriteStory = () => {
 
     // Attempt story saving. Display error if any.
     try {
+      console.log(text);
       await axios.post("/api/stories/save", data);
     } catch (error) {
       setError(true);
@@ -105,9 +106,10 @@ const WriteStory = () => {
           ],
           height: 600,
           content_style: "body { overflow-y: auto; }",
+          directionality: 'ltr',
         }}
         onEditorChange={handleTextChange}
-        initialValue={text}
+        value={text}
       />
 
       <div className="flex flex-row justify-center items-center my-6">
