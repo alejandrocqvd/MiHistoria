@@ -180,43 +180,62 @@ export const saveStory = async (req: Request, res: Response) => {
             });
     
             // Check if story already exists.
-            const q = `SELECT * FROM story WHERE username = ?`;
+            const q = `SELECT page_count FROM story WHERE username = ?`;
             connection?.query(q, [username], async (error, data) => {
                 // Error checking.
-                if (error) return res.status(500).json({ error: error });
+                if (error) throw error;
                 const typedData = data as RowDataPacket[];
     
-                // Split the story into pages.
-                const pages = splitHtmlToPages(text, 500);
+                // Split the story into pages of 1000 words or less.
+                const pages = splitToPages(text, 1000);
     
                 // If the story already exists, update it's content.
                 if (typedData.length) {
                     const q = `UPDATE story 
                                 SET title = ?, text = ?, image = ?
                                 WHERE username = ?`;
-                    connection?.query(q, [title, text, null, username], (error) => {
+                    connection?.query(q, [title, text, null, username], async (error) => {
                         // Error checking.
-                        if (error) return res.status(500).json({ error });
+                        if (error) throw error;
     
-                        // Update each page.
-                        const q = `UPDATE`;
+                        // Go through each page, and if it already exists -> update it, if it does not -> insert it.
+                        let page_number = 1;
+                        for (const page of pages) {
+                            console.log(page);
+                            pageQuery(page, username, page_number);
+                            page_number++;
+                        }
+
+                        // If the current page count for the story is greater than the new page count, delete the unnecessary pages.
+                        if (typedData[0].page_count > page_number) {
+                            for (let i = typedData[0].page_count; i > page_number; i--) {
+                                deletePageQuery(username, page_number);
+                            }
+                        }
+
+                        const q = `UPDATE story SET page_count = ? WHERE username = ?`;
+                        connection?.query(q, [page_number, username], (error) => {
+                            if (error) throw error;
+                        });
                     });
-                } 
+                }
     
                 // If the story does not exist, insert it into the appropriate tables.
                 else {
-                    const q = `INSERT INTO story (username, title, text, image, timestamp)
-                                VALUES (?, ?, ?, ?, ?)`;
-                    connection?.query(q, [username, title, text, null, null], (error) => {
+                    const q = `INSERT INTO story (username, title, page_count, text, image, timestamp)
+                                VALUES (?, ?, ?, ?, ?, ?)`;
+                    connection?.query(q, [username, title, pages.length, text, null, null], (error) => {
                         // Error checking,
-                        if (error) return res.status(500).json({ error });
+                        if (error) throw error;
     
                         // Insert each page.
                         const q = `INSERT INTO page (page_number, username, text)
                                     VALUES (?, ?, ?)`;
                         let page_number = 1;
                         for (const page of pages) {
-                            connection?.query(q, [page_number, username, page]);
+                            connection?.query(q, [page_number, username, page], (error) => {
+                                if (error) throw error;
+                            });
                             page_number++;
                         }
                     });
@@ -246,16 +265,72 @@ export const saveStory = async (req: Request, res: Response) => {
 /**
  * Splits HTML content into pages, ensuring that each HTML element stays intact.
  * 
- * @param {string} html - The HTML content in string format.
+ * @param {string} htmlString - The HTML content as a string.
  * @param {number} maxWordsPerPage - The maximum number of words per page.
  * @returns {string[]} An array of strings, each string is the HTML content of a page.
  */
-function splitHtmlToPages(html: string, maxWordsPerPage: number = 500): string[] {
+function splitToPages(htmlString: string, maxWordsPerPage: number): string[] {
+    // Extract the <ul> and <ol> elements and their nested content.
+    const listRegex = /<(ul|ol)[^>]*>.*?<\/(ul|ol)>/gs;
+    const listElements: string[] = htmlString.match(listRegex) || [];
+
+    // Extract other elements that are not part of the <ul> or <ol>.
+    const regex = /<[^>\/]+>[^<]*<\/[^>]+>/g;
+    const nonListElements: string[] = htmlString.replace(listRegex, '').match(regex) || [];
+
+    // Combine the two arrays.
+    const elements: string[] = listElements.concat(nonListElements);
+
+    // Variables for pages creation.
     const pages: string[] = [];
-    let currentPage: string = '';
-    let currentWordCount: number = 0;
+    let currentPage: string = "";
+    let pageWordCount: number = 0;
 
+    elements.forEach(element => {
+        // Count how many words are in the element.
+        let words = element.split(/\W+/);
+        let filteredWords = words.filter(word => word.length > 0);
+        let elementWordCount = filteredWords.length;
 
+        if (pageWordCount + elementWordCount > maxWordsPerPage) {
+            pages.push(currentPage);
+            currentPage = element;
+            pageWordCount = elementWordCount;
+        } else {
+            currentPage += element;
+            pageWordCount += elementWordCount;
+        }
+    });
+    if (currentPage !== "") pages.push(currentPage);
 
     return pages;
+}
+
+const pageQuery = (page: string, username: string, page_number: number) => {
+    const q = `SELECT * FROM page WHERE username = ? AND page_number = ?`;
+    
+    db.query(q, [username, page_number], (error, data) => {
+        // Error checking.
+        if (error) return error;
+
+        const typedData = data as RowDataPacket[];
+
+        if (typedData.length) {
+            // Update case.
+            const q = `UPDATE page SET text = ? WHERE username = ? AND page_number = ?`;
+            db.query(q, [page, username, page_number]);
+        } else {
+            // Insert case.
+            const q = `INSERT INTO page (page_number, username, text)
+                        VALUES (?, ?, ?)`;
+            db.query(q, [page_number, username, page]);
+        }
+    });
+}
+
+const deletePageQuery = (username: string, page_number: number) => {
+    const q = `DELETE FROM page WHERE username = ? AND page_number = ?`;
+    db.query(q, [username, page_number], (error) => {
+        if (error) return error;
+    });
 }
