@@ -24,7 +24,7 @@ CREATE TABLE story
     text                MEDIUMTEXT,
     image               VARCHAR(255),
     timestamp           DATETIME        DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (username) ON DELETE CASCADE,
+    PRIMARY KEY (username),
     FOREIGN KEY (username) REFERENCES user(username)
 );
 

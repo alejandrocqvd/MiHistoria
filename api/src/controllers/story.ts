@@ -290,7 +290,12 @@ export const deleteStory = (req: Request, res: Response) => {
             // Error checking.
             if (error) return res.status(500).json({ error });
 
-            return res.status(200).json({ message: "Successfully deleted story." });
+            const q = `DELETE FROM page WHERE username = ?`;
+            db.query(q, [username], (error) => {
+                if (error) throw error;
+
+                return res.status(200).json({ message: "Successfully deleted story and all its pages." });
+            });
         });
     } catch (error) {
         res.status(400).json({ error: "Invalid token." });
