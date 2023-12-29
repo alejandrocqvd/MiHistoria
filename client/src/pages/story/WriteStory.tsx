@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Editor as TinyMCEEditor } from "@tinymce/tinymce-react";
 import { Editor as TinyMCEEditorInstance } from "tinymce";
 import axios from "axios";
@@ -19,6 +19,10 @@ const WriteStory = () => {
 
   // - published: Boolean indicating if the story is public or private.
   const [published, setPublished] = useState<boolean>(false);
+
+  // Retrieve the user item from session storage and parse it if it's a valid JSON string.
+  const storedUser = sessionStorage.getItem('user');
+  const sessionUsername = storedUser && storedUser !== "null" ? JSON.parse(storedUser).user_info.username : null;
 
   const handleTextChange = (content: string, editor: TinyMCEEditorInstance) => {
     setText(content);
@@ -83,11 +87,28 @@ const WriteStory = () => {
     }
   }
 
+  useEffect(() => {
+    const fetchData = async () => {
+        try {
+          const res = await axios.post("/api/stories/story", { username: sessionUsername});
+          setText(res.data.data.text);
+          setTitle(res.data.data.title);
+        } catch (error) {
+          setError(true);
+          if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error);
+          else setErrorMessage("An unexpected error occurred.");
+          console.log(error);
+        }
+    }
+    fetchData();
+  }, []);
+
   return (
     <div className="flex flex-col justify-items-center w-9/12 md:w-1/2 mt-24 h-screen">
 
       <input 
         type="text" 
+        value={title}
         onChange={handleTitleChange}
         placeholder="Title..." 
         className="text-5xl text-center font-bold my-8 pb-1 rounded-xl bg-tertiary">

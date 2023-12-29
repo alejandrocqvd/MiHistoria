@@ -18,11 +18,16 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+p {
+    text-align: start;
+}
+
 /* Header tags styling */
 h1, h2, h3, h4, h5, h6 {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     margin-bottom: 0.5em;
     margin-top: 0.5em;
+    text-align: start;
 }
 
 h1 {
@@ -55,14 +60,34 @@ h6 {
     font-weight: 500;
 }
 
-/* List styling */
+/* List styles */
 ul, ol {
+    list-style: none; /* Removes default list-style */
     margin-bottom: 1em;
-    padding-left: 2em;
+    padding-left: 0; /* Resets default padding */
+    text-align: left;
 }
 
-li {
+/* Ordered List Styling */
+ol {
+    counter-reset: list-counter; /* Creates a new instance of counter */
+}
+ol li {
+    counter-increment: list-counter; /* Increments counter for each item */
     margin-bottom: 0.5em;
+}
+ol li:before {
+    content: counter(list-counter) ". "; /* Inserts counter before the item */
+    margin-right: 0.5em; /* Adjusts space between number and text */
+}
+
+/* Unordered List Styling */
+ul li {
+    margin-bottom: 0.5em;
+}
+ul li:before {
+    content: "• "; /* Inserts dash before the item */
+    margin-right: 0.5em; /* Adjusts space between dash and text */
 }
 
 /* Blockquote styling */
@@ -72,6 +97,7 @@ blockquote {
     margin-left: 0;
     margin-right: 0;
     font-style: italic;
+    text-align: start;
 }
 
 /* Table styling */

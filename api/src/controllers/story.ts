@@ -3,7 +3,7 @@ import { db, getConnection } from "../db";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { RowDataPacket } from "mysql2";
 import sanitizeHtml from "sanitize-html";
-const jsdom = require("jsdom");
+import { JSDOM } from 'jsdom';
 
 /**
  * Handles fetching a story's page contents.
@@ -113,7 +113,7 @@ export const updatePage = (req: Request, res: Response) => {
                     WHERE page_number = ? AND username = ?`;
         db.query(q, [text, page_number, username], (error) => {
             // Error checking
-            if (error) return res.status(500).json({ error: error });
+            if (error) return res.status(500).json({ error });
 
             return res.status(200).json({ message: `Successfully updated page ${page_number} of ${username}'s story.` });
         });
@@ -133,7 +133,7 @@ export const getStory = (req: Request, res: Response) => {
     const { username } = req.body;
 
     // Query to get story information, author information, save count, and like count.
-    const q = `SELECT u.username, u.first_name, u.last_name, u.dob, u.image AS user_image, s.title, s.image AS story_image
+    const q = `SELECT u.username, u.first_name, u.last_name, u.dob, u.image AS user_image, s.title, s.image AS story_image, s.text, s.page_count
                 FROM story AS s
                 LEFT JOIN user AS u ON u.username = s.username
                 WHERE s.username = ?`;
@@ -186,8 +186,9 @@ export const saveStory = async (req: Request, res: Response) => {
                 if (error) throw error;
                 const typedData = data as RowDataPacket[];
     
-                // Split the story into pages of 1000 words or less.
-                const pages = splitToPages(text, 1000);
+                // Split the story into pages of 900 words or less.
+                const pages = splitToPages(text, 900);
+                console.log(pages);
     
                 // If the story already exists, update it's content.
                 if (typedData.length) {
@@ -270,38 +271,32 @@ export const saveStory = async (req: Request, res: Response) => {
  * @returns {string[]} An array of strings, each string is the HTML content of a page.
  */
 function splitToPages(htmlString: string, maxWordsPerPage: number): string[] {
-    // Extract the <ul> and <ol> elements and their nested content.
-    const listRegex = /<(ul|ol)[^>]*>.*?<\/(ul|ol)>/gs;
-    const listElements: string[] = htmlString.match(listRegex) || [];
-
-    // Extract other elements that are not part of the <ul> or <ol>.
-    const regex = /<[^>\/]+>[^<]*<\/[^>]+>/g;
-    const nonListElements: string[] = htmlString.replace(listRegex, '').match(regex) || [];
-
-    // Combine the two arrays.
-    const elements: string[] = listElements.concat(nonListElements);
-
-    // Variables for pages creation.
     const pages: string[] = [];
-    let currentPage: string = "";
-    let pageWordCount: number = 0;
+    const dom = new JSDOM(htmlString);
+    const body = dom.window.document.body;
+    let currentPage: string[] = [];
+    let currentWordCount = 0;
 
-    elements.forEach(element => {
-        // Count how many words are in the element.
-        let words = element.split(/\W+/);
-        let filteredWords = words.filter(word => word.length > 0);
-        let elementWordCount = filteredWords.length;
+    body.childNodes.forEach(node => {
+        if (node.nodeType === dom.window.Node.ELEMENT_NODE) {
+            const element = node as Element;
+            const textContent = element.textContent || '';
+            const wordCount = textContent.split(/\s+/).filter(word => word.length > 0).length;
 
-        if (pageWordCount + elementWordCount > maxWordsPerPage) {
-            pages.push(currentPage);
-            currentPage = element;
-            pageWordCount = elementWordCount;
-        } else {
-            currentPage += element;
-            pageWordCount += elementWordCount;
+            if (currentWordCount + wordCount > maxWordsPerPage && currentPage.length > 0) {
+                pages.push(currentPage.join(''));
+                currentPage = [];
+                currentWordCount = 0;
+            }
+
+            currentPage.push(element.outerHTML);
+            currentWordCount += wordCount;
         }
     });
-    if (currentPage !== "") pages.push(currentPage);
+
+    if (currentPage.length > 0) {
+        pages.push(currentPage.join(''));
+    }
 
     return pages;
 }

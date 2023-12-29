@@ -145,7 +145,7 @@ const Story = () => {
             <p className="text-5xl text-center font-bold my-12 rounded-xl">Title</p>
             <img src={storyBg} className="h-72 w-full rounded-xl mb-6" />
 
-            <div className={story?.username ? "flex" : "hidden"}>
+            <div className="flex-col">
               <p className="text-3xl text-center font-bold mb-6">By {story?.username ?? "You"}</p>
               <div className="flex-1 flex flex-row justify-center items-center rounded-xl mb-8">
                 <img src={storyBg} className="h-12 rounded-xl w-12" />

@@ -93,7 +93,7 @@ const StoryPage = () => {
         </div>
       </div>
   
-      <div dangerouslySetInnerHTML={{ __html: text }} />
+      <div className="flex flex-wrap flex-col w-full" dangerouslySetInnerHTML={{ __html: text }} />
   
       <div className="flex flex-row justify-between items-start w-full mt-6 mb-12">
         <div className="flex flex-row justify-between items-start">

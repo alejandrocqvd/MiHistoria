@@ -20,6 +20,7 @@ CREATE TABLE story
     username            VARCHAR(255)    NOT NULL,
     title               VARCHAR(255)    NOT NULL,
     page_count          INT,
+    is_private          BOOLEAN         DEFAULT FALSE,
     text                MEDIUMTEXT,
     image               VARCHAR(255),
     timestamp           DATETIME        DEFAULT CURRENT_TIMESTAMP,
@@ -83,7 +84,7 @@ VALUES
 
 INSERT INTO story
 VALUES
-("alejandrocqvd", "Once Upon a Time in Hollywood", 1, "
+("alejandrocqvd", "Once Upon a Time in Hollywood", 1, null, "
         <p>
             <strong>Early Life and Education</strong><br></br>
             I was born in 1904 in New York City. My fascination with science began at a young age, 
