@@ -44,6 +44,9 @@ const Story = () => {
   // - pageNumber: Number indicating the current page number.
   const [pageNumber, setPageNumber] = useState<number>(1);
 
+  // - isEditable: Boolean indicating if the current user is allowed to edit the story.
+  const [isEditable, setIsEditable] = useState<boolean>(false);
+
   // useNavigate used to go to edit page.
   const navigate = useNavigate();
 
@@ -81,11 +84,32 @@ const Story = () => {
     return age;
   }
 
-  const handleLike = () => {
-    setLiked(!liked);
+  const handleLike = async () => {
+    try {
+      await axios.post("/api/users/like", {
+        data: { liked, story_username: params.id },
+        withCredentials: true
+      });
+      setLiked(!liked);
+    } catch (error) {
+      setError(true);
+      setErrorMessage("Failed to like or unlike story.");
+      console.log(error);
+    }
   }
-  const handleSave = () => {
-    setSaved(!saved);
+
+  const handleSave = async () => {
+    try {
+      await axios.post("/api/users/save", {
+        data: { saved, story_username: params.id },
+        withCredentials: true
+      });
+      setSaved(!saved);
+    } catch (error) {
+      setError(true);
+      setErrorMessage("Failed to save or unsave story.");
+      console.log(error);
+    }
   }
 
   const handleDelete = async () => {
@@ -120,16 +144,40 @@ const Story = () => {
 
         setPageNumber(Number.parseInt(page_number));
 
-        const res = await axios.post("/api/stories/story", { username: id });
-        // Check if the response has data for a story
+        // Check if the current user is allowed to edit the story.
+        if (sessionUsername == params.id) setIsEditable(true);
+
+        // API Request to get the data of the story.
+        const storyRes = await axios.post("/api/stories/story", { username: id });
+        
+        // API Request to get the stories the current user has liked.
+        const likeRes = await axios.get("/api/users/liked", {
+          withCredentials: true
+        });
+
+        // API Request to get the stories the current user has saved.
+        const saveRes = await axios.get("/api/users/saved", {
+          withCredentials: true
+        });
+        
+        // Check if the response has data for a story.
         if (!exists) {
-          if (res.data.data) {
-            setStory(res.data.data);
+          if (storyRes.data.data) {
+            setStory(storyRes.data.data);
             setExists(true);
           } else {
             setExists(false);
           }
         }
+
+        // Set the liked status of the story.
+        const hasLiked = likeRes.data.data.some((story: { story_username: string; }) => story.story_username === id);
+        setLiked(hasLiked);
+
+        // Set the saved status of the story.
+        const hasSaved = saveRes.data.data.some(((story: { story_username: string; }) => story.story_username === id));
+        setSaved(hasSaved);
+
       } catch (error) {
         setError(true);
         if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error);
@@ -203,21 +251,21 @@ const Story = () => {
             <button 
               onClick={handleLike} 
               className={`w-28 shadow-md text-center rounded-xl bg-secondary px-4 py-2 transition duration-200 ease-in-out hover:shadow-xl ${liked ? "text-red-600" : null}`}>
-              <FontAwesomeIcon icon={liked ? solidHeart : regularHeart} className="mr-1" /> 24k
+              <FontAwesomeIcon icon={liked ? solidHeart : regularHeart} />
             </button>
             <button 
               onClick={handleSave} 
               className={`w-28 shadow-md ml-4 text-center rounded-xl bg-secondary px-4 py-2 transition duration-200 ease-in-out hover:shadow-xl ${saved ? "text-amber-500" : null}`}>
-              <FontAwesomeIcon icon={saved ? solidBookmark : regularBookmark} className="mr-1" /> 6k
+              <FontAwesomeIcon icon={saved ? solidBookmark : regularBookmark} />
             </button>
             <button 
               onClick={() => navigate("/story/write")}
-              className="w-28 shadow-md ml-4 text-center rounded-xl bg-gradient font-bold px-4 py-2 transition duration-200 ease-in-out hover:shadow-xl"
+              className={isEditable ? "w-28 shadow-md ml-4 text-center rounded-xl bg-gradient font-bold px-4 py-2 transition duration-200 ease-in-out hover:shadow-xl" : "hidden"}
               >Edit
             </button>
             <button 
               onClick={handleDelete}
-              className="w-32 shadow-md ml-4 text-center rounded-xl bg-error font-bold px-4 py-2 hover:bg-[#9A0E2A] transition duration-200 ease-in-out hover:shadow-xl"
+              className={isEditable ? "w-32 shadow-md ml-4 text-center rounded-xl bg-error font-bold px-4 py-2 hover:bg-[#9A0E2A] transition duration-200 ease-in-out hover:shadow-xl" : "hidden"}
               >Delete Story
             </button>
           </div>
@@ -290,16 +338,16 @@ const Story = () => {
             <button 
               onClick={handleLike} 
               className={`w-28 shadow-md text-center rounded-xl bg-secondary px-4 py-2 transition duration-200 ease-in-out hover:shadow-xl ${liked ? "text-red-600" : null}`}>
-              <FontAwesomeIcon icon={liked ? solidHeart : regularHeart} className="mr-1" /> 24k
+              <FontAwesomeIcon icon={liked ? solidHeart : regularHeart} />
             </button>
             <button 
               onClick={handleSave} 
               className={`w-28 shadow-md ml-4 text-center rounded-xl bg-secondary px-4 py-2 transition duration-200 ease-in-out hover:shadow-xl ${saved ? "text-amber-500" : null}`}>
-              <FontAwesomeIcon icon={saved ? solidBookmark : regularBookmark} className="mr-1" /> 6k
+              <FontAwesomeIcon icon={saved ? solidBookmark : regularBookmark} />
             </button>
             <button 
               onClick={() => navigate("/story/write")}
-              className="w-28 shadow-md ml-4 text-center rounded-xl bg-gradient font-bold px-4 py-2 transition duration-200 ease-in-out hover:shadow-xl"
+              className={isEditable ? "w-28 shadow-md ml-4 text-center rounded-xl bg-gradient font-bold px-4 py-2 transition duration-200 ease-in-out hover:shadow-xl" : "hidden"}
               >Edit
             </button>
           </div>

@@ -166,3 +166,126 @@ export const getUsername = (req: Request, res: Response) => {
         res.status(400).json({ error: "Invalid token." });
     }
 }
+
+
+export const getLiked = (req: Request, res: Response) => {
+    try {
+        // Get JWT.
+        const token = req.cookies["access_token"];
+        if (!token) return res.status(401).json({ error: "Access denied, no token provided." });
+        
+        // Verify the token and save username.
+        const decoded = jwt.verify(token, "jwtkey") as JwtPayload;
+        if (!decoded.username) return res.status(401).json({ error: "Invalid token." });
+        const username = decoded.username;
+
+        // Query to get the stories the user has liked.
+        const q = `SELECT story_username FROM likes_story WHERE like_username = ?`;
+        db.query(q, [username], (error, data) => {
+            // Error checking.
+            if (error) return res.status(500).json({ error });
+
+            const typedData = data as RowDataPacket[];
+            return res.status(200).json({ message: "Successfully fetched user's liked stories.", data: typedData });
+        });
+    } catch (error) {
+        res.status(400).json({ error: "Invalid token." });
+    }
+}
+
+export const updateLiked = (req: Request, res: Response) => {
+    const { liked, story_username } = req.body.data;
+
+    try {
+        // Get JWT.
+        const token = req.cookies["access_token"];
+        if (!token) return res.status(401).json({ error: "Access denied, no token provided." });
+        
+        // Verify the token and save username.
+        const decoded = jwt.verify(token, "jwtkey") as JwtPayload;
+        if (!decoded.username) return res.status(401).json({ error: "Invalid token." });
+        const username = decoded.username;
+
+        if (liked) {
+            // Unlike the story.
+            const q = `DELETE FROM likes_story WHERE like_username = ? AND story_username = ?`;
+            db.query(q, [username, story_username], (error) => {
+                if (error) return res.status(500).json({ error });
+
+                return res.status(200).json({ message: "Successfully unliked story." });
+            });
+        } else {
+            // Like the story.
+            const q = `INSERT INTO likes_story (like_username, story_username)
+                        VALUES (?, ?)`;
+            db.query(q, [username, story_username], (error) => {
+                if (error) return res.status(500).json({ error });
+
+                return res.status(201).json({ message: "Successfully liked story." });
+            });
+        }
+    } catch (error) {
+        res.status(400).json({ error: "Invalid token." });
+    }
+}
+
+export const getSaved = (req: Request, res: Response) => {
+    try {
+        // Get JWT.
+        const token = req.cookies["access_token"];
+        if (!token) return res.status(401).json({ error: "Access denied, no token provided." });
+        
+        // Verify the token and save username.
+        const decoded = jwt.verify(token, "jwtkey") as JwtPayload;
+        if (!decoded.username) return res.status(401).json({ error: "Invalid token." });
+        const username = decoded.username;
+
+        // Query to get the stories the user has saved.
+        const q = `SELECT story_username FROM saves WHERE save_username = ?`;
+        db.query(q, [username], (error, data) => {
+            // Error checking.
+            if (error) return res.status(500).json({ error });
+
+            const typedData = data as RowDataPacket[];
+            return res.status(200).json({ message: "Successfully fetched user's saved stories.", data: typedData });
+        });
+    } catch (error) {
+        res.status(400).json({ error: "Invalid token." });
+    }
+}
+
+export const updateSaved = (req: Request, res: Response) => {
+    const { saved, story_username } = req.body.data;
+
+    try {
+        // Get JWT.
+        const token = req.cookies["access_token"];
+        if (!token) return res.status(401).json({ error: "Access denied, no token provided." });
+        
+        // Verify the token and save username.
+        const decoded = jwt.verify(token, "jwtkey") as JwtPayload;
+        if (!decoded.username) return res.status(401).json({ error: "Invalid token." });
+        const username = decoded.username;
+
+        if (saved) {
+            // Unsave the story.
+            const q = `DELETE FROM saves WHERE save_username = ? AND story_username = ?`;
+            db.query(q, [username, story_username], (error) => {
+                if (error) return res.status(500).json({ error });
+
+                return res.status(200).json({ message: "Successfully unsaved story." });
+            });
+        } else {
+            // Save the story.
+            const q = `INSERT INTO saves (save_username, story_username)
+                        VALUES (?, ?)`;
+            db.query(q, [username, story_username], (error) => {
+                if (error) return res.status(500).json({ error });
+
+                return res.status(201).json({ message: "Successfully saved story." });
+            });
+        }
+    } catch (error) {
+        res.status(400).json({ error: "Invalid token." });
+    }
+}
