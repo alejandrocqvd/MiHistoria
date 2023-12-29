@@ -1,7 +1,8 @@
 import storyBg from "../../assets/login-bg.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
-import { Link, Outlet, useParams } from "react-router-dom";
+import { faPaperPlane, faHeart as solidHeart, faBookmark as solidBookmark } from "@fortawesome/free-solid-svg-icons";
+import { faHeart as regularHeart, faBookmark as regularBookmark } from "@fortawesome/free-regular-svg-icons";
+import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
 import Comment from "../../components/Comment.tsx";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
@@ -16,6 +17,8 @@ interface StoryData {
   dob: string;
   user_image: string;
   story_image: string;
+  text: string;
+  page_count: string;
 }
 
 const Story = () => {
@@ -32,6 +35,18 @@ const Story = () => {
   // - exists: Boolean indicating if the user's story exists.
   const [exists, setExists] = useState<boolean>(false);
 
+  // - liked: Boolean indicating if the user has liked the post.
+  const [liked, setLiked] = useState<Boolean>(false);
+
+  // - saved: Boolean indicating if the user has saved the post.
+  const [saved, setSaved] = useState<Boolean>(false);
+
+  // - pageNumber: Number indicating the current page number.
+  const [pageNumber, setPageNumber] = useState<number>(1);
+
+  // useNavigate used to go to edit page.
+  const navigate = useNavigate();
+
   // Use the useParams hook to get URL parameters.
   const params = useParams() as {
     id: string;
@@ -45,6 +60,11 @@ const Story = () => {
   // Retrieve the user item from session storage and parse it if it's a valid JSON string.
   const storedUser = sessionStorage.getItem('user');
   const sessionUsername = storedUser && storedUser !== "null" ? JSON.parse(storedUser).user_info.username : null;
+
+  // DOCUMENT THIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  const generatePageNumbers = (pageCount: number): number[] => {
+    return Array.from({ length: pageCount }, (_, i) => i + 1);
+  }  
 
   /**
    * Converts the user's date of birth string to a numerical age.
@@ -61,23 +81,46 @@ const Story = () => {
     return age;
   }
 
+  const handleLike = () => {
+    setLiked(!liked);
+  }
+  const handleSave = () => {
+    setSaved(!saved);
+  }
+
+  const handleDelete = async () => {
+    const isConfirmed = window.confirm("Are you sure you want to delete your story?");
+
+    if (isConfirmed) {
+      try {
+         await axios.delete("/api/stories/delete", {
+          data: { story_username: params.id },
+          withCredentials: true
+         });
+         navigate("/profile");
+      } catch (error) {
+        setError(true);
+        setErrorMessage("Failed to delete story.");
+        console.log(error);
+      }
+    }
+  }
+
   // useEffect fetches the story page's text through an API request to the back end.
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { id } = params;
+        const { id, page_number } = params;
 
-        if (!id) {
+        if (!id || !page_number) {
           setError(true);
           setErrorMessage("Invalid parameters.");
           return;
         }
 
-        const data = {
-          username: id,
-        };
+        setPageNumber(Number.parseInt(page_number));
 
-        const res = await axios.post("/api/stories/story", data);
+        const res = await axios.post("/api/stories/story", { username: id });
         // Check if the response has data for a story
         if (!exists) {
           if (res.data.data) {
@@ -135,18 +178,18 @@ const Story = () => {
           </div>
         ) : (
           <div className="flex flex-col justify-center items-center h-screen w-full text-center">
-            <p className="text-4xl font-bold mb-12">{params.id} hasn't written a story yet!</p>
+            <p className="text-4xl font-bold mb-24">{params.id} hasn't written a story yet!</p>
           </div>
         )
       ) : (
         <>
           <div className="flex flex-col h-auto w-full md:w-1/2">
 
-            <p className="text-5xl text-center font-bold my-12 rounded-xl">Title</p>
+            <p className="text-5xl text-center font-bold my-12 rounded-xl">{story?.title}</p>
             <img src={storyBg} className="h-72 w-full rounded-xl mb-6" />
 
             <div className="flex-col">
-              <p className="text-3xl text-center font-bold mb-6">By {story?.username ?? "You"}</p>
+              <p className="text-3xl text-center font-bold mb-6">By {story?.username}</p>
               <div className="flex-1 flex flex-row justify-center items-center rounded-xl mb-8">
                 <img src={storyBg} className="h-12 rounded-xl w-12" />
                 <p className="text-xl ml-8 font-semibold">{story?.first_name + " " + story?.last_name}</p>
@@ -156,8 +199,109 @@ const Story = () => {
 
           </div>
 
+          <div className="flex flex-row justify-center items-center mb-12">
+            <button 
+              onClick={handleLike} 
+              className={`w-28 shadow-md text-center rounded-xl bg-secondary px-4 py-2 transition duration-200 ease-in-out hover:shadow-xl ${liked ? "text-red-600" : null}`}>
+              <FontAwesomeIcon icon={liked ? solidHeart : regularHeart} className="mr-1" /> 24k
+            </button>
+            <button 
+              onClick={handleSave} 
+              className={`w-28 shadow-md ml-4 text-center rounded-xl bg-secondary px-4 py-2 transition duration-200 ease-in-out hover:shadow-xl ${saved ? "text-amber-500" : null}`}>
+              <FontAwesomeIcon icon={saved ? solidBookmark : regularBookmark} className="mr-1" /> 6k
+            </button>
+            <button 
+              onClick={() => navigate("/story/write")}
+              className="w-28 shadow-md ml-4 text-center rounded-xl bg-gradient font-bold px-4 py-2 transition duration-200 ease-in-out hover:shadow-xl"
+              >Edit
+            </button>
+            <button 
+              onClick={handleDelete}
+              className="w-32 shadow-md ml-4 text-center rounded-xl bg-error font-bold px-4 py-2 hover:bg-[#9A0E2A] transition duration-200 ease-in-out hover:shadow-xl"
+              >Delete Story
+            </button>
+          </div>
+
+          <div className="flex flex-row justify-between items-start w-full md:w-1/2 mb-6">
+            <div className="flex flex-row justify-between items-start">
+              <button 
+                onClick={() => navigate(`/story/${params.id}/page/${pageNumber - 1}`)}
+                className={pageNumber == 1 ? "hidden" : "bg-secondary p-2 rounded-xl shadow-md mr-2 w-32 transition duration-200 ease-in-out hover:shadow-xl"}
+                >Previous Page
+              </button>
+              <button 
+                onClick={() => navigate(`/story/${params.id}/page/${pageNumber + 1}`)}
+                className={pageNumber == Number.parseInt(story?.page_count ?? "") ? "hidden" : "bg-secondary p-2 rounded-xl shadow-md mr-2 w-32 transition duration-200 ease-in-out hover:shadow-xl"}
+                >Next Page
+              </button>
+            </div>
+            <div className={story?.page_count == "1" ? "hidden" : "flex flex-row justify-between items-center bg-secondary p-2 rounded-xl shadow-md mr-2 w-32 px-4"}>
+              <p>Page:</p>
+              {
+                story && (
+                  <select 
+                  className="bg-secondary"  
+                    value={pageNumber} 
+                    onChange={(e) => navigate(`/story/${params.id}/page/${Number(e.target.value)}`)}>
+                    {generatePageNumbers(Number(story.page_count)).map(pageNum => (
+                      <option key={pageNum} value={pageNum}>{pageNum}</option>
+                    ))}
+                  </select>
+                )
+              }
+            </div>
+          </div>
+
           <div className="justify-items-center h-auto w-full md:w-1/2 rounded-xl">
             <Outlet />
+          </div>
+
+          <div className="flex flex-row justify-between items-start w-full md:w-1/2 mt-6 mb-12">
+            <div className="flex flex-row justify-between items-start">
+              <button 
+                onClick={() => navigate(`/story/${params.id}/page/${pageNumber - 1}`)}
+                className={pageNumber == 1 ? "hidden" : "bg-secondary p-2 rounded-xl shadow-md mr-2 w-32 transition duration-200 ease-in-out hover:shadow-xl"}
+                >Previous Page
+              </button>
+              <button 
+                onClick={() => navigate(`/story/${params.id}/page/${pageNumber + 1}`)}
+                className={pageNumber == Number.parseInt(story?.page_count ?? "") ? "hidden" : "bg-secondary p-2 rounded-xl shadow-md mr-2 w-32 transition duration-200 ease-in-out hover:shadow-xl"}
+                >Next Page
+              </button>
+            </div>
+            <div className={story?.page_count == "1" ? "hidden" : "flex flex-row justify-between items-center bg-secondary p-2 rounded-xl shadow-md mr-2 w-32 px-4"}>
+              <p>Page:</p>
+              {
+                story && (
+                  <select 
+                    className="bg-secondary" 
+                    value={pageNumber} 
+                    onChange={(e) => navigate(`/story/${params.id}/page/${Number(e.target.value)}`)}>
+                    {generatePageNumbers(Number(story.page_count)).map(pageNum => (
+                      <option key={pageNum} value={pageNum}>{pageNum}</option>
+                    ))}
+                  </select>
+                )
+              }
+            </div>
+          </div>
+      
+          <div className="flex flex-row justify-center items-center mb-10">
+            <button 
+              onClick={handleLike} 
+              className={`w-28 shadow-md text-center rounded-xl bg-secondary px-4 py-2 transition duration-200 ease-in-out hover:shadow-xl ${liked ? "text-red-600" : null}`}>
+              <FontAwesomeIcon icon={liked ? solidHeart : regularHeart} className="mr-1" /> 24k
+            </button>
+            <button 
+              onClick={handleSave} 
+              className={`w-28 shadow-md ml-4 text-center rounded-xl bg-secondary px-4 py-2 transition duration-200 ease-in-out hover:shadow-xl ${saved ? "text-amber-500" : null}`}>
+              <FontAwesomeIcon icon={saved ? solidBookmark : regularBookmark} className="mr-1" /> 6k
+            </button>
+            <button 
+              onClick={() => navigate("/story/write")}
+              className="w-28 shadow-md ml-4 text-center rounded-xl bg-gradient font-bold px-4 py-2 transition duration-200 ease-in-out hover:shadow-xl"
+              >Edit
+            </button>
           </div>
 
           <div className="flex flex-col justify-center items center w-full md:w-1/2 mb-6">

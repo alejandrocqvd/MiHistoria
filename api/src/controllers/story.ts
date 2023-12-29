@@ -188,7 +188,6 @@ export const saveStory = async (req: Request, res: Response) => {
     
                 // Split the story into pages of 900 words or less.
                 const pages = splitToPages(text, 900);
-                console.log(pages);
     
                 // If the story already exists, update it's content.
                 if (typedData.length) {
@@ -202,7 +201,6 @@ export const saveStory = async (req: Request, res: Response) => {
                         // Go through each page, and if it already exists -> update it, if it does not -> insert it.
                         let page_number = 1;
                         for (const page of pages) {
-                            console.log(page);
                             pageQuery(page, username, page_number);
                             page_number++;
                         }
@@ -261,6 +259,42 @@ export const saveStory = async (req: Request, res: Response) => {
             res.status(400).json({ error: "Invalid token." });
         }
     });
+}
+
+/**
+ * Handles updating a story's page.
+ * 
+ * @param {Request} req - Contains the text for the page being updated.
+ * @param {Response} res - Object used to send back the appropriate response to the client.
+ * @returns A response and if successful, updated the story's page.
+ */
+export const deleteStory = (req: Request, res: Response) => {
+    const { story_username } = req.body;
+
+    try {
+        // Get JWT.
+        const token = req.cookies["access_token"];
+        if (!token) return res.status(401).json({ error: "Access denied, no token provided." });
+        
+        // Verify the token and save username.
+        const decoded = jwt.verify(token, "jwtkey") as JwtPayload;
+        if (!decoded.username) return res.status(401).json({ error: "Invalid token." });
+        const username = decoded.username;
+
+        // Check if user's username and story username don't match.
+        if ( username !== story_username ) return res.status(401).json({ error: "Unauthorized request. User cannot delete this story." });
+
+        // Query to delete the story.
+        const q = `DELETE FROM story WHERE username = ?`;
+        db.query(q, [username], (error) => {
+            // Error checking.
+            if (error) return res.status(500).json({ error });
+
+            return res.status(200).json({ message: "Successfully deleted story." });
+        });
+    } catch (error) {
+        res.status(400).json({ error: "Invalid token." });
+    }
 }
 
 /**
