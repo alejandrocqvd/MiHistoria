@@ -177,3 +177,8 @@ VALUES
             <em>- J. Robert Oppenheimer</em>
         </p>
 ");
+
+INSERT INTO comment
+VALUES 
+(1, "test", "alejandrocqvd", "hello this is a test", "2022-04-22 10:34:53.44"),
+(2, "alejandrocqvd", "alejandrocqvd", "hello!!!!", "2021-04-22 10:34:53.44");
