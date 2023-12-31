@@ -21,6 +21,16 @@ interface StoryData {
   page_count: string;
 }
 
+// Interface for holding and managing an individual comment's data.
+interface CommentData {
+  comment_id: string;
+  username: string;
+  first_name: string;
+  last_name: string;
+  text: string;
+  timestamp: string;
+}
+
 const Story = () => {
   // State variables:
   // - error: Boolean indicating if there is an error.
@@ -46,6 +56,24 @@ const Story = () => {
 
   // - isEditable: Boolean indicating if the current user is allowed to edit the story.
   const [isEditable, setIsEditable] = useState<boolean>(false);
+
+  // - comment: String containing the user's typed comment.
+  const [comment, setComment] = useState<string>("");
+
+  // - comments: Array containing comment objects.
+  const [comments, setComments] = useState<CommentData[]>([]);
+
+  // - commentError: Boolean indicating if there is an error with comment creation.
+  const [commentError, setCommentError] = useState<boolean>(false);
+
+  // - commentErrorMessage: String containing the error message to display.
+  const [commentErrorMessage, setCommentErrorMessage] = useState<string>("");
+  
+  // - currentCommentPage: Number indicating the current index of the comment pages.
+  const [currentCommentPage, setCurrentCommentPage] = useState<number>(1);
+
+  // - totalComments: Number indicating the total number of comments loaded in.
+  const [totalComments, setTotalComments] = useState<number>(0);
 
   // useNavigate used to go to edit page.
   const navigate = useNavigate();
@@ -130,6 +158,69 @@ const Story = () => {
     }
   }
 
+  const fetchComments = async (page: number) => {
+    try {
+      const res = await axios.post("/api/stories/comments", {
+        story_username: params.id,
+        page: page,
+        limit: 50
+      });
+      // Fill the comments array with data from the API request.
+      const newComments = res.data.data.map((comment: any) => ({
+        comment_id: comment.comment_id,
+        username: comment.username,
+        first_name: comment.first_name,
+        last_name: comment.last_name,
+        text: comment.text,
+        timestamp: comment.timestamp,
+      }));
+      // Update the state by appending new comments, avoiding duplicates.
+      setComments(prevComments => {
+        const existingCommentIds = new Set(prevComments.map(c => c.comment_id));
+        const filteredNewComments = newComments.filter((comment: { comment_id: string; }) => !existingCommentIds.has(comment.comment_id));
+        return [...prevComments, ...filteredNewComments];
+      });
+
+    } catch (error) {
+      setError(true);
+      if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error);
+      else setErrorMessage("An unexpected error occurred.");
+      console.log(error);
+    }
+  };
+
+  const handleShowMore = () => {
+    const nextPage = currentCommentPage + 1;
+    setCurrentCommentPage(nextPage);
+  };
+
+  const handleComment = async () => {
+    try {
+      await axios.post("/api/stories/comment/create", {
+        data: { story_username: params.id, text: comment },
+        withCredentials: true
+      });
+      setComment("");
+    } catch (error) {
+      setError(true);
+      setErrorMessage("Failed to create comment.");
+      console.log(error);
+    }
+  }
+
+  const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setComment(e.target.value);
+  }
+
+  const scroll = () => {
+    setTimeout(() => {
+      const topNav = document.getElementById("TopNav");
+      if (topNav) {
+        topNav.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 50);
+  };
+
   // useEffect fetches the story page's text through an API request to the back end.
   useEffect(() => {
     const fetchData = async () => {
@@ -159,6 +250,13 @@ const Story = () => {
         const saveRes = await axios.get("/api/users/saved", {
           withCredentials: true
         });
+
+        // API Request to get the total number of comments made on the story.
+        const countRes = await axios.post("/api/stories/comments/count", { story_username: id });
+        setTotalComments(countRes.data.data.count);
+
+        // API Request to get the first page of comments on the story.
+        fetchComments(currentCommentPage);
         
         // Check if the response has data for a story.
         if (!exists) {
@@ -186,31 +284,7 @@ const Story = () => {
       }
     }
     fetchData();
-  }, [params]);
-
-
-  const dummyComments = [
-    {
-      comment_id: "1",
-      text: "This is the first comment.",
-      timestamp: "2021-12-17T12:00:00Z",
-      author: {
-        username: "user1",
-        first_name: "John",
-        last_name: "Doe"
-      }
-    },
-    {
-      comment_id: "2",
-      text: "This is the second comment.",
-      timestamp: "2021-12-18T13:00:00Z",
-      author: {
-        username: "user2",
-        first_name: "Jane",
-        last_name: "Doe"
-      }
-    },
-  ];
+  }, [params, currentCommentPage, comments]);
 
   return (
     <div className="flex flex-col justify-center items-center mt-20 w-9/12">
@@ -247,7 +321,7 @@ const Story = () => {
 
           </div>
 
-          <div className="flex flex-row justify-center items-center mb-12">
+          <div id="TopNav" className="flex flex-row justify-center items-center mb-12">
             <button 
               onClick={handleLike} 
               className={`w-28 shadow-md text-center rounded-xl bg-secondary px-4 py-2 transition duration-200 ease-in-out hover:shadow-xl ${liked ? "text-red-600" : null}`}>
@@ -307,12 +381,18 @@ const Story = () => {
           <div className="flex flex-row justify-between items-start w-full md:w-1/2 mt-6 mb-12">
             <div className="flex flex-row justify-between items-start">
               <button 
-                onClick={() => navigate(`/story/${params.id}/page/${pageNumber - 1}`)}
+                onClick={() => {
+                  navigate(`/story/${params.id}/page/${pageNumber - 1}`);
+                  scroll();
+                }}
                 className={pageNumber == 1 ? "hidden" : "bg-secondary p-2 rounded-xl shadow-md mr-2 w-32 transition duration-200 ease-in-out hover:shadow-xl"}
                 >Previous Page
               </button>
               <button 
-                onClick={() => navigate(`/story/${params.id}/page/${pageNumber + 1}`)}
+                onClick={() => {
+                  navigate(`/story/${params.id}/page/${pageNumber + 1}`);
+                  scroll();
+                }}
                 className={pageNumber == Number.parseInt(story?.page_count ?? "") ? "hidden" : "bg-secondary p-2 rounded-xl shadow-md mr-2 w-32 transition duration-200 ease-in-out hover:shadow-xl"}
                 >Next Page
               </button>
@@ -324,7 +404,10 @@ const Story = () => {
                   <select 
                     className="bg-secondary" 
                     value={pageNumber} 
-                    onChange={(e) => navigate(`/story/${params.id}/page/${Number(e.target.value)}`)}>
+                    onChange={(e) => {
+                      navigate(`/story/${params.id}/page/${Number(e.target.value)}`);
+                      scroll();
+                    }}>
                     {generatePageNumbers(Number(story.page_count)).map(pageNum => (
                       <option key={pageNum} value={pageNum}>{pageNum}</option>
                     ))}
@@ -355,15 +438,57 @@ const Story = () => {
           <div className="flex flex-col justify-center items center w-full md:w-1/2 mb-6">
             <p className="text-2xl font-semibold mb-6">Comments</p>
             <div className="pb-4 relative mb-4">
-              <input className="w-full py-2 px-4 pl-3 pr-10 rounded-2xl bg-tertiary" type="textarea" placeholder={currentUser ? "Comment..." : "Must be signed in to comment"} required={!!currentUser} disabled={!currentUser}></input>
-              <button className="absolute inset-y-0 right-0 px-5 pt-3 flex items-center text-sm">
-                <FontAwesomeIcon className="absolute inset-y-0 right-0 px-5 pt-3 flex items-center text-sm" icon={faPaperPlane} />
+              <input 
+                onChange={handleCommentChange}
+                value={comment}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    if (comment.length > 5000) {
+                      setCommentError(true);
+                      setCommentErrorMessage("Comment exceeds the limit of 5000 words.");
+                    } else {
+                      handleComment();
+                    }
+                  }
+                }}
+                className="w-full py-2 px-4 pl-3 pr-10 rounded-2xl bg-tertiary" 
+                type="textarea" 
+                placeholder={currentUser ? "Comment..." : "Must be signed in to comment"} 
+                required={!!currentUser} 
+                disabled={!currentUser}>
+              </input>
+              <button 
+                onClick={() => {
+                  if (comment.length > 5000) {
+                    setCommentError(true);
+                    setCommentErrorMessage("Comment exceeds the limit of 5000 words.");
+                  } else {
+                    handleComment();
+                  }
+                }}
+                className="absolute inset-y-0 right-0 px-5 pt-3 flex items-center text-sm">
+                <FontAwesomeIcon 
+                  className="absolute inset-y-0 right-0 px-5 pt-3 flex items-center text-sm" 
+                  icon={faPaperPlane} 
+                />
               </button>
             </div>
+            <div className={commentError ? "w-full justify-items-center text-error mb-8" : "hidden"}>
+              <p className="text-center">{commentErrorMessage}</p>
+            </div>
 
-            {dummyComments.map(comment => (
+            {comments.map(comment => (
               <Comment key={comment.comment_id} commentData={comment} />
             ))}
+
+            {(currentCommentPage * 50) <= totalComments && (
+              <button 
+                onClick={handleShowMore}
+                className="w-full mb-4 px-6 py-3 bg-gradient rounded-xl font-semibold"
+                >See More
+              </button>
+            )}
 
           </div>
         </>

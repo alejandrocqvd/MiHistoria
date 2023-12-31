@@ -7,6 +7,10 @@ export const Navbar = () => {
 
   const { currentUser, logout } = useContext(AuthContext)!;
 
+  // Retrieve the user item from session storage and parse it if it's a valid JSON string.
+  const storedUser = sessionStorage.getItem('user');
+  const sessionUsername = storedUser && storedUser !== "null" ? JSON.parse(storedUser).user_info.username : null;
+
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -23,7 +27,7 @@ export const Navbar = () => {
         <div className='hidden md:flex flex-grow justify-center items-center font-bold'>
           <Link className='hover-underline-animation m-14' to='./'>Home</Link>
           <Link className='hover-underline-animation m-14' to='./explore'>Explore</Link>
-          <Link className='hover-underline-animation m-14' to={ currentUser ? `./story/write` : './register'}>Your Story</Link>
+          <Link className='hover-underline-animation m-14' to={ currentUser ? `./story/${sessionUsername}/page/1` : './register'}>Your Story</Link>
           { currentUser ? <Link className='hover-underline-animation m-14' to='./profile'>Profile</Link> : null}
         </div>
         <div className="hidden md:flex justify-center items-center h-10 w-24 ml-32 p-4 bg-gradient rounded-xl shadow-lg font-bold transition duration-200 ease-in-out hover:scale-105">

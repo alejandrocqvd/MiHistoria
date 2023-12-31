@@ -180,7 +180,7 @@ export const getLiked = (req: Request, res: Response) => {
         const username = decoded.username;
 
         // Query to get the stories the user has liked.
-        const q = `SELECT story_username FROM likes_story WHERE like_username = ?`;
+        const q = `SELECT story_username FROM likes WHERE like_username = ?`;
         db.query(q, [username], (error, data) => {
             // Error checking.
             if (error) return res.status(500).json({ error });
@@ -208,7 +208,7 @@ export const updateLiked = (req: Request, res: Response) => {
 
         if (liked) {
             // Unlike the story.
-            const q = `DELETE FROM likes_story WHERE like_username = ? AND story_username = ?`;
+            const q = `DELETE FROM likes WHERE like_username = ? AND story_username = ?`;
             db.query(q, [username, story_username], (error) => {
                 if (error) return res.status(500).json({ error });
 
@@ -216,7 +216,7 @@ export const updateLiked = (req: Request, res: Response) => {
             });
         } else {
             // Like the story.
-            const q = `INSERT INTO likes_story (like_username, story_username)
+            const q = `INSERT INTO likes (like_username, story_username)
                         VALUES (?, ?)`;
             db.query(q, [username, story_username], (error) => {
                 if (error) return res.status(500).json({ error });

@@ -20,7 +20,6 @@ CREATE TABLE story
     username            VARCHAR(255)    NOT NULL,
     title               VARCHAR(255)    NOT NULL,
     page_count          INT,
-    is_private          BOOLEAN         DEFAULT FALSE,
     text                MEDIUMTEXT,
     image               VARCHAR(255),
     timestamp           DATETIME        DEFAULT CURRENT_TIMESTAMP,
@@ -43,13 +42,13 @@ CREATE TABLE comment
     comment_username    VARCHAR(255)    NOT NULL,
     story_username      VARCHAR(255)    NOT NULL,
     text                TEXT            NOT NULL,
-    timestamp           DATETIME        NOT NULL,
+    timestamp           DATETIME        DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (comment_id),
     FOREIGN KEY (comment_username) REFERENCES user(username),
     FOREIGN KEY (story_username) REFERENCES story(username)
 );
 
-CREATE TABLE likes_story
+CREATE TABLE likes
 (
     like_username       VARCHAR(255)    NOT NULL,
     story_username      VARCHAR(255)    NOT NULL,
@@ -62,19 +61,10 @@ CREATE TABLE saves
 (
     save_username        VARCHAR(255)    NOT NULL,
     story_username       VARCHAR(255)    NOT NULL,
-    timestamp            DATETIME        NOT NULL           DEFAULT CURRENT_TIMESTAMP,
+    timestamp            DATETIME        DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (save_username, story_username),
     FOREIGN KEY (save_username) REFERENCES user(username),
     FOREIGN KEY (story_username) REFERENCES story(username)
-);
-
-CREATE TABLE likes_comment
-(
-    username            VARCHAR(255)    NOT NULL,
-    comment_id          INT             NOT NULL,
-    PRIMARY KEY (username, comment_id),
-    FOREIGN KEY (username) REFERENCES User(username),
-    FOREIGN KEY (comment_id) REFERENCES Comment(comment_id)
 );
 
 INSERT INTO user
@@ -84,7 +74,7 @@ VALUES
 
 INSERT INTO story
 VALUES
-("alejandrocqvd", "Once Upon a Time in Hollywood", 1, null, "
+("alejandrocqvd", "Once Upon a Time in Hollywood", 1, "
         <p>
             <strong>Early Life and Education</strong><br></br>
             I was born in 1904 in New York City. My fascination with science began at a young age, 

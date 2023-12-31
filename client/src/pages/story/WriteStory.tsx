@@ -28,8 +28,8 @@ const WriteStory = () => {
     setText(content);
   }
 
-  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(event.target.value);
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
   }
 
   const handleSave = async () => {
