@@ -192,9 +192,9 @@ export const saveStory = async (req: Request, res: Response) => {
                 // If the story already exists, update it's content.
                 if (typedData.length) {
                     const q = `UPDATE story 
-                                SET title = ?, text = ?, image = ?
+                                SET title = ?, text = ?, image = ?, page_count = ?
                                 WHERE username = ?`;
-                    connection?.query(q, [title, text, null, username], async (error) => {
+                    connection?.query(q, [title, text, null, pages.length, username], async (error) => {
                         // Error checking.
                         if (error) throw error;
     
@@ -211,11 +211,6 @@ export const saveStory = async (req: Request, res: Response) => {
                                 deletePageQuery(username, page_number);
                             }
                         }
-
-                        const q = `UPDATE story SET page_count = ? WHERE username = ?`;
-                        connection?.query(q, [page_number, username], (error) => {
-                            if (error) throw error;
-                        });
                     });
                 }
     
@@ -285,16 +280,21 @@ export const deleteStory = (req: Request, res: Response) => {
         if ( username !== story_username ) return res.status(401).json({ error: "Unauthorized request. User cannot delete this story." });
 
         // Query to delete the story.
-        const q = `DELETE FROM story WHERE username = ?`;
+        const q = `DELETE FROM page WHERE username = ?`;
         db.query(q, [username], (error) => {
             // Error checking.
             if (error) return res.status(500).json({ error });
 
-            const q = `DELETE FROM page WHERE username = ?`;
+            const q = `DELETE FROM comment WHERE story_username = ?`;
             db.query(q, [username], (error) => {
-                if (error) throw error;
+                if (error) return res.status(500).json({ error });
 
-                return res.status(200).json({ message: "Successfully deleted story and all its pages." });
+                const q = `DELETE FROM story WHERE username = ?`;
+                db.query(q, [username], (error) => {
+                    if (error) return res.status(500).json({ error });
+
+                    return res.status(200).json({ message: "Successfully deleted story and all its pages." });
+                });
             });
         });
     } catch (error) {

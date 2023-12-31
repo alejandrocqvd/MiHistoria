@@ -3,11 +3,11 @@ const NotFound = () => {
     <div className="flex flex-col h-96 justify-items-center mt-32 mb-24 w-9/12 md:w-3/12">
       <a className="font-semibold text-5xl text-center mb-12">404 Not Found!</a>
       <p className="mb-6">
-        Sorry, we couldn"t find the page you were looking for. It might have been removed, had its name changed, or is temporarily unavailable. 
+        Sorry, we couldn't find the page you were looking for. It might have been removed, had its name changed, or is temporarily unavailable. 
         But don"t worry, there are plenty more stories to explore!
       </p>
       <p className="font-bold mb-6 text-2xl text-center">
-        Here"s what you can do next:
+        Here's what you can do next:
       </p>
       <ul className="mb-12">
         <li><a href="./" className="font-bold">Go to Home Page</a>: Revisit our homepage and start your journey again.</li>

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Editor as TinyMCEEditor } from "@tinymce/tinymce-react";
-import { Editor as TinyMCEEditorInstance } from "tinymce";
 import axios from "axios";
 
 const WriteStory = () => {
@@ -17,14 +16,11 @@ const WriteStory = () => {
   // - title: String containing the title of the story.
   const [title, setTitle] = useState<string>("");
 
-  // - published: Boolean indicating if the story is public or private.
-  const [published, setPublished] = useState<boolean>(false);
-
   // Retrieve the user item from session storage and parse it if it's a valid JSON string.
   const storedUser = sessionStorage.getItem('user');
   const sessionUsername = storedUser && storedUser !== "null" ? JSON.parse(storedUser).user_info.username : null;
 
-  const handleTextChange = (content: string, editor: TinyMCEEditorInstance) => {
+  const handleTextChange = (content: string) => {
     setText(content);
   }
 
@@ -53,38 +49,6 @@ const WriteStory = () => {
       console.log(error);
     }
     
-  }
-
-  const handlePublish = async () => {
-    // Reset error states.
-    setError(false);
-    setErrorMessage("");
-
-    // Attempt story publishing. Display error if any.
-    try {
-      await axios.post("/api/story/publish", { private: false });
-    } catch (error) {
-      setError(true);
-      if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error); 
-      else setErrorMessage("An unexpected error occurred.");
-      console.log(error);
-    }
-  }
-
-  const handleUnpublish = async () => {
-    // Reset error states.
-    setError(false);
-    setErrorMessage("");
-
-    // Attempt story unpublishing. Display error if any.
-    try {
-      await axios.post("/api/story/unpublish", { private: true });
-    } catch (error) {
-      setError(true);
-      if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error); 
-      else setErrorMessage("An unexpected error occurred.");
-      console.log(error);
-    }
   }
 
   useEffect(() => {
@@ -135,7 +99,6 @@ const WriteStory = () => {
 
       <div className="flex flex-row justify-center items-center my-6">
         <button onClick={handleSave} className="bg-gradient rounded-xl shadow-md font-bold p-2 w-32 mr-2">Save Story</button>
-        <button onClick={published ? handleUnpublish : handlePublish} className="bg-gradient rounded-xl shadow-md font-bold p-2 w-32 ml-2">{published ? "Unpublish Story" : "Publish Story"}</button>
       </div>
 
     </div>
