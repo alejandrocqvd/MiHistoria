@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Editor as TinyMCEEditor } from "@tinymce/tinymce-react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const WriteStory = () => {
   // State variables:
@@ -15,6 +16,9 @@ const WriteStory = () => {
 
   // - title: String containing the title of the story.
   const [title, setTitle] = useState<string>("");
+
+  // useNavigate used to go back to user's story after updating their story.
+  const navigate = useNavigate();
 
   // Retrieve the user item from session storage and parse it if it's a valid JSON string.
   const storedUser = sessionStorage.getItem('user');
@@ -42,6 +46,7 @@ const WriteStory = () => {
     try {
       console.log(text);
       await axios.post("/api/stories/save", data);
+      navigate(`/story/${sessionUsername}/page/1`);
     } catch (error) {
       setError(true);
       if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error); 
@@ -98,7 +103,7 @@ const WriteStory = () => {
       />
 
       <div className="flex flex-row justify-center items-center my-6">
-        <button onClick={handleSave} className="bg-gradient rounded-xl shadow-md font-bold p-2 w-32 mr-2">Save Story</button>
+        <button onClick={handleSave} className="bg-gradient rounded-xl shadow-md font-bold p-2 w-32 mr-2 hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out">Save Story</button>
       </div>
 
     </div>
