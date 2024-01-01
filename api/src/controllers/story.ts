@@ -192,9 +192,9 @@ export const saveStory = async (req: Request, res: Response) => {
                 // If the story already exists, update it's content.
                 if (typedData.length) {
                     const q = `UPDATE story 
-                                SET title = ?, text = ?, image = ?, page_count = ?
+                                SET title = ?, text = ?, page_count = ?
                                 WHERE username = ?`;
-                    connection?.query(q, [title, text, null, pages.length, username], async (error) => {
+                    connection?.query(q, [title, text, pages.length, username], async (error) => {
                         // Error checking.
                         if (error) throw error;
     
@@ -216,9 +216,9 @@ export const saveStory = async (req: Request, res: Response) => {
     
                 // If the story does not exist, insert it into the appropriate tables.
                 else {
-                    const q = `INSERT INTO story (username, title, page_count, text, image, timestamp)
-                                VALUES (?, ?, ?, ?, ?, ?)`;
-                    connection?.query(q, [username, title, pages.length, text, null, null], (error) => {
+                    const q = `INSERT INTO story (username, title, page_count, text, timestamp)
+                                VALUES (?, ?, ?, ?, ?)`;
+                    connection?.query(q, [username, title, pages.length, text, null], (error) => {
                         // Error checking,
                         if (error) throw error;
     
@@ -254,6 +254,31 @@ export const saveStory = async (req: Request, res: Response) => {
             res.status(400).json({ error: "Invalid token." });
         }
     });
+}
+
+export const saveBanner = async (req: Request, res: Response) => {
+    const { image } = req.body;
+
+    try {
+        // Get JWT.
+        const token = req.cookies["access_token"];
+        if (!token) return res.status(401).json({ error: "Access denied, no token provided." });
+        
+        // Verify the token and save username.
+        const decoded = jwt.verify(token, "jwtkey") as JwtPayload;
+        if (!decoded.username) return res.status(401).json({ error: "Invalid token." });
+        const username = decoded.username;
+
+        // Query to update the story's banner image.
+        const q = `UPDATE story SET image = ? WHERE username = ?`;
+        db.query(q, [image, username], (error) => {
+            if (error) return res.status(500).json({ error });
+
+            return res.status(200).json({ message: "Successfully updated story banner image." });
+        });
+    } catch (error) {
+        res.status(400).json({ error: "Invalid token." });
+    }
 }
 
 /**

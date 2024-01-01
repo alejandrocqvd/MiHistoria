@@ -309,7 +309,10 @@ const Story = () => {
           <div className="flex flex-col h-auto w-full md:w-1/2">
 
             <p className="text-5xl text-center font-bold my-12 rounded-xl">{story?.title}</p>
-            <img src={storyBg} className="h-72 w-full rounded-xl mb-6" />
+            <img 
+              src={story?.story_image ? `/public/uploads/${story.story_image}` : storyBg} 
+              className="max-h-72 w-auto h-auto rounded-xl mb-6 object-contain" 
+            />
 
             <div className={`flex-col ${story?.is_private && "mb-8"}`}>
               <p className="text-3xl text-center font-bold mb-6">By {story?.username}</p>

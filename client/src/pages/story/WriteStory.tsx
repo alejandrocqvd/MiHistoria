@@ -39,7 +39,7 @@ const WriteStory = () => {
 
     const data = {
       title: title,
-      text: text
+      text: text,
     }
 
     // Attempt story saving. Display error if any.
@@ -80,21 +80,27 @@ const WriteStory = () => {
         value={title}
         onChange={handleTitleChange}
         placeholder="Title..." 
-        className="text-5xl text-center font-bold my-8 pb-1 rounded-xl bg-tertiary">
+        className="text-5xl text-center font-bold pb-1 rounded-xl bg-tertiary">
       </input>
+
+      <button 
+        onClick={() => navigate("/story/banner")}
+        className="justify-items-center h-10 w-auto my-2 text-lg border-2 rounded-xl shadow-lg font-bold"
+        >Change Story Banner
+      </button>
 
       <TinyMCEEditor
         apiKey="cl0f7stppfmnuulii3hvi4dhnko97k32vvg06zrd6n8ealln"
         init={{
-          plugins: "tinycomments mentions anchor autolink charmap codesample image link lists media searchreplace visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed permanentpen footnotes advtemplate advtable advcode editimage tableofcontents mergetags powerpaste tinymcespellchecker autocorrect a11ychecker typography inlinecss",
-          toolbar: "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media | align lineheight | tinycomments | checklist numlist bullist indent outdent | removeformat",
+          plugins: "anchor autolink charmap codesample image link lists media searchreplace visualblocks wordcount",
+          toolbar: "undo redo | blocks fontsize | bold italic underline strikethrough | link image media | align lineheight | tinycomments | checklist numlist bullist indent outdent | removeformat",
           tinycomments_mode: "embedded",
           tinycomments_author: "Author name",
           mergetags_list: [
             { value: "First.Name", title: "First Name" },
             { value: "Email", title: "Email" },
           ],
-          height: 600,
+          height: 640,
           content_style: "body { overflow-y: auto; }",
           directionality: 'ltr',
         }}
@@ -102,8 +108,11 @@ const WriteStory = () => {
         value={text}
       />
 
-      <div className="flex flex-row justify-center items-center my-6">
-        <button onClick={handleSave} className="bg-gradient rounded-xl shadow-md font-bold p-2 w-32 mr-2 hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out">Save Story</button>
+      <div className="flex flex-row justify-center items-center my-4">
+        <button 
+          onClick={handleSave} className="bg-gradient rounded-xl shadow-md font-bold p-2 w-32 mr-2 hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out"
+          >Save Story
+        </button>
       </div>
 
     </div>
