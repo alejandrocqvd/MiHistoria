@@ -19,6 +19,7 @@ interface StoryData {
   story_image: string;
   text: string;
   page_count: string;
+  is_private: string;
 }
 
 // Interface for holding and managing an individual comment's data.
@@ -310,9 +311,9 @@ const Story = () => {
             <p className="text-5xl text-center font-bold my-12 rounded-xl">{story?.title}</p>
             <img src={storyBg} className="h-72 w-full rounded-xl mb-6" />
 
-            <div className="flex-col">
+            <div className={`flex-col ${story?.is_private && "mb-10"}`}>
               <p className="text-3xl text-center font-bold mb-6">By {story?.username}</p>
-              <div className="flex-1 flex flex-row justify-center items-center rounded-xl mb-8">
+              <div className={story?.is_private ? "hidden" : "flex-1 flex flex-row justify-center items-center rounded-xl mb-8"}>
                 <img src={storyBg} className="h-12 rounded-xl w-12" />
                 <p className="text-xl ml-8 font-semibold">{story?.first_name + " " + story?.last_name}</p>
                 <p className="text-xl ml-8 font-normal">{calculateAge(story?.dob ?? "")} Years Old</p>

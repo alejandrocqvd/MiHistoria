@@ -229,6 +229,7 @@ const EditProfile = () => {
             </label>
           </div>
         </div>
+        <p className="text-center">A private account hides your first name, last name, and age, on your story page.</p>
 
         <div className="text-center">
             {error && <p className="text-error">{errorMessage}</p>}

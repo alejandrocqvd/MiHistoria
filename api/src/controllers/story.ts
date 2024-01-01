@@ -133,7 +133,7 @@ export const getStory = (req: Request, res: Response) => {
     const { username } = req.body;
 
     // Query to get story information, author information, save count, and like count.
-    const q = `SELECT u.username, u.first_name, u.last_name, u.dob, u.image AS user_image, s.title, s.image AS story_image, s.text, s.page_count
+    const q = `SELECT u.username, u.first_name, u.last_name, u.dob, u.image AS user_image, s.title, s.image AS story_image, s.text, s.page_count, u.is_private
                 FROM story AS s
                 LEFT JOIN user AS u ON u.username = s.username
                 WHERE s.username = ?`;
