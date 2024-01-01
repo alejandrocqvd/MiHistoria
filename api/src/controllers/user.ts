@@ -47,7 +47,7 @@ export const getProfile = (req: Request, res: Response) => {
  */
 export const updateProfile = (req: Request, res: Response) => {
     try {
-        const { first_name, last_name, email, dob, img, is_private } = req.body;
+        const { first_name, last_name, email, dob, is_private } = req.body;
 
         // Get JWT.
         const token = req.cookies["access_token"];
@@ -60,9 +60,9 @@ export const updateProfile = (req: Request, res: Response) => {
     
         // Query to update user's information.
         const q = `UPDATE user 
-                    SET first_name = ?, last_name = ?, dob = ?, email = ?, image = ?, is_private = ? 
+                    SET first_name = ?, last_name = ?, dob = ?, email = ?, is_private = ? 
                     WHERE username = ?`;
-        db.query(q, [first_name, last_name, dob, email, img, is_private, username], (error) => {
+        db.query(q, [first_name, last_name, dob, email, is_private, username], (error) => {
             // Error checking.
             if (error) return res.status(500).json({ error: error });
 
@@ -106,6 +106,54 @@ export const updatePassword = (req: Request, res: Response) => {
             if (error) return res.status(500).json({ error: error });
 
             return res.status(200).json({ message: "Successfully updated user password." });
+        });
+    } catch (error) {
+        res.status(400).json({ error: "Invalid token." });
+    }
+}
+
+export const updatePicture = (req: Request, res: Response) => {
+    const { image } = req.body;
+
+    try {
+        // Get JWT.
+        const token = req.cookies["access_token"];
+        if (!token) return res.status(401).json({ error: "Access denied, no token provided." });
+        
+        // Verify the token and save username.
+        const decoded = jwt.verify(token, "jwtkey") as JwtPayload;
+        if (!decoded.username) return res.status(401).json({ error: "Invalid token." });
+        const username = decoded.username;
+
+        // Query to update the user's profile picture.
+        const q = `UPDATE user SET image = ? WHERE username = ?`;
+        db.query(q, [image, username], (error) => {
+            if (error) return res.status(500).json({ error });
+
+            return res.status(200).json({ message: "Successfully updated user's profile picture." });
+        });
+    } catch (error) {
+        res.status(400).json({ error: "Invalid token." });
+    }
+}
+
+export const deletePicture = (req: Request, res: Response) => {
+    try {
+        // Get JWT.
+        const token = req.cookies["access_token"];
+        if (!token) return res.status(401).json({ error: "Access denied, no token provided." });
+        
+        // Verify the token and save username.
+        const decoded = jwt.verify(token, "jwtkey") as JwtPayload;
+        if (!decoded.username) return res.status(401).json({ error: "Invalid token." });
+        const username = decoded.username;
+
+        // Query to delete the user's profile picture.
+        const q = `UPDATE user SET image = ? WHERE username = ?`;
+        db.query(q, [null, username], (error) => {
+            if (error) return res.status(500).json({ error });
+
+            return res.status(200).json({ message: "Successfully deleted user's profile picture." });
         });
     } catch (error) {
         res.status(400).json({ error: "Invalid token." });

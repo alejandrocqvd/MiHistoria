@@ -17,6 +17,7 @@ import RequireAuth from "./pages/support/RequireAuth"
 import ChangePassword from "./pages/profile/ChangePassword"
 import WriteStory from "./pages/story/WriteStory"
 import ChangeBanner from "./pages/story/ChangeBanner"
+import ChangePicture from "./pages/profile/ChangePicture"
 
 const Layout = () => {
   return (
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
       {
         path: "/profile/edit/password",
         element: <RequireAuth><ChangePassword/></RequireAuth>,
+      },
+      {
+        path: "/profile/edit/picture",
+        element: <RequireAuth><ChangePicture/></RequireAuth>,
       },
       {
         path: "/story/:id",

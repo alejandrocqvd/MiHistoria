@@ -281,6 +281,29 @@ export const saveBanner = async (req: Request, res: Response) => {
     }
 }
 
+export const deleteBanner = async (req: Request, res: Response) => {
+    try {
+        // Get JWT.
+        const token = req.cookies["access_token"];
+        if (!token) return res.status(401).json({ error: "Access denied, no token provided." });
+        
+        // Verify the token and save username.
+        const decoded = jwt.verify(token, "jwtkey") as JwtPayload;
+        if (!decoded.username) return res.status(401).json({ error: "Invalid token." });
+        const username = decoded.username;
+
+        // Query to delete the story's banner image.
+        const q = `UPDATE story SET image = ? WHERE username = ?`;
+        db.query(q, [null, username], (error) => {
+            if (error) return res.status(500).json({ error });
+
+            return res.status(200).json({ message: "Successfully deleted story banner image." });
+        });
+    } catch (error) {
+        res.status(400).json({ error: "Invalid token." });
+    }
+}
+
 /**
  * Handles updating a story's page.
  * 
@@ -352,7 +375,7 @@ export const getComments = (req: Request, res: Response) => {
     const offset = (page - 1) * limit;
 
     // Query to get the comments and their information.
-    const q = `SELECT c.comment_id, c.comment_username AS username, c.text, c.timestamp, u.first_name, u.last_name
+    const q = `SELECT c.comment_id, c.comment_username AS username, c.text, c.timestamp, u.first_name, u.last_name, u.image 
                 FROM comment AS c LEFT JOIN user AS u ON comment_username = username
                 WHERE story_username = ?
                 ORDER BY c.timestamp DESC

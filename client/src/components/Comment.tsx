@@ -9,6 +9,7 @@ interface commentData {
     username: string;
     first_name: string;
     last_name: string;
+    image: string;
 }
 
 interface CommentProps {
@@ -29,19 +30,9 @@ const Comment: React.FC<CommentProps> = ({ commentData }) => {
   // - isDeleted: Boolean indicating if the comment has been deleted.
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
 
-  const [liked, setLiked] = useState<boolean>(false);
-
-  const [likeCount, setLikeCount] = useState<number>(0);
-
-  const [userLiked, setUserLiked] = useState<boolean>(false);
-
   // Retrieve the user item from session storage and parse it if it's a valid JSON string.
   const storedUser = sessionStorage.getItem('user');
   const sessionUsername = storedUser && storedUser !== "null" ? JSON.parse(storedUser).user_info.username : null;
-
-  const handleLike = () => {
-    setLiked(!liked);
-  }
 
   const handleDelete = async () => {
     const isConfirmed = window.confirm("Are you sure you want to delete your comment?");
@@ -81,8 +72,8 @@ const Comment: React.FC<CommentProps> = ({ commentData }) => {
     <div className={isDeleted ? "hidden" : "flex flex-col justify-items-center bg-secondary rounded-xl p-4 mb-2"}>
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row justify-start items-center mb-2">
-              <img src={storyBg} className="h-8 rounded-xl w-8" />
-              <a href={`/story/${commentData.username}/page/1`} className="text-lg ml-4 font-semibold">{commentData.first_name + " " + commentData.last_name}</a>
+              <img src={`/public/uploads/${commentData.image}`} className={commentData.image !== null ? "h-8 rounded-xl w-8 object-cover mr-3" : "hidden"} />
+              <a href={`/story/${commentData.username}/page/1`} className="text-lg font-semibold ml-1">{commentData.first_name + " " + commentData.last_name}</a>
           </div>
           <div className="flex flex-row justify-end items-center">
               <button 

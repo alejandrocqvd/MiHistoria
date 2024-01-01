@@ -98,7 +98,7 @@ const Profile = () => {
         <>
           <div className="flex flex-col justify-items-center mt-32 w-9/12">
             <div className="flex flex-col md:flex-row justify-center items-center mb-12">
-              <img src={storyBg} className="h-32 w-32 rounded-xl" />
+              <img src={`/public/uploads/${profile?.image}`} className={profile?.image !== null ? "h-32 w-32 rounded-xl object-cover" : "hidden"} />
               <p className="text-5xl font-bold m-8">{profile?.username}</p>
               { profile?.is_private ? <FontAwesomeIcon icon={faLock} className="h-8 mt-2" /> : null}
             </div>

@@ -17,6 +17,9 @@ const WriteStory = () => {
   // - title: String containing the title of the story.
   const [title, setTitle] = useState<string>("");
 
+  // - image: String containing the filename of the story's banner image.
+  const [image, setImage] = useState<string>("");
+ 
   // useNavigate used to go back to user's story after updating their story.
   const navigate = useNavigate();
 
@@ -28,8 +31,20 @@ const WriteStory = () => {
     setText(content);
   }
 
-  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
+  const handleImageDelete = async () => {
+    const isConfirmed = window.confirm("Are you sure you want to delete your story's banner?");
+
+    if (isConfirmed) {
+      try {
+        await axios.delete("/api/stories/upload/delete")
+        setImage("");
+      } catch (error) {
+        setError(true);
+        if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error); 
+        else setErrorMessage("An unexpected error occurred.");
+        console.log(error);
+      }
+    }
   }
 
   const handleSave = async () => {
@@ -62,6 +77,7 @@ const WriteStory = () => {
           const res = await axios.post("/api/stories/story", { username: sessionUsername});
           setText(res.data.data.text);
           setTitle(res.data.data.title);
+          setImage(res.data.data.story_image);
         } catch (error) {
           setError(true);
           if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error);
@@ -78,16 +94,25 @@ const WriteStory = () => {
       <input 
         type="text" 
         value={title}
-        onChange={handleTitleChange}
+        onChange={(e) => setTitle(e.target.value)}
         placeholder="Title..." 
         className="text-5xl text-center font-bold pb-1 rounded-xl bg-tertiary">
       </input>
 
-      <button 
-        onClick={() => navigate("/story/banner")}
-        className="justify-items-center h-10 w-auto my-2 text-lg border-2 rounded-xl shadow-lg font-bold"
-        >Change Story Banner
-      </button>
+      <div className="flex flex-col md:flex-row w-full justify-center items-center my-2">
+        <button 
+          onClick={() => navigate("/story/banner")}
+          className="justify-items-center h-10 w-full text-lg border-2 rounded-xl shadow-lg font-bold"
+          >Change Story Banner
+        </button>
+        {image && (
+          <button 
+            onClick={handleImageDelete}
+            className="justify-items-center h-10 w-full text-lg border-2 rounded-xl shadow-lg font-bold md:ml-2 my-2 md:my-0"
+            >Delete Story Banner
+        </button>
+        )}
+      </div>
 
       <TinyMCEEditor
         apiKey="cl0f7stppfmnuulii3hvi4dhnko97k32vvg06zrd6n8ealln"

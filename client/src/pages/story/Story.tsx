@@ -1,4 +1,3 @@
-import storyBg from "../../assets/login-bg.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane, faHeart as solidHeart, faBookmark as solidBookmark } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as regularHeart, faBookmark as regularBookmark } from "@fortawesome/free-regular-svg-icons";
@@ -30,6 +29,7 @@ interface CommentData {
   last_name: string;
   text: string;
   timestamp: string;
+  image: string;
 }
 
 const Story = () => {
@@ -174,6 +174,7 @@ const Story = () => {
         last_name: comment.last_name,
         text: comment.text,
         timestamp: comment.timestamp,
+        image: comment.image
       }));
       // Update the state by appending new comments, avoiding duplicates.
       setComments(prevComments => {
@@ -310,14 +311,14 @@ const Story = () => {
 
             <p className="text-5xl text-center font-bold my-12 rounded-xl">{story?.title}</p>
             <img 
-              src={story?.story_image ? `/public/uploads/${story.story_image}` : storyBg} 
-              className="max-h-72 w-auto h-auto rounded-xl mb-6 object-contain" 
+              src={`/public/uploads/${story?.story_image}`} 
+              className={story?.story_image ? "max-h-96 w-auto h-auto rounded-xl mb-6 object-contain" : "hidden"} 
             />
 
             <div className={`flex-col ${story?.is_private && "mb-8"}`}>
               <p className="text-3xl text-center font-bold mb-6">By {story?.username}</p>
               <div className={story?.is_private ? "hidden" : "flex-1 flex flex-row justify-center items-center rounded-xl mb-8"}>
-                <img src={storyBg} className="h-12 rounded-xl w-12" />
+                <img src={`/public/uploads/${story?.user_image}`} className={story?.user_image !== null ? "h-12 rounded-xl w-12 object-cover" : "hidden"} />
                 <p className="text-xl ml-8 font-semibold">{story?.first_name + " " + story?.last_name}</p>
                 <p className="text-xl ml-8 font-normal">{calculateAge(story?.dob ?? "")} Years Old</p>
               </div>

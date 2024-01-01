@@ -1,5 +1,4 @@
 import { useContext, useEffect, useState } from "react";
-import storyBg from "../../assets/login-bg.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope} from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
@@ -12,7 +11,7 @@ interface FormData {
   last_name: string;
   email: string;
   dob: string;
-  img: string;
+  image: string;
   is_private: boolean;
 }
 
@@ -35,7 +34,7 @@ const EditProfile = () => {
     last_name: "",
     email: "",
     dob: "",
-    img: "",
+    image: "",
     is_private: false
   });
 
@@ -158,7 +157,10 @@ const EditProfile = () => {
       <div className="flex flex-col justify-items-center mt-32 w-9/12">
         <p className="text-5xl font-bold text-center mb-12">Edit Profile</p>
         <div className="flex flex-col md:flex-row justify-center items-center mb-12">
-          <img src={storyBg} className="h-28 w-auto rounded-xl" />
+          <img 
+            src={`/public/uploads/${inputs.image}`} 
+            className={inputs.image !== null ? "h-28 w-28 rounded-xl object-cover" : "hidden"} 
+          />
           <p className="text-4xl font-semibold m-8">{username}</p>
         </div>
       </div>
@@ -229,7 +231,7 @@ const EditProfile = () => {
             </label>
           </div>
         </div>
-        <p className="text-center">A private account hides your first name, last name, and age, on your story page.</p>
+        <p className="text-center">A private account hides your first name, last name, age, and profile picture on your story page.</p>
 
         <div className="text-center">
             {error && <p className="text-error">{errorMessage}</p>}
@@ -237,8 +239,13 @@ const EditProfile = () => {
 
         <div className="flex flex-col md:flex-row justify-center items-center pt-4 pb-4 mb-10">
           <Link 
-            to={"./password"} 
+            to={"./picture"} 
             className="flex justify-center items-center h-10 w-40 bg-gradient rounded-xl shadow-lg font-bold transition duration-200 ease-in-out hover:scale-105"
+            >Change Picture
+          </Link>
+          <Link 
+            to={"./password"} 
+            className="flex justify-center items-center h-10 w-40 ml-0 md:ml-4 mt-4 md:mt-0 bg-gradient rounded-xl shadow-lg font-bold transition duration-200 ease-in-out hover:scale-105"
             >Change Password
           </Link>
           <button 

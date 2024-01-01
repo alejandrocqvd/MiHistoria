@@ -1,5 +1,6 @@
 import express from "express";
 import { 
+  deletePicture,
   deleteProfile, 
   getLiked, 
   getProfile, 
@@ -7,6 +8,7 @@ import {
   getUsername, 
   updateLiked, 
   updatePassword, 
+  updatePicture, 
   updateProfile, 
   updateSaved 
 } from "../controllers/user";
@@ -21,6 +23,8 @@ router.post("/like", updateLiked);
 router.post("/save", updateSaved);
 router.post("/edit", updateProfile);
 router.post("/password", updatePassword);
+router.post("/upload", updatePicture);
+router.delete("/upload/delete", deletePicture);
 router.delete("/delete", deleteProfile);
 
 export default router;
