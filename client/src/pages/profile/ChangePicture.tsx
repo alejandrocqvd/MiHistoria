@@ -69,6 +69,11 @@ const ChangePicture = () => {
         onChange={handleFileChange}
         className="w-1/2 py-2 px-4 pl-3 pr-10 rounded-2xl bg-secondary">
       </input>
+
+      <div className="text-center">
+        {error && <p className="text-error my-2">{errorMessage}</p>}
+      </div>
+
       <div className="flex flex-row md:flex-row justify-center items-center pt-4 pb-4 mb-10">
         <button 
           onClick={handleSubmit}

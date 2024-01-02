@@ -2,6 +2,7 @@ import express from "express";
 import authRoutes from "./routes/auth";
 import userRoutes from "./routes/users";
 import storyRoutes from "./routes/stories";
+import searchRoutes from "./routes/searches";
 import cookieParser from "cookie-parser";
 import multer from "multer";
 import path from "path";
@@ -32,6 +33,7 @@ app.post("/api/upload", upload.single("file"), function (req, res) {
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/stories", storyRoutes);
+app.use("/api/searches", searchRoutes);
 
 app.listen(8800, () => {
     console.log("Connected to backend\n");

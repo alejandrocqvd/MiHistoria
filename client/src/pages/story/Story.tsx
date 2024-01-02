@@ -243,15 +243,25 @@ const Story = () => {
         // API Request to get the data of the story.
         const storyRes = await axios.post("/api/stories/story", { username: id });
         
-        // API Request to get the stories the current user has liked.
-        const likeRes = await axios.get("/api/users/liked", {
-          withCredentials: true
-        });
+        if (sessionUsername) {
+          // API Request to get the stories the current user has liked.
+          const likeRes = await axios.get("/api/users/liked", {
+            withCredentials: true
+          });
 
-        // API Request to get the stories the current user has saved.
-        const saveRes = await axios.get("/api/users/saved", {
-          withCredentials: true
-        });
+          // API Request to get the stories the current user has saved.
+          const saveRes = await axios.get("/api/users/saved", {
+            withCredentials: true
+          });
+
+          // Set the liked status of the story.
+          const hasLiked = likeRes.data.data.some((story: { story_username: string; }) => story.story_username === id);
+          setLiked(hasLiked);
+
+          // Set the saved status of the story.
+          const hasSaved = saveRes.data.data.some(((story: { story_username: string; }) => story.story_username === id));
+          setSaved(hasSaved);
+        }
 
         // API Request to get the total number of comments made on the story.
         const countRes = await axios.post("/api/stories/comments/count", { story_username: id });
@@ -269,14 +279,6 @@ const Story = () => {
             setExists(false);
           }
         }
-
-        // Set the liked status of the story.
-        const hasLiked = likeRes.data.data.some((story: { story_username: string; }) => story.story_username === id);
-        setLiked(hasLiked);
-
-        // Set the saved status of the story.
-        const hasSaved = saveRes.data.data.some(((story: { story_username: string; }) => story.story_username === id));
-        setSaved(hasSaved);
 
       } catch (error) {
         setError(true);
@@ -328,12 +330,12 @@ const Story = () => {
 
           <div id="TopNav" className="flex flex-row justify-center items-center mb-12">
             <button 
-              onClick={handleLike} 
+              onClick={sessionUsername ? handleLike : () => navigate("/login")} 
               className={`w-28 shadow-md text-center rounded-xl bg-secondary px-4 py-2 transition duration-200 ease-in-out hover:shadow-xl ${liked ? "text-red-600" : null}`}>
               <FontAwesomeIcon icon={liked ? solidHeart : regularHeart} />
             </button>
             <button 
-              onClick={handleSave} 
+              onClick={sessionUsername ? handleSave : () => navigate("/login")} 
               className={`w-28 shadow-md ml-4 text-center rounded-xl bg-secondary px-4 py-2 transition duration-200 ease-in-out hover:shadow-xl ${saved ? "text-amber-500" : null}`}>
               <FontAwesomeIcon icon={saved ? solidBookmark : regularBookmark} />
             </button>
@@ -377,6 +379,10 @@ const Story = () => {
                 )
               }
             </div>
+          </div>
+
+          <div className="text-center">
+            {error && <p className="text-error my-2">{errorMessage}</p>}
           </div>
 
           <div className="justify-items-center h-auto w-full md:w-1/2 rounded-xl">
@@ -424,12 +430,12 @@ const Story = () => {
       
           <div className="flex flex-row justify-center items-center mb-10">
             <button 
-              onClick={handleLike} 
+              onClick={sessionUsername ? handleLike : () => navigate("/login")} 
               className={`w-28 shadow-md text-center rounded-xl bg-secondary px-4 py-2 transition duration-200 ease-in-out hover:shadow-xl ${liked ? "text-red-600" : null}`}>
               <FontAwesomeIcon icon={liked ? solidHeart : regularHeart} />
             </button>
             <button 
-              onClick={handleSave} 
+              onClick={sessionUsername ? handleSave : () => navigate("/login")} 
               className={`w-28 shadow-md ml-4 text-center rounded-xl bg-secondary px-4 py-2 transition duration-200 ease-in-out hover:shadow-xl ${saved ? "text-amber-500" : null}`}>
               <FontAwesomeIcon icon={saved ? solidBookmark : regularBookmark} />
             </button>

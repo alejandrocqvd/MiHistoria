@@ -9,6 +9,10 @@ import { AuthContext } from "../context/authContext";
 const Home = () => {
   const { currentUser } = useContext(AuthContext)!;
 
+  // Retrieve the user item from session storage and parse it if it's a valid JSON string.
+  const storedUser = sessionStorage.getItem('user');
+  const sessionUsername = storedUser && storedUser !== "null" ? JSON.parse(storedUser).user_info.username : null;
+
   return (
     <>
       <div className="flex justify-center md:justify-between items-center h-screen w-9/12 mb-24">
@@ -18,15 +22,15 @@ const Home = () => {
           <p className="my-10 py-5">Write your story, <span className="bg-clip-text text-transparent bg-gradient font-extrabold underline">here.</span></p>
           <div className="flex flex-row justify-start items-center">
             <button className="hidden md:flex justify-center items-center h-10 w-auto p-4 mr-8 bg-gradient text-sm rounded-xl shadow-lg font-bold transition duration-200 ease-in-out hover:scale-105">
-              <Link to={ currentUser ? "./story/:id" : "./register"}>Start your journey</Link>
+              <Link to={ currentUser ? `/story/${sessionUsername}/page/1` : "./register"}>Start your journey</Link>
             </button>
             <button className="hidden md:flex justify-center items-center h-10 w-auto p-4 text-sm border-2 rounded-xl shadow-lg font-bold transition duration-200 ease-in-out hover:scale-105">
-              <Link to={ currentUser ? "./story:id" : "./login"}>Continue your story</Link>
+              <Link to={ currentUser ? `/story/${sessionUsername}/page/1` : "./login"}>Continue your story</Link>
             </button>
           </div>
         </div>
-        <div>
-          <img src={homeBg} className="hidden md:flex" />
+        <div className="h-9/12 my-auto justify-center items-center">
+          <img src={homeBg} className="hidden md:flex h-full w-auto" />
         </div>
       </div>
 
@@ -35,7 +39,7 @@ const Home = () => {
         <p className="text-xl flex-1 mr-6 text-center">
           In an digital world full of fleeting moments and endless posts, MiHistoria offers something different. 
           Here, each user gets one chance, <span className="font-bold">one post, to share their life story.</span> Our app is built on the belief that every person"s 
-          journey is unique and deserves to be told in its entirety. We"ve created this space to allow users to look back, reflect, and write down their lives.
+          journey is unique and deserves to be told in its entirety. We've created this space to allow users to look back, reflect, and write down their lives.
         </p>
       </div>
       <div className="flex flex-col justify-center items-center w-9/12 mt-10 mb-24 py-16 md:px-48 px-8 bg-[#292929] shadow-xl rounded-xl">
@@ -51,19 +55,19 @@ const Home = () => {
       <div className="flex flex-col lg:flex-row justify-stretch items-stretch w-9/12 mb-24">
         <a href={"./explore"} 
           className="flex-1 flex flex-col justify-between items-center w-full p-16 mb-8 text-center bg-[#292929] shadow-xl rounded-xl hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out">
-            <h1 className="text-4xl font-bold mb-8">Read Human Experiences</h1>
+            <p className="text-4xl font-bold mb-8 text-center">Read Human Experiences</p>
             <img src={globeIcon} className="h-24 w-auto mb-8" />
-            <p className="font-semibold">See the collection of personal narratives that take you though the intricate experiences of people from any corner of the world.</p>
+            <p className="font-semibold text-center">See the collection of personal narratives that take you though the intricate experiences of people from any corner of the world.</p>
         </a>
         <a href={ currentUser ? "./story/:id/page/1" : "./login"} className="flex-1 flex flex-col justify-between items-center w-full lg:mx-20 p-16 mb-8 text-center bg-[#292929] shadow-xl hover:shadow-2xl rounded-xl hover:scale-105 transition duration-300 ease-in-out">
-            <h1 className="text-4xl font-bold mb-8">Write <span className="underline">Your</span> Story</h1>
+            <p className="text-4xl font-bold mb-8 text-center">Write <span className="underline">Your</span> Story</p>
             <img src={bookIcon} className="h-24 w-auto mb-8" />
-            <p className="font-semibold">Let the world hear your story. Travel back in your time to recollect and write down your life.</p>
+            <p className="font-semibold text-center">Let the world hear your story. Travel back in your time to recollect and write down your life.</p>
         </a>
         <a href={ currentUser ? "./profile/edit" : "./login"} className="flex-1 flex flex-col justify-between items-center w-full p-16 mb-8 text-center bg-[#292929] shadow-xl hover:shadow-2xl rounded-xl hover:scale-105 transition duration-300 ease-in-out">
-            <h1 className="text-4xl font-bold mb-8">Be yourself or be anonymous</h1>
+            <p className="text-4xl font-bold mb-8 text-center">Be yourself or be anonymous</p>
             <img src={privacyIcon} className="h-24 w-auto mb-8" />
-            <p className="font-semibold">No need to expose your identity, feel free to write anonymously and tell your truth with no filter.</p>
+            <p className="font-semibold text-center">No need to expose your identity, feel free to write anonymously and tell your truth with no filter.</p>
         </a>
       </div>
 

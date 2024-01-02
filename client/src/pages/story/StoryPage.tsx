@@ -45,6 +45,9 @@ const StoryPage = () => {
 
   return (
     <div className="flex flex-col justify-start items-center">
+      <div className="text-center">
+        {error && <p className="text-error">{errorMessage}</p>}
+      </div>
       <div className="flex flex-wrap flex-col w-full" dangerouslySetInnerHTML={{ __html: text }} />
     </div>
   )

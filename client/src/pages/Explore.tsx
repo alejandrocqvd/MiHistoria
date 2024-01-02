@@ -1,27 +1,72 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import homeBg from "../assets/home-bg.png";
+import { AuthContext } from "../context/authContext";
+import axios from "axios";
+
+interface SearchData {
+  title: string;
+  image: string;
+  username: string;
+}
 
 const Explore = () => {
-  // useStates for search parameters
+  // State variables:
+  // - error: Boolean indicating if there is an error.
+  const [error, setError] = useState<boolean>(false);
+
+  // - errorMessage: String containing the error message to display.
+  const [errorMessage, setErrorMessage] = useState<string>("");
+
+  // - search: String containing the user's search input.
+  const [search, setSearch] = useState<string>("");
+
+  // - data: Array of objects containing information for search results.
+  const [data, setData] = useState<SearchData[]>([]);
+
+  // useStates for search parameters.
   const [searchStories, setSearchStories] = useState<boolean>(false);
+
   const [searchUsers, setSearchUsers] = useState<boolean>(false);
 
-  // useStates for identifying if the user has typed something in search bar
+  // useStates for identifying if the user has typed something in search bar.
   const [searching, setSearching] = useState<boolean>(false);
 
-  // Updates the search title according to chosen filters
+  // AuthContext to get current user
+  const authContext = useContext(AuthContext);
+  const { currentUser } = authContext!;
+
+  // Updates the search title according to chosen filters.
   const getSearchTitle = () => {
     if (searchStories) return "Search Stories";
     if (searchUsers) return "Search Users";
     return "Search";
   }
 
-  // Used to determine whether or not to show top stories, newest stories, if the user has started searching
+  // Used to determine whether or not to show top stories, newest stories, if the user has started searching.
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event?.target.value;
-    setSearching(value.length > 0);
+    if (value.length > 0) {
+      setSearching(true);
+      setSearch(value);
+      handleSearch();
+    } else {
+      setSearching(false);
+      setData([]);
+    }
+  }
+
+  const handleSearch = async () => {
+    try {
+      const res = await axios.post("/api/searches/all", { search });
+      setData(res.data.data);
+    } catch (error) {
+      setError(true);
+      if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error);
+      else setErrorMessage("An unexpected error occurred.");
+      console.log(error);
+    }
   }
 
   return (
@@ -49,7 +94,7 @@ const Explore = () => {
             </button>
           </div>
 
-          <div className={ searching ? "hidden" : "flex flex-col justify-center items-center mb-12"}>
+          <div className={ searching || !currentUser ? "hidden" : "flex flex-col justify-center items-center mb-12"}>
             <p className="text-3xl font-semibold mb-8">Saved Stories</p>
             <a href="./story/:id" className="flex flex-row justify-between items-center w-full mb-4 px-6 py-3 bg-secondary rounded-xl hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out">
               <div className="flex flex-row justify-center items-center overflow-hidden">

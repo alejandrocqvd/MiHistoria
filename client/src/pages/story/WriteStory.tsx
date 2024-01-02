@@ -133,6 +133,10 @@ const WriteStory = () => {
         value={text}
       />
 
+      <div className="text-center">
+        {error && <p className="text-error my-2">{errorMessage}</p>}
+      </div>
+
       <div className="flex flex-row justify-center items-center my-4">
         <button 
           onClick={handleSave} className="bg-gradient rounded-xl shadow-md font-bold p-2 w-32 mr-2 hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out"
