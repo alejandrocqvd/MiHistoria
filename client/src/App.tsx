@@ -11,13 +11,16 @@ import Navbar from "./components/Navbar"
 import Footer from "./components/Footer"
 import Help from "./pages/support/Help"
 import Legal from "./pages/support/Legal"
-import Explore from "./pages/Explore"
+import Explore from "./pages/search/Explore"
 import StoryPage from "./pages/story/StoryPage"
 import RequireAuth from "./pages/support/RequireAuth"
 import ChangePassword from "./pages/profile/ChangePassword"
 import WriteStory from "./pages/story/WriteStory"
 import ChangeBanner from "./pages/story/ChangeBanner"
 import ChangePicture from "./pages/profile/ChangePicture"
+import ExploreYearlyTop from "./pages/search/ExploreYearlyTop"
+import ExploreMonthlyTop from "./pages/search/ExploreMonthlyTop"
+import ExploreNew from "./pages/search/ExploreNew"
 
 const Layout = () => {
   return (
@@ -75,6 +78,18 @@ const router = createBrowserRouter([
       {
         path: "/explore",
         element: <Explore/>,
+      },
+      {
+        path: "/explore/top",
+        element: <ExploreYearlyTop/>,
+      },
+      {
+        path: "/explore/top/monthly",
+        element: <ExploreMonthlyTop/>,
+      },
+      {
+        path: "/explore/new",
+        element: <ExploreNew/>,
       },
       {
         path: "/help",
