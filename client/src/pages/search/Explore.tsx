@@ -5,6 +5,7 @@ import homeBg from "../../assets/home-bg.png";
 import { AuthContext } from "../../context/authContext";
 import axios from "axios";
 import SearchResult from "../../components/SearchResult";
+import { Link } from "react-router-dom";
 
 interface SearchData {
   title: string;
@@ -25,6 +26,18 @@ const Explore = () => {
 
   // - data: Array of objects containing information for search results.
   const [data, setData] = useState<SearchData[]>([]);
+
+  // - savedData: Array of objects containing information for 5 saved stories.
+  const [savedData, setSavedData] = useState<SearchData[]>([]);
+
+  // - topMonthlyData: Array of objects containing information for top 5 stories in the past month.
+  const [topMonthlyData, setTopMonthlyData] = useState<SearchData[]>([]);
+
+  // - topYearlyData: Array of objects containing information for top 5 stories in the past year.
+  const [topYearlyData, setTopYearlyData] = useState<SearchData[]>([]);
+
+  // - topData: Array of objects containing information for top 5 stories of all time.
+  const [topData, setTopData] = useState<SearchData[]>([]);
 
   // useStates for search parameters.
   const [searchStories, setSearchStories] = useState<boolean>(false);
@@ -77,6 +90,32 @@ const Explore = () => {
     if (searching) handleSearch();
   }, [searchStories, searchUsers]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (currentUser) {
+          const savedRes = await axios.get("/api/searches/saved/5");
+          setSavedData(savedRes.data.data);
+        }
+
+        const monthlyRes = await axios.get("/api/searches/top/monthly/5");
+        setTopMonthlyData(monthlyRes.data.data);
+
+        const yearlyRes = await axios.get("/api/searches/top/yearly/5");
+        setTopYearlyData(yearlyRes.data.data);
+
+        const topRes = await axios.get("/api/searches/top/5");
+        setTopData(topRes.data.data);
+      } catch (error) {
+        setError(true);
+        if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error);
+        else setErrorMessage("An unexpected error occurred.");
+        console.log(error);
+      }
+    }
+    fetchData();
+  }, []);
+
   return (
     <>
       <div className="flex flex-col justify-center items-center h-auto w-9/12 mb-24 mt-32">
@@ -104,6 +143,10 @@ const Explore = () => {
             </button>
           </div>
 
+          <div className="text-center">
+            {error && <p className="text-error">{errorMessage}</p>}
+          </div>
+
           <div className={ searching ? "flex flex-col justify-center items-center mb-12" : "hidden"}>
             {data.map(searchResult => (
               <SearchResult key={searchResult.username} data={searchResult} />
@@ -112,13 +155,9 @@ const Explore = () => {
 
           <div className={ searching || !currentUser ? "hidden" : "flex flex-col justify-center items-center mb-12"}>
             <p className="text-3xl font-semibold mb-8">Saved Stories</p>
-            <a href="./story/:id" className="flex flex-row justify-between items-center h-22 w-full mb-4 px-6 py-3 bg-secondary rounded-xl hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out">
-              <div className="flex flex-row justify-center items-center overflow-hidden">
-                <img src={homeBg} className="h-16 w-auto rounded-xl mr-6" />
-                <p className="text-xl font-semibold overflow-hidden text-ellipsis line-clamp-1">Once Upon A Time In Hollywood</p>
-              </div>
-              <p className="flex-shrink-0">John Seed</p>
-            </a>
+            {savedData.map(searchResult => (
+              <SearchResult key={searchResult.username} data={searchResult} />
+            ))}
             <button className="w-full mb-4 px-6 py-3 bg-gradient rounded-xl hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out font-semibold">
               See More
             </button>
@@ -126,30 +165,32 @@ const Explore = () => {
 
           <div className={ searching ? "hidden" : "flex flex-col justify-center items-center mb-12"}>
             <p className="text-3xl font-semibold mb-8">Top Stories This Month</p>
-            <a href="./story/:id" className="flex flex-row justify-between items-center w-full mb-4 px-6 py-3 bg-secondary rounded-xl hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out">
-              <div className="flex flex-row justify-center items-center overflow-hidden">
-                <img src={homeBg} className="h-16 w-auto rounded-xl mr-6" />
-                <p className="text-xl font-semibold overflow-hidden text-ellipsis line-clamp-1">Once Upon A Time In Hollywood</p>
-              </div>
-              <p className="flex-shrink-0">John Seed</p>
-            </a>
-            <button className="w-full mb-4 px-6 py-3 bg-gradient rounded-xl hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out font-semibold">
+            {topMonthlyData.map(searchResult => (
+              <SearchResult key={searchResult.username} data={searchResult} />
+            ))}
+            <Link to={"/explore/top/monthly"} className="w-full mb-4 px-6 py-3 text-center bg-gradient rounded-xl hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out font-semibold">
               See More
-            </button>
+            </Link>
           </div>
           
           <div className={ searching ? "hidden" : "flex flex-col justify-center items-center mb-12"}>
-            <p className="text-3xl font-semibold mb-8">Top Stories of All Time</p>
-            <a href="./story/:id" className="flex flex-row justify-between items-center w-full mb-4 px-6 py-3 bg-secondary rounded-xl hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out">
-              <div className="flex flex-row justify-center items-center overflow-hidden">
-                <img src={homeBg} className="h-16 w-auto rounded-xl mr-6" />
-                <p className="text-xl font-semibold overflow-hidden text-ellipsis line-clamp-1">Once Upon A Time In Hollywood</p>
-              </div>
-              <p className="flex-shrink-0">John Seed</p>
-            </a>
-            <button className="w-full mb-4 px-6 py-3 bg-gradient rounded-xl hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out font-semibold">
+            <p className="text-3xl font-semibold mb-8">Top Stories This Year</p>
+            {topYearlyData.map(searchResult => (
+              <SearchResult key={searchResult.username} data={searchResult} />
+            ))}
+            <Link to={"/explore/top/yearly"} className="w-full mb-4 px-6 py-3 text-center bg-gradient rounded-xl hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out font-semibold">
               See More
-            </button>
+            </Link>
+          </div>
+
+          <div className={ searching ? "hidden" : "flex flex-col justify-center items-center mb-12"}>
+            <p className="text-3xl font-semibold mb-8">Top Stories of All Time</p>
+            {topData.map(searchResult => (
+              <SearchResult key={searchResult.username} data={searchResult} />
+            ))}
+            <Link to={"/explore/top"} className="w-full mb-4 px-6 py-3 text-center bg-gradient rounded-xl hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out font-semibold">
+              See More
+            </Link>
           </div>
 
           <div className={ searching ? "hidden" : "flex flex-col justify-center items-center mb-12"}>
@@ -161,9 +202,9 @@ const Explore = () => {
               </div>
               <p className="flex-shrink-0">John Seed</p>
             </a>
-            <button className="w-full mb-4 px-6 py-3 bg-gradient rounded-xl hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out font-semibold">
+            <Link to={"/explore/new"} className="w-full mb-4 px-6 py-3 text-center bg-gradient rounded-xl hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out font-semibold">
               See More
-            </button>
+            </Link>
           </div>
 
         </div>

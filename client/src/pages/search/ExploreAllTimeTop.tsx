@@ -8,7 +8,7 @@ interface SearchData {
   username: string;
 }
 
-const ExploreMonthlyTop = () => {
+const ExploreAllTimeTop = () => {
   // State variables:
   // - error: Boolean indicating if there is an error.
   const [error, setError] = useState<boolean>(false);
@@ -22,7 +22,7 @@ const ExploreMonthlyTop = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("/api/searches/top/monthly");
+        const res = await axios.get("/api/searches/top");
         setData(res.data.data);
       } catch (error) {
         setError(true);
@@ -36,13 +36,9 @@ const ExploreMonthlyTop = () => {
 
   return (
     <div className="flex flex-col justify-center items-center h-auto w-9/12 mb-24 mt-32">
-      <p className="text-center mb-10 p-2 font-bold text-5xl bg-clip-text text-transparent bg-gradient">Top Stories This Month</p>
+      <p className="text-center mb-10 p-2 font-bold text-5xl bg-clip-text text-transparent bg-gradient">Top Stories of All Time</p>
 
-      <div className="text-center">
-        {error && <p className="text-error">{errorMessage}</p>}
-      </div>
-
-      <div className="flex flex-col justify-center items-center mb-12 w-1/2">
+      <div className="flex flex-col justify-center items-center mb-12">
         {data.map(searchResult => (
           <SearchResult key={searchResult.username} data={searchResult} />
         ))}
@@ -51,4 +47,4 @@ const ExploreMonthlyTop = () => {
   )
 }
 
-export default ExploreMonthlyTop;
+export default ExploreAllTimeTop;

@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import { db } from "../db";;
 import { RowDataPacket } from "mysql2";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 export const searchAll = (req: Request, res: Response) => {
   const { searchTerm } = req.body;
@@ -55,17 +56,187 @@ export const searchUsers = (req: Request, res: Response) => {
 }
 
 export const getSaved = (req: Request, res: Response) => {
+  try {
+    // Get JWT.
+    const token = req.cookies["access_token"];
+    if (!token) return res.status(401).json({ error: "Access denied, no token provided." });
+    
+    // Verify the token and save username.
+    const decoded = jwt.verify(token, "jwtkey") as JwtPayload;
+    if (!decoded.username) return res.status(401).json({ error: "Invalid token." });
+    const username = decoded.username;
 
+    // Query to get the user's saved stories.
+    const q = `SELECT DISTINCT st.title, st.image, st.username, sv.timestamp
+                FROM story AS st
+                LEFT JOIN saves AS sv ON st.username = sv.story_username
+                WHERE sv.save_username = ? 
+                ORDER BY sv.timestamp DESC`;
+    db.query(q, [username], (error, data) => {
+      if (error) return res.status(500).json({ error });
+
+      const typedData = data as RowDataPacket[];
+      return res.status(200).json({ message: "Successfully fetched saved stories.", data: typedData });
+    });
+} catch (error) {
+    res.status(400).json({ error: "Invalid token." });
+}
+}
+
+export const get5Saved = (req: Request, res: Response) => {
+  try {
+      // Get JWT.
+      const token = req.cookies["access_token"];
+      if (!token) return res.status(401).json({ error: "Access denied, no token provided." });
+      
+      // Verify the token and save username.
+      const decoded = jwt.verify(token, "jwtkey") as JwtPayload;
+      if (!decoded.username) return res.status(401).json({ error: "Invalid token." });
+      const username = decoded.username;
+
+      // Query to get 5 of the user's saved stories.
+      const q = `SELECT DISTINCT st.title, st.image, st.username, sv.timestamp
+                  FROM story AS st
+                  LEFT JOIN saves AS sv ON st.username = sv.story_username
+                  WHERE sv.save_username = ? 
+                  ORDER BY sv.timestamp DESC
+                  LIMIT 5`;
+      db.query(q, [username], (error, data) => {
+        if (error) return res.status(500).json({ error });
+
+        const typedData = data as RowDataPacket[];
+        return res.status(200).json({ message: "Successfully fetched 5 saved stories.", data: typedData });
+      });
+  } catch (error) {
+      res.status(400).json({ error: "Invalid token." });
+  }
 }
 
 export const getMonthlyTop = (req: Request, res: Response) => {
+  // Query to get top posts in the last 30 days.
+  const q = `SELECT DISTINCT s.title, s.image, s.username, COUNT(l.story_username) AS like_count
+              FROM story AS s
+              LEFT JOIN likes AS l ON s.username = l.story_username
+              WHERE s.timestamp >= NOW() - INTERVAL 30 DAY
+              GROUP BY s.title, s.image, s.username
+              ORDER BY like_count DESC`;
+  db.query(q, (error, data) => {
+    if (error) return res.status(500).json({ error });
 
+    const typedData = data as RowDataPacket[];
+    return res.status(200).json({ message: "Successfully fetched top monthly stories.", data: typedData });
+  });
+}
+
+export const get5MonthlyTop = (req: Request, res: Response) => {
+  // Query to get 5 top posts in the last 30 days.
+  const q = `SELECT DISTINCT s.title, s.image, s.username, COUNT(l.story_username) AS like_count
+              FROM story AS s
+              LEFT JOIN likes AS l ON s.username = l.story_username
+              WHERE s.timestamp >= NOW() - INTERVAL 30 DAY
+              GROUP BY s.title, s.image, s.username
+              ORDER BY like_count DESC
+              LIMIT 5`;
+  db.query(q, (error, data) => {
+    if (error) return res.status(500).json({ error });
+
+    const typedData = data as RowDataPacket[];
+    return res.status(200).json({ message: "Successfully fetched 5 top monthly stories.", data: typedData });
+  });
 }
 
 export const getYearlyTop = (req: Request, res: Response) => {
+  // Query to get top posts in the last year.
+  const q = `SELECT DISTINCT s.title, s.image, s.username, COUNT(l.story_username) AS like_count
+              FROM story AS s
+              LEFT JOIN likes AS l ON s.username = l.story_username
+              WHERE s.timestamp >= NOW() - INTERVAL 1 YEAR
+              GROUP BY s.title, s.image, s.username
+              ORDER BY like_count DESC`;
+  db.query(q, (error, data) => {
+    if (error) return res.status(500).json({ error });
 
+    const typedData = data as RowDataPacket[];
+    return res.status(200).json({ message: "Successfully fetched top yearly stories.", data: typedData });
+  });
 }
 
-export const getNew= (req: Request, res: Response) => {
+export const get5YearlyTop = (req: Request, res: Response) => {
+  // Query to get 5 top posts in the last year.
+  const q = `SELECT DISTINCT s.title, s.image, s.username, COUNT(l.story_username) AS like_count
+              FROM story AS s
+              LEFT JOIN likes AS l ON s.username = l.story_username
+              WHERE s.timestamp >= NOW() - INTERVAL 1 YEAR
+              GROUP BY s.title, s.image, s.username
+              ORDER BY like_count DESC
+              LIMIT 5`;
+  db.query(q, (error, data) => {
+    if (error) return res.status(500).json({ error });
 
+    const typedData = data as RowDataPacket[];
+    return res.status(200).json({ message: "Successfully fetched 5 top yearly stories.", data: typedData });
+  });
+}
+
+export const getAllTimeTop = (req: Request, res: Response) => {
+  // Query to get top 100 posts of all time.
+  const q = `SELECT DISTINCT s.title, s.image, s.username, COUNT(l.story_username) AS like_count
+              FROM story AS s
+              LEFT JOIN likes AS l ON s.username = l.story_username
+              GROUP BY s.title, s.image, s.username
+              ORDER BY like_count DESC
+              LIMIT 100`;
+  db.query(q, (error, data) => {
+    if (error) return res.status(500).json({ error });
+
+    const typedData = data as RowDataPacket[];
+    return res.status(200).json({ message: "Successfully fetched top stories of all time.", data: typedData });
+  });
+}
+
+export const get5AllTimeTop = (req: Request, res: Response) => {
+  // Query to get top 5 posts of all time.
+  const q = `SELECT DISTINCT s.title, s.image, s.username, COUNT(l.story_username) AS like_count
+              FROM story AS s
+              LEFT JOIN likes AS l ON s.username = l.story_username
+              GROUP BY s.title, s.image, s.username
+              ORDER BY like_count DESC
+              LIMIT 5`;
+  db.query(q, (error, data) => {
+    if (error) return res.status(500).json({ error });
+
+    const typedData = data as RowDataPacket[];
+    return res.status(200).json({ message: "Successfully fetched top 5 stories of all time.", data: typedData });
+  });
+}
+
+export const getNew = (req: Request, res: Response) => {
+  // Query to get new stories.
+  const q = `SELECT DISTINCT s.title, s.image, s.username
+              FROM story AS s
+              LEFT JOIN likes AS l ON s.username = l.story_username
+              GROUP BY s.title, s.image, s.username
+              ORDER BY s.timestamp DESC`;
+  db.query(q, (error, data) => {
+    if (error) return res.status(500).json({ error });
+
+    const typedData = data as RowDataPacket[];
+    return res.status(200).json({ message: "Successfully fetched new stories.", data: typedData });
+  });
+}
+
+export const get5New = (req: Request, res: Response) => {
+  // Query to get 5 new stories.
+  const q = `SELECT DISTINCT s.title, s.image, s.username
+              FROM story AS s
+              LEFT JOIN likes AS l ON s.username = l.story_username
+              GROUP BY s.title, s.image, s.username
+              ORDER BY s.timestamp DESC
+              LIMIT 5`;
+  db.query(q, (error, data) => {
+    if (error) return res.status(500).json({ error });
+
+    const typedData = data as RowDataPacket[];
+    return res.status(200).json({ message: "Successfully fetched 5 newest stories.", data: typedData });
+  });
 }

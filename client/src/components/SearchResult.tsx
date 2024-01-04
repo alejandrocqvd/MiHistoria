@@ -15,7 +15,7 @@ const SearchResult: React.FC<ResultProps> = ({ data }) => {
         <img src={`/public/uploads/${data.image}`} className={data.image !== null ? "h-16 w-auto rounded-xl mr-6" : "hidden"} />
         <p className="text-xl font-semibold overflow-hidden text-ellipsis line-clamp-1">{data.title}</p>
       </div>
-      <p className="flex-shrink-0">{data.username}</p>
+      <p className="flex-shrink-0 ml-4">{data.username}</p>
     </a>
   )
 }

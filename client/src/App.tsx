@@ -21,6 +21,8 @@ import ChangePicture from "./pages/profile/ChangePicture"
 import ExploreYearlyTop from "./pages/search/ExploreYearlyTop"
 import ExploreMonthlyTop from "./pages/search/ExploreMonthlyTop"
 import ExploreNew from "./pages/search/ExploreNew"
+import ExploreAllTimeTop from "./pages/search/ExploreAllTimeTop"
+import Saved from "./pages/search/Saved"
 
 const Layout = () => {
   return (
@@ -76,11 +78,19 @@ const router = createBrowserRouter([
         element: <RequireAuth><ChangeBanner/></RequireAuth>
       },
       {
+        path: "/saved",
+        element: <RequireAuth><Saved/></RequireAuth>,
+      },
+      {
         path: "/explore",
         element: <Explore/>,
       },
       {
         path: "/explore/top",
+        element: <ExploreAllTimeTop/>,
+      },
+      {
+        path: "/explore/top/yearly",
         element: <ExploreYearlyTop/>,
       },
       {
