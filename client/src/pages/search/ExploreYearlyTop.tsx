@@ -38,7 +38,7 @@ const ExploreYearlyTop = () => {
     <div className="flex flex-col justify-center items-center h-auto w-9/12 mb-24 mt-32">
       <p className="text-center mb-10 p-2 font-bold text-5xl bg-clip-text text-transparent bg-gradient">Top Stories This Year</p>
 
-      <div className="flex flex-col justify-center items-center mb-12">
+      <div className="flex flex-col justify-center items-center mb-12 w-1/2">
         {data.map(searchResult => (
           <SearchResult key={searchResult.username} data={searchResult} />
         ))}
