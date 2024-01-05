@@ -179,12 +179,56 @@ export const deleteProfile = (req: Request, res: Response) => {
         const username = decoded.username;
     
         // Query to delete user's account.
-        const q = `DELETE FROM user WHERE username = ?`;
+        const q = `DELETE FROM comment WHERE comment_username = ?`;
         db.query(q, [username], (error) => {
             // Error checking.
             if (error) return res.status(500).json({ error: error });
 
-            return res.status(200).json({ message: "Successfully deleted account." });
+            const q = `DELETE FROM likes WHERE like_username = ?`;
+            db.query(q, [username], (error) => {
+                // Error checking.
+                if (error) return res.status(500).json({ error: error });
+    
+                const q = `DELETE FROM saves WHERE save_username = ?`;
+                db.query(q, [username], (error) => {
+                    // Error checking.
+                    if (error) return res.status(500).json({ error: error });
+        
+                    // Query to delete the story.
+                    const q = `DELETE FROM page WHERE username = ?`;
+                    db.query(q, [username], (error) => {
+                        // Error checking.
+                        if (error) return res.status(500).json({ error });
+
+                        const q = `DELETE FROM comment WHERE story_username = ?`;
+                        db.query(q, [username], (error) => {
+                            if (error) return res.status(500).json({ error });
+
+                            const q = `DELETE FROM likes WHERE story_username = ?`;
+                            db.query(q, [username], (error) => {
+                                if (error) return res.status(500).json({ error });
+
+                                const q = `DELETE FROM saves WHERE story_username = ?`;
+                                db.query(q, [username], (error) => {
+                                    if (error) return res.status(500).json({ error });
+
+                                    const q = `DELETE FROM story WHERE username = ?`;
+                                    db.query(q, [username], (error) => {
+                                        if (error) return res.status(500).json({ error });
+                    
+                                        const q = `DELETE FROM user WHERE username = ?`;
+                                        db.query(q, [username], (error) => {
+                                            if (error) return res.status(500).json({ error });
+                        
+                                            return res.status(200).json({ message: "Successfully deleted user." });
+                                        });                                       
+                                    });                    
+                                });                
+                            });
+                        });
+                    });                
+                });               
+            });        
         });
     } catch (error) {
         res.status(400).json({ error: "Invalid token." });

@@ -6,6 +6,7 @@ import Comment from "../../components/Comment.tsx";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { AuthContext } from "../../context/authContext.tsx";
+import ErrorDisplay from "../../components/ErrorDisplay.tsx";
 
 // Interface for holding and managing the story's data.
 interface StoryData {
@@ -161,7 +162,7 @@ const Story = () => {
 
   const fetchComments = async (page: number) => {
     try {
-      const res = await axios.post("/api/stories/comments", {
+      const res = await axios.post("/api/comments/get", {
         story_username: params.id,
         page: page,
         limit: 50
@@ -198,7 +199,7 @@ const Story = () => {
 
   const handleComment = async () => {
     try {
-      await axios.post("/api/stories/comment/create", {
+      await axios.post("/api/comments/create", {
         data: { story_username: params.id, text: comment },
         withCredentials: true
       });
@@ -264,7 +265,7 @@ const Story = () => {
         }
 
         // API Request to get the total number of comments made on the story.
-        const countRes = await axios.post("/api/stories/comments/count", { story_username: id });
+        const countRes = await axios.post("/api/comments/count", { story_username: id });
         setTotalComments(countRes.data.data.count);
 
         // API Request to get the first page of comments on the story.
@@ -381,10 +382,8 @@ const Story = () => {
             </div>
           </div>
 
-          <div className="text-center">
-            {error && <p className="text-error my-2">{errorMessage}</p>}
-          </div>
-
+          {error && <ErrorDisplay errorMessage={errorMessage}></ErrorDisplay>}
+          
           <div className="justify-items-center h-auto w-full md:w-1/2 rounded-xl">
             <Outlet />
           </div>
