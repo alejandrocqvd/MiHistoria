@@ -68,16 +68,17 @@ const WriteStory = () => {
       else setErrorMessage("An unexpected error occurred.");
       console.log(error);
     }
-    
   }
 
   useEffect(() => {
     const fetchData = async () => {
         try {
-          const res = await axios.post("/api/stories/story", { username: sessionUsername});
-          setText(res.data.data.text);
-          setTitle(res.data.data.title);
-          setImage(res.data.data.story_image);
+          const res = await axios.post("/api/stories/story", { username: sessionUsername });
+          if (res.data.data) {
+            setText(res.data.data.text);
+            setTitle(res.data.data.title);
+            setImage(res.data.data.story_image);
+          }
         } catch (error) {
           setError(true);
           if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error);
@@ -134,7 +135,7 @@ const WriteStory = () => {
       />
 
       <div className="text-center">
-        {error && <p className="text-error my-2">{errorMessage}</p>}
+        {error && <p className="text-error text-center mb-2 mt-4">{errorMessage}</p>}
       </div>
 
       <div className="flex flex-row justify-center items-center my-4">

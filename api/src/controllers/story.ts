@@ -216,9 +216,9 @@ export const saveStory = async (req: Request, res: Response) => {
     
                 // If the story does not exist, insert it into the appropriate tables.
                 else {
-                    const q = `INSERT INTO story (username, title, page_count, text, timestamp)
-                                VALUES (?, ?, ?, ?, ?)`;
-                    connection?.query(q, [username, title, pages.length, text, null], (error) => {
+                    const q = `INSERT INTO story (username, title, page_count, text)
+                                VALUES (?, ?, ?, ?)`;
+                    connection?.query(q, [username, title, pages.length, text], (error) => {
                         // Error checking,
                         if (error) throw error;
     
@@ -337,11 +337,21 @@ export const deleteStory = (req: Request, res: Response) => {
             db.query(q, [username], (error) => {
                 if (error) return res.status(500).json({ error });
 
-                const q = `DELETE FROM story WHERE username = ?`;
+                const q = `DELETE FROM likes WHERE story_username = ?`;
                 db.query(q, [username], (error) => {
                     if (error) return res.status(500).json({ error });
 
-                    return res.status(200).json({ message: "Successfully deleted story and all its pages." });
+                    const q = `DELETE FROM saves WHERE story_username = ?`;
+                    db.query(q, [username], (error) => {
+                        if (error) return res.status(500).json({ error });
+    
+                        const q = `DELETE FROM story WHERE username = ?`;
+                        db.query(q, [username], (error) => {
+                            if (error) return res.status(500).json({ error });
+        
+                            return res.status(200).json({ message: "Successfully deleted story and all its pages." });
+                        });                    
+                    });                
                 });
             });
         });

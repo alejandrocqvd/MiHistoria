@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import homeBg from "../../assets/home-bg.png";
 import { AuthContext } from "../../context/authContext";
 import axios from "axios";
 import SearchResult from "../../components/SearchResult";
@@ -91,7 +90,9 @@ const Explore = () => {
     const fetchData = async () => {
       try {
         if (currentUser) {
-          const savedRes = await axios.get("/api/searches/saved/5");
+          const savedRes = await axios.post("/api/searches/saved/5", {
+            withCredentials: true
+          });
           setSavedData(savedRes.data.data);
         }
 
@@ -147,14 +148,14 @@ const Explore = () => {
             ))}
           </div>
 
-          <div className={ searching || !currentUser ? "hidden" : "flex flex-col justify-center items-center mb-12"}>
+          <div className={ searching || !currentUser || savedData.length === 0 ? "hidden" : "flex flex-col justify-center items-center mb-12"}>
             <p className="text-3xl font-semibold mb-8">Saved Stories</p>
             {savedData.map(searchResult => (
               <SearchResult key={searchResult.username} data={searchResult} />
             ))}
-            <button className="w-full mb-4 px-6 py-3 bg-gradient rounded-xl hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out font-semibold">
+            <Link to={"/saved"} className="w-full mb-4 px-6 py-3 bg-gradient rounded-xl text-center hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out font-semibold">
               See More
-            </button>
+            </Link>
           </div>
       
 

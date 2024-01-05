@@ -11,6 +11,7 @@ import {
   getMonthlyTop, 
   getNew, 
   getSaved, 
+  getSavedCount, 
   getYearlyCount, 
   getYearlyTop, 
   searchAll, 
@@ -25,7 +26,8 @@ router.post("/story", searchStories);
 router.post("/user", searchUsers);
 
 router.post("/saved", getSaved);
-router.get("/saved/5", get5Saved);
+router.post("/saved/5", get5Saved);
+router.post("/saved/count", getSavedCount);
 
 router.post("/new", getNew);
 router.get("/new/5", get5New);
