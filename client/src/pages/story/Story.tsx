@@ -189,12 +189,12 @@ const Story = () => {
       else setErrorMessage("An unexpected error occurred.");
       console.log(error);
     }
-  };
+  }
 
   const handleShowMore = () => {
     const nextPage = currentCommentPage + 1;
     setCurrentCommentPage(nextPage);
-  };
+  }
 
   const handleComment = async () => {
     try {
@@ -221,7 +221,7 @@ const Story = () => {
         topNav.scrollIntoView({ behavior: "smooth", block: "start" });
       }
     }, 50);
-  };
+  }
 
   // useEffect fetches the story page's text through an API request to the back end.
   useEffect(() => {

@@ -30,14 +30,11 @@ const Explore = () => {
   // - savedData: Array of objects containing information for 5 saved stories.
   const [savedData, setSavedData] = useState<SearchData[]>([]);
 
-  // - topMonthlyData: Array of objects containing information for top 5 stories in the past month.
-  const [topMonthlyData, setTopMonthlyData] = useState<SearchData[]>([]);
-
-  // - topYearlyData: Array of objects containing information for top 5 stories in the past year.
-  const [topYearlyData, setTopYearlyData] = useState<SearchData[]>([]);
-
   // - topData: Array of objects containing information for top 5 stories of all time.
   const [topData, setTopData] = useState<SearchData[]>([]);
+
+  // - newData: Array of objects containing information for the newest 5 stories.
+  const [newData, setNewData] = useState<SearchData[]>([]);
 
   // useStates for search parameters.
   const [searchStories, setSearchStories] = useState<boolean>(false);
@@ -98,14 +95,11 @@ const Explore = () => {
           setSavedData(savedRes.data.data);
         }
 
-        const monthlyRes = await axios.get("/api/searches/top/monthly/5");
-        setTopMonthlyData(monthlyRes.data.data);
-
-        const yearlyRes = await axios.get("/api/searches/top/yearly/5");
-        setTopYearlyData(yearlyRes.data.data);
-
         const topRes = await axios.get("/api/searches/top/5");
         setTopData(topRes.data.data);
+
+        const newRes = await axios.get("/api/searches/new/5");
+        setNewData(newRes.data.data);
       } catch (error) {
         setError(true);
         if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error);
@@ -162,29 +156,10 @@ const Explore = () => {
               See More
             </button>
           </div>
+      
 
           <div className={ searching ? "hidden" : "flex flex-col justify-center items-center mb-12"}>
-            <p className="text-3xl font-semibold mb-8">Top Stories This Month</p>
-            {topMonthlyData.map(searchResult => (
-              <SearchResult key={searchResult.username} data={searchResult} />
-            ))}
-            <Link to={"/explore/top/monthly"} className="w-full mb-4 px-6 py-3 text-center bg-gradient rounded-xl hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out font-semibold">
-              See More
-            </Link>
-          </div>
-          
-          <div className={ searching ? "hidden" : "flex flex-col justify-center items-center mb-12"}>
-            <p className="text-3xl font-semibold mb-8">Top Stories This Year</p>
-            {topYearlyData.map(searchResult => (
-              <SearchResult key={searchResult.username} data={searchResult} />
-            ))}
-            <Link to={"/explore/top/yearly"} className="w-full mb-4 px-6 py-3 text-center bg-gradient rounded-xl hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out font-semibold">
-              See More
-            </Link>
-          </div>
-
-          <div className={ searching ? "hidden" : "flex flex-col justify-center items-center mb-12"}>
-            <p className="text-3xl font-semibold mb-8">Top Stories of All Time</p>
+            <p className="text-3xl font-semibold mb-8">Top Stories</p>
             {topData.map(searchResult => (
               <SearchResult key={searchResult.username} data={searchResult} />
             ))}
@@ -195,13 +170,9 @@ const Explore = () => {
 
           <div className={ searching ? "hidden" : "flex flex-col justify-center items-center mb-12"}>
             <p className="text-3xl font-semibold mb-8">New Stories</p>
-            <a href="./story/:id" className="flex flex-row justify-between items-center w-full mb-4 px-6 py-3 bg-secondary rounded-xl hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out">
-              <div className="flex flex-row justify-center items-center overflow-hidden">
-                <img src={homeBg} className="h-16 w-auto rounded-xl mr-6" />
-                <p className="text-xl font-semibold overflow-hidden text-ellipsis line-clamp-1">Once Upon A Time In Hollywood</p>
-              </div>
-              <p className="flex-shrink-0">John Seed</p>
-            </a>
+            {newData.map(searchResult => (
+              <SearchResult key={searchResult.username} data={searchResult} />
+            ))}
             <Link to={"/explore/new"} className="w-full mb-4 px-6 py-3 text-center bg-gradient rounded-xl hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out font-semibold">
               See More
             </Link>

@@ -18,10 +18,8 @@ import ChangePassword from "./pages/profile/ChangePassword"
 import WriteStory from "./pages/story/WriteStory"
 import ChangeBanner from "./pages/story/ChangeBanner"
 import ChangePicture from "./pages/profile/ChangePicture"
-import ExploreYearlyTop from "./pages/search/ExploreYearlyTop"
-import ExploreMonthlyTop from "./pages/search/ExploreMonthlyTop"
 import ExploreNew from "./pages/search/ExploreNew"
-import ExploreAllTimeTop from "./pages/search/ExploreAllTimeTop"
+import ExploreAllTimeTop from "./pages/search/ExploreTop"
 import Saved from "./pages/search/Saved"
 
 const Layout = () => {
@@ -88,14 +86,6 @@ const router = createBrowserRouter([
       {
         path: "/explore/top",
         element: <ExploreAllTimeTop/>,
-      },
-      {
-        path: "/explore/top/yearly",
-        element: <ExploreYearlyTop/>,
-      },
-      {
-        path: "/explore/top/monthly",
-        element: <ExploreMonthlyTop/>,
       },
       {
         path: "/explore/new",
