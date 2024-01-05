@@ -3,15 +3,49 @@ import { Link } from "react-router-dom";
 import globeIcon from "../assets/globe-icon.png";
 import bookIcon from "../assets/book-icon.png";
 import privacyIcon from "../assets/privacy-icon.png";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/authContext";
+import axios from "axios";
+import SearchResult from "../components/SearchResult";
+import ErrorDisplay from "../components/ErrorDisplay";
+
+interface SearchData {
+  title: string;
+  image: string;
+  username: string;
+}
 
 const Home = () => {
+  // State variables:
+  // - error: Boolean indicating if there is an error.
+  const [error, setError] = useState<boolean>(false);
+
+  // - errorMessage: String containing the error message to display.
+  const [errorMessage, setErrorMessage] = useState<string>("");
+
+  // - topData: Array of objects containing information for top 5 stories of all time.
+  const [topData, setTopData] = useState<SearchData[]>([]);
+
   const { currentUser } = useContext(AuthContext)!;
 
   // Retrieve the user item from session storage and parse it if it's a valid JSON string.
   const storedUser = sessionStorage.getItem('user');
   const sessionUsername = storedUser && storedUser !== "null" ? JSON.parse(storedUser).user_info.username : null;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await axios.get("/api/searches/top/5");
+        setTopData(res.data.data);
+      } catch (error) {
+        setError(true);
+        if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error);
+        else setErrorMessage("An unexpected error occurred.");
+        console.log(error);
+      }
+    }
+    fetchData();
+  },[]);
 
   return (
     <>
@@ -59,7 +93,7 @@ const Home = () => {
             <img src={globeIcon} className="h-24 w-auto mb-8" />
             <p className="font-semibold text-center">See the collection of personal narratives that take you though the intricate experiences of people from any corner of the world.</p>
         </a>
-        <a href={ currentUser ? "./story/:id/page/1" : "./login"} className="flex-1 flex flex-col justify-between items-center w-full lg:mx-20 p-16 mb-8 text-center bg-[#292929] shadow-xl hover:shadow-2xl rounded-xl hover:scale-105 transition duration-300 ease-in-out">
+        <a href={ currentUser ? `/story/${sessionUsername}/page/1` : "/login"} className="flex-1 flex flex-col justify-between items-center w-full lg:mx-20 p-16 mb-8 text-center bg-[#292929] shadow-xl hover:shadow-2xl rounded-xl hover:scale-105 transition duration-300 ease-in-out">
             <p className="text-4xl font-bold mb-8 text-center">Write <span className="underline">Your</span> Story</p>
             <img src={bookIcon} className="h-24 w-auto mb-8" />
             <p className="font-semibold text-center">Let the world hear your story. Travel back in your time to recollect and write down your life.</p>
@@ -72,58 +106,13 @@ const Home = () => {
       </div>
 
       <p className="text-5xl font-bold mb-12 mt-28 pb-2 bg-clip-text text-transparent bg-gradient">Explore Top Stories</p>
-      <div className="flex flex-col justify-center items-stretch h-auto w-9/12 mb-32">
-        
-        <a href="./story/:id" className="flex flex-row justify-center items-center mb-4 h-24 p-8 bg-[#292929] shadow-xl rounded-xl hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out">
-          <div className="flex-1 flex flex-col justify-items-center h-full">
-            <p className="text-3xl text-center font-bold">Title</p>
-          </div>
-          <div className="flex-1 flex flex-row justify-center items-center rounded-xl">
-            <img src={homeBg} className="h-20" />
-            <p className="text-xl ml-8 font-semibold">Author</p>
-          </div>
-        </a>
 
-        <a href="./story/:id" className="flex flex-row justify-center items-center mb-4 h-24 p-8 bg-[#292929] shadow-xl rounded-xl hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out">
-          <div className="flex-1 flex flex-col justify-items-center h-full">
-            <p className="text-3xl text-center font-bold">Title</p>
-          </div>
-          <div className="flex-1 flex flex-row justify-center items-center rounded-xl">
-            <img src={homeBg} className="h-20" />
-            <p className="text-xl ml-8 font-semibold">Author</p>
-          </div>
-        </a>
+      {error && <ErrorDisplay errorMessage={errorMessage}></ErrorDisplay>}
 
-        <a href="./story/:id" className="flex flex-row justify-center items-center mb-4 h-24 p-8 bg-[#292929] shadow-xl rounded-xl hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out">
-          <div className="flex-1 flex flex-col justify-items-center h-full">
-            <p className="text-3xl text-center font-bold">Title</p>
-          </div>
-          <div className="flex-1 flex flex-row justify-center items-center rounded-xl">
-            <img src={homeBg} className="h-20" />
-            <p className="text-xl ml-8 font-semibold">Author</p>
-          </div>
-        </a>
-
-        <a href="./story/:id" className="flex flex-row justify-center items-center mb-4 h-24 p-8 bg-[#292929] shadow-xl rounded-xl hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out">
-          <div className="flex-1 flex flex-col justify-items-center h-full">
-            <p className="text-3xl text-center font-bold">Title</p>
-          </div>
-          <div className="flex-1 flex flex-row justify-center items-center rounded-xl">
-            <img src={homeBg} className="h-20" />
-            <p className="text-xl ml-8 font-semibold">Author</p>
-          </div>
-        </a>
-
-        <a href="./story/:id" className="flex flex-row justify-center items-center mb-4 h-24 p-8 bg-[#292929] shadow-xl rounded-xl hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out">
-          <div className="flex-1 flex flex-col justify-items-center h-full">
-            <p className="text-3xl text-center font-bold">Title</p>
-          </div>
-          <div className="flex-1 flex flex-row justify-center items-center rounded-xl">
-            <img src={homeBg} className="h-20" />
-            <p className="text-xl ml-8 font-semibold">Author</p>
-          </div>
-        </a>
-
+      <div className="flex flex-col justify-center items-stretch h-auto w-1/2 mb-32">
+        {topData.map(searchResult => (
+          <SearchResult key={searchResult.username} data={searchResult} />
+        ))}
       </div>
     </>
   )

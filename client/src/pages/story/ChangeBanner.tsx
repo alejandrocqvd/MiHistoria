@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ErrorDisplay from "../../components/ErrorDisplay";
 
 const ChangeBanner = () => {
   // State variables
@@ -78,9 +79,7 @@ const ChangeBanner = () => {
             className="w-1/2 py-2 px-4 pl-3 pr-10 rounded-2xl bg-secondary">
           </input>
 
-          <div className="text-center">
-            {error && <p className="text-error">{errorMessage}</p>}
-          </div>
+          {error && <ErrorDisplay errorMessage={errorMessage}></ErrorDisplay>}
 
           <div className="flex flex-col md:flex-row justify-center items-center pt-4 pb-4 mb-10">
             <button 

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import ErrorDisplay from "../../components/ErrorDisplay";
 
 const ChangePassword = () => {
   // State variables:
@@ -120,9 +121,7 @@ const ChangePassword = () => {
           </button>            
         </div>
 
-        <div className="text-center">
-            {error && <p className="text-error">{errorMessage}</p>}
-        </div>
+        {error && <ErrorDisplay errorMessage={errorMessage}></ErrorDisplay>}
 
         <div className="flex flex-col md:flex-row justify-center items-center pt-4 pb-4 mb-10">
           <button 

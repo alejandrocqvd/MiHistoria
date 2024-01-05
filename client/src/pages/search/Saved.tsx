@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import SearchResult from "../../components/SearchResult";
 import axios from "axios";
+import ErrorDisplay from "../../components/ErrorDisplay";
 
 interface SearchData {
   title: string;
@@ -67,9 +68,7 @@ const Saved = () => {
     <div className="flex flex-col justify-center items-center h-auto w-9/12 mb-24 mt-32">
       <p className="text-center p-2 mb-10 font-bold text-5xl bg-clip-text text-transparent bg-gradient">Saved Stories</p>
   
-      <div className="text-center">
-        {error && <p className="text-error">{errorMessage}</p>}
-      </div>
+      {error && <ErrorDisplay errorMessage={errorMessage}></ErrorDisplay>}
   
       <div className="flex flex-col justify-center items-center w-1/2">
         {data.map(searchResult => (

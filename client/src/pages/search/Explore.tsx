@@ -5,6 +5,7 @@ import { AuthContext } from "../../context/authContext";
 import axios from "axios";
 import SearchResult from "../../components/SearchResult";
 import { Link } from "react-router-dom";
+import ErrorDisplay from "../../components/ErrorDisplay";
 
 interface SearchData {
   title: string;
@@ -138,9 +139,7 @@ const Explore = () => {
             </button>
           </div>
 
-          <div className="text-center">
-            {error && <p className="text-error">{errorMessage}</p>}
-          </div>
+          {error && <ErrorDisplay errorMessage={errorMessage}></ErrorDisplay>}
 
           <div className={ searching ? "flex flex-col justify-center items-center mb-12" : "hidden"}>
             {data.map(searchResult => (

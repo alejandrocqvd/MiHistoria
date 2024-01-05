@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from 'react-router-dom';
+import ErrorDisplay from "../../components/ErrorDisplay";
 
 const StoryPage = () => {
   // State variables:
@@ -45,9 +46,7 @@ const StoryPage = () => {
 
   return (
     <div className="flex flex-col justify-start items-center">
-      <div className="text-center">
-        {error && <p className="text-error">{errorMessage}</p>}
-      </div>
+      {error && <ErrorDisplay errorMessage={errorMessage}></ErrorDisplay>}
       <div className="flex flex-wrap flex-col w-full" dangerouslySetInnerHTML={{ __html: text }} />
     </div>
   )

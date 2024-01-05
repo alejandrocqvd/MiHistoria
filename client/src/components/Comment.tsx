@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import storyBg from "../assets/login-bg.png"
 import axios from "axios";
 
 interface commentData {
@@ -39,7 +38,7 @@ const Comment: React.FC<CommentProps> = ({ commentData }) => {
 
     if (isConfirmed) {
       try {
-        await axios.delete("/api/stories/comment/delete", {
+        await axios.delete("/api/comments/delete", {
           data: { comment_id: commentData.comment_id, comment_username: commentData.username },
           withCredentials: true
         });

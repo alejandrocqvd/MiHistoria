@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash, faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/authContext";
+import ErrorDisplay from "../../components/ErrorDisplay";
 
 // Interface for holding and managing form data in the Login component.
 interface FormData {
@@ -124,9 +125,7 @@ const Login = () => {
               </button>
             </div>
 
-            <div className="text-center pb-4">
-              {error && <p className="text-error">{errorMessage}</p>}
-            </div>
+            {error && <ErrorDisplay errorMessage={errorMessage}></ErrorDisplay>}
 
             <div className="text-center">
               <p>Don't have an account? <a href="./register" className="hover-underline-animation font-bold">Register</a></p>

@@ -4,6 +4,7 @@ import { faEnvelope} from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../../context/authContext";
+import ErrorDisplay from "../../components/ErrorDisplay";
 
 // Interface for holding and managing form data in the EditProfile component
 interface FormData {
@@ -233,9 +234,7 @@ const EditProfile = () => {
         </div>
         <p className="text-center">A private account hides your first name, last name, age, and profile picture on your story page.</p>
 
-        <div className="text-center">
-            {error && <p className="text-error">{errorMessage}</p>}
-        </div>
+        {error && <ErrorDisplay errorMessage={errorMessage}></ErrorDisplay>}
 
         <div className="flex flex-col md:flex-row justify-center items-center pt-4 pb-4 mb-10">
           <Link 

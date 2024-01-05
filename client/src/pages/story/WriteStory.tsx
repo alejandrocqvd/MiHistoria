@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Editor as TinyMCEEditor } from "@tinymce/tinymce-react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import ErrorDisplay from "../../components/ErrorDisplay";
 
 const WriteStory = () => {
   // State variables:
@@ -134,9 +135,7 @@ const WriteStory = () => {
         value={text}
       />
 
-      <div className="text-center">
-        {error && <p className="text-error text-center mb-2 mt-4">{errorMessage}</p>}
-      </div>
+      {error && <ErrorDisplay errorMessage={errorMessage}></ErrorDisplay>}
 
       <div className="flex flex-row justify-center items-center my-4">
         <button 

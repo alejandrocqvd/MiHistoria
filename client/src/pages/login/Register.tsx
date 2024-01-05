@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash, faEnvelope, faUser } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import ErrorDisplay from "../../components/ErrorDisplay";
 
 
 // Interface for holding and managing form data in the Register component.
@@ -209,10 +210,8 @@ const Register: React.FC = () => {
                   Register
               </button>
             </div>
-
-            <div className="text-center pb-4">
-                {error && <p className="text-error">{errorMessage}</p>}
-            </div>
+            
+            {error && <ErrorDisplay errorMessage={errorMessage}></ErrorDisplay>}
 
             <div className="text-center">
               <p>Already have an account? <a href="./login" className="hover-underline-animation font-bold">Login</a></p>
