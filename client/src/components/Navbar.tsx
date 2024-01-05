@@ -15,6 +15,7 @@ export const Navbar = () => {
 
   const handleLogout = () => {
     logout();
+    setIsOpen(false);
     navigate("/");
   }
 
@@ -38,10 +39,14 @@ export const Navbar = () => {
         </button>
       </nav>
       <div className={`fixed z-30 top-20 w-full bg-secondary md:hidden ${isOpen ? 'block' : 'hidden'}`}>
-        <Link className='block p-4 hover:bg-tertiary hover:font-semibold' to='./'>Home</Link>
-        <Link className='block p-4 hover:bg-tertiary hover:font-semibold' to='./explore'>Explore</Link>
-        <Link className='block p-4 hover:bg-tertiary hover:font-semibold' to='./story/:id'>Your Story</Link>
-        <Link className='block p-4 hover:bg-tertiary hover:font-semibold' to='./login'>Login</Link>
+        <Link className='block p-4 hover:bg-tertiary hover:font-semibold' to='/'>Home</Link>
+        <Link className='block p-4 hover:bg-tertiary hover:font-semibold' to='/explore'>Explore</Link>
+        <Link className='block p-4 hover:bg-tertiary hover:font-semibold' to={currentUser ? `/story/${sessionUsername}/page/1` : "/login"}>Your Story</Link>
+        { currentUser ? <Link className='block p-4 hover:bg-tertiary hover:font-semibold' to='./profile'>Profile</Link> : null}
+        { 
+          currentUser ? <button onClick={handleLogout} className='block p-4 hover:bg-tertiary hover:font-semibold'>Logout</button> : 
+          <Link to='./login' className='block p-4 hover:bg-tertiary hover:font-semibold'>Login</Link>
+        }
       </div>
     </>
   )

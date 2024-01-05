@@ -56,9 +56,7 @@ const Comment: React.FC<CommentProps> = ({ commentData }) => {
     return date.toLocaleString("en-US", { 
       year: "numeric",
       month: "long",
-      day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
+      day: "numeric"
     });
   }
   const formattedDate = formatTimestamp(commentData.timestamp);
@@ -72,7 +70,7 @@ const Comment: React.FC<CommentProps> = ({ commentData }) => {
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row justify-start items-center mb-2">
               <img src={`/public/uploads/${commentData.image}`} className={commentData.image !== null ? "h-8 rounded-xl w-8 object-cover mr-3" : "hidden"} />
-              <a href={`/story/${commentData.username}/page/1`} className="text-lg font-semibold ml-1">{commentData.first_name + " " + commentData.last_name}</a>
+              <a href={`/story/${commentData.username}/page/1`} className="text-md md:text-lg font-semibold ml-1">{commentData.username}</a>
           </div>
           <div className="flex flex-row justify-end items-center">
               <button 

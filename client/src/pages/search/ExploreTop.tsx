@@ -84,22 +84,22 @@ const ExploreTop = () => {
       <div className="flex flex-row justify-center items-center my-10">
         <button 
           onClick={() => { setMonthly(true); setYearly(false); setAllTime(false); }}
-          className={`${monthly && "border-text"} flex justify-center items-center h-10 w-28 p-4 border-2 border-secondary bg-secondary text-sm rounded-xl shadow-lg font-bold hover:shadow-xl`}
+          className={`${monthly && "border-text"} flex justify-center items-center h-10 w-32 p-4 border-2 border-secondary bg-secondary text-sm rounded-xl shadow-lg font-bold hover:shadow-xl`}
           >This Month
         </button>
         <button 
           onClick={() => { setMonthly(false); setYearly(true); setAllTime(false); }}
-          className={`${yearly && "border-text"} flex justify-center items-center h-10 w-28 mx-4 p-4 border-2 border-secondary bg-secondary text-sm rounded-xl shadow-lg font-bold hover:shadow-xl`}
+          className={`${yearly && "border-text"} flex justify-center items-center h-10 w-32 mx-4 p-4 border-2 border-secondary bg-secondary text-sm rounded-xl shadow-lg font-bold hover:shadow-xl`}
           >This Year
         </button>
         <button 
           onClick={() => { setMonthly(false); setYearly(false); setAllTime(true); }}
-          className={`${allTime && "border-text"} flex justify-center items-center h-10 w-28 p-4 border-2 border-secondary bg-secondary text-sm rounded-xl shadow-lg font-bold hover:shadow-xl`}
+          className={`${allTime && "border-text"} flex justify-center items-center h-10 w-32 p-4 border-2 border-secondary bg-secondary text-sm rounded-xl shadow-lg font-bold hover:shadow-xl`}
           >All Time
         </button>
       </div>
 
-      <div className="flex flex-col justify-center items-center w-1/2">
+      <div className="flex flex-col justify-center items-center w-full md:w-1/2">
         {data.map(searchResult => (
           <SearchResult key={searchResult.username} data={searchResult} />
         ))}

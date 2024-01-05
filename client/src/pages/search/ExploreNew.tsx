@@ -70,7 +70,7 @@ const ExploreNew = () => {
   
       {error && <ErrorDisplay errorMessage={errorMessage}></ErrorDisplay>}
   
-      <div className="flex flex-col justify-center items-center w-1/2">
+      <div className="flex flex-col justify-center items-center w-full md:w-1/2">
         {data.map(searchResult => (
           <SearchResult key={searchResult.username} data={searchResult} />
         ))}

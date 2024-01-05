@@ -109,7 +109,7 @@ const Home = () => {
 
       {error && <ErrorDisplay errorMessage={errorMessage}></ErrorDisplay>}
 
-      <div className="flex flex-col justify-center items-stretch h-auto w-1/2 mb-32">
+      <div className="flex flex-col justify-center items-stretch h-auto w-9/12 md:w-1/2 mb-32">
         {topData.map(searchResult => (
           <SearchResult key={searchResult.username} data={searchResult} />
         ))}

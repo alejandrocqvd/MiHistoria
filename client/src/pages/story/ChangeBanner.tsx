@@ -76,7 +76,7 @@ const ChangeBanner = () => {
             type="file" 
             accept="image/jpeg, image/png"
             onChange={handleFileChange}
-            className="w-1/2 py-2 px-4 pl-3 pr-10 rounded-2xl bg-secondary">
+            className="w-full md:w-1/2 py-2 px-4 pl-3 pr-10 rounded-2xl bg-secondary">
           </input>
 
           {error && <ErrorDisplay errorMessage={errorMessage}></ErrorDisplay>}

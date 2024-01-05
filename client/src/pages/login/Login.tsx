@@ -127,8 +127,8 @@ const Login = () => {
 
             {error && <ErrorDisplay errorMessage={errorMessage}></ErrorDisplay>}
 
-            <div className="text-center">
-              <p>Don't have an account? <a href="./register" className="hover-underline-animation font-bold">Register</a></p>
+            <div>
+              <p className="text-center">Don't have an account? <a href="./register" className="hover-underline-animation font-bold">Register</a></p>
             </div>
 
         </form>

@@ -213,8 +213,8 @@ const Register: React.FC = () => {
             
             {error && <ErrorDisplay errorMessage={errorMessage}></ErrorDisplay>}
 
-            <div className="text-center">
-              <p>Already have an account? <a href="./login" className="hover-underline-animation font-bold">Login</a></p>
+            <div>
+              <p className="text-center">Already have an account? <a href="./login" className="hover-underline-animation font-bold">Login</a></p>
             </div>
 
         </form>
