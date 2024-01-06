@@ -381,7 +381,7 @@ that being a chef, a leader, it's about more than just cooking. It's about bring
 life is about. It's about taking the heat, the pain, the love, and the passion, and turning it into something beautiful.</p>
 ", "the_bear-story-bg.jpg", "2023-12-11 10:34:53.44"),
 
-("bblock", "Berkman", 2, "
+("bblock", "The Mask Collector", 2, "
 <p>Alright, let's get one thing straight - my life? It's like one of those weird indie films where you can't decide if you're watching a 
 comedy or a tragedy. I'm Barry Berkman, just a regular guy, if your definition of 'regular' includes being a hitman. Yeah, you heard that 
 right. But this isn't some braggadocious tale of a cold-blooded killer. It's... complicated.</p><p>&nbsp;</p>
