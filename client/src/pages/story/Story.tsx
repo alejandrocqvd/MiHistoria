@@ -322,8 +322,8 @@ const Story = () => {
               <p className="text-3xl text-center font-bold mb-6">By {story?.username}</p>
               <div className={story?.is_private ? "hidden" : "flex-1 flex flex-row justify-center items-center rounded-xl mb-8"}>
                 <img src={`/public/uploads/${story?.user_image}`} className={story?.user_image !== null ? "h-12 rounded-xl w-12 object-cover" : "hidden"} />
-                <p className="text-xl ml-8 font-semibold">{(story?.first_name || "") + " " + (story?.last_name || "")}</p>
-                <p className={story?.dob ? "text-xl ml-8 font-normal" : "hidden"}>{calculateAge(story?.dob ?? "")} Years Old</p>
+                <p className="text-xl mr-4 font-semibold">{(story?.first_name || "") + " " + (story?.last_name || "")}</p>
+                <p className={story?.dob ? "text-xl ml-4 font-normal" : "hidden"}>{calculateAge(story?.dob ?? "")} Years Old</p>
               </div>
             </div>
 
