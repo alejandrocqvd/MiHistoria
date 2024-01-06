@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, To, useLocation, useNavigate } from 'react-router-dom'
 import { AuthContext } from '../context/authContext';
 
 export const Navbar = () => {
@@ -12,11 +12,20 @@ export const Navbar = () => {
   const sessionUsername = storedUser && storedUser !== "null" ? JSON.parse(storedUser).user_info.username : null;
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = () => {
     logout();
     setIsOpen(false);
     navigate("/");
+  }
+
+  const navigateAndRefresh = (path: string) => {
+    if (location.pathname.startsWith('/story')) {
+      window.location.href = path;
+    } else {
+      navigate(path);
+    }
   }
 
   return (
@@ -26,10 +35,13 @@ export const Navbar = () => {
           <Link to='./'><p className='text-3xl px-4 font-notable font-extrabold bg-clip-text text-transparent bg-gradient'>MiHistoria</p></Link>
         </div>
         <div className='hidden md:flex flex-grow justify-center items-center font-bold'>
-          <Link className='hover-underline-animation m-14' to='./'>Home</Link>
-          <Link className='hover-underline-animation m-14' to='./explore'>Explore</Link>
-          <Link className='hover-underline-animation m-14' to={ currentUser ? `./story/${sessionUsername}/page/1` : '/login'}>Your Story</Link>
-          { currentUser ? <Link className='hover-underline-animation m-14' to='./profile'>Profile</Link> : null}
+          <Link className='hover-underline-animation m-14' to='/'>Home</Link>
+          <Link className='hover-underline-animation m-14' to='/explore'>Explore</Link>
+          <button className='hover-underline-animation m-14' 
+                  onClick={() => navigateAndRefresh(currentUser ? `/story/${sessionUsername}/page/1` : "/login")}>
+            Your Story
+          </button>
+          { currentUser ? <Link className='hover-underline-animation m-14' to='/profile'>Profile</Link> : null}
         </div>
         <div className="hidden md:flex justify-center items-center h-10 w-24 ml-32 p-4 bg-gradient rounded-xl shadow-lg font-bold transition duration-200 ease-in-out hover:scale-105">
           { currentUser ? <button onClick={handleLogout}>Logout</button> : <Link to='./login'>Login</Link>}
@@ -41,7 +53,10 @@ export const Navbar = () => {
       <div className={`fixed z-30 top-20 w-full bg-secondary md:hidden ${isOpen ? 'block' : 'hidden'}`}>
         <Link className='block p-4 hover:bg-tertiary hover:font-semibold' to='/'>Home</Link>
         <Link className='block p-4 hover:bg-tertiary hover:font-semibold' to='/explore'>Explore</Link>
-        <Link className='block p-4 hover:bg-tertiary hover:font-semibold' to={currentUser ? `/story/${sessionUsername}/page/1` : "/login"}>Your Story</Link>
+        <button className='block p-4 hover:bg-tertiary hover:font-semibold' 
+                onClick={() => navigateAndRefresh(currentUser ? `/story/${sessionUsername}/page/1` : "/login")}>
+          Your Story
+        </button>
         { currentUser ? <Link className='block p-4 hover:bg-tertiary hover:font-semibold' to='./profile'>Profile</Link> : null}
         { 
           currentUser ? <button onClick={handleLogout} className='block p-4 hover:bg-tertiary hover:font-semibold'>Logout</button> : 
