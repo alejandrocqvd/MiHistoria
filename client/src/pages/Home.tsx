@@ -72,7 +72,7 @@ const Home = () => {
         <p className="text-5xl font-bold mb-12 text-center pb-2 bg-clip-text text-transparent bg-gradient">What is MiHistoria?</p>
         <p className="text-xl flex-1 mr-6 text-center">
           In an digital world full of fleeting moments and endless posts, MiHistoria offers something different. 
-          Here, each user gets one chance, <span className="font-bold">one post, to share their life story.</span> Our app is built on the belief that every person"s 
+          Here, each user gets one chance, <span className="font-bold">one post, to share their life story.</span> Our app is built on the belief that every person's 
           journey is unique and deserves to be told in its entirety. We've created this space to allow users to look back, reflect, and write down their lives.
         </p>
       </div>
