@@ -317,7 +317,7 @@ of being unforgiven remained etched in my heart.</p><p>&nbsp;</p>
 challenges, that the truth is often hidden beneath layers of deceit, and that redemption is a road that one must walk alone.</p><p>&nbsp;</p>
 <p>My story is not one of glory or triumph but of a relentless quest for truth and the redemption of my honor. I am Yasuo, the Unforgiven, 
 a swordsman shaped by tragedy, honed by conflict, and forever guided by the wind.</p>
-", null, "2020-02-02 10:34:53.44"),
+", null, "2023-09-05 10:34:53.44"),
 
 ("yasuoHater999", "my brother killed me", 1, "
 <p>Dude, why'd you have to mess everything up? I mean, seriously? Our master is gone, and everyone thinks you did it. 
@@ -335,7 +335,7 @@ Lillia's helping me out here, sending some dreamy vibes your way. Hope it helps 
 Take care of yourself, Yasuo. And maybe try to fix some of the stuff you've messed up, okay?</p><p>&nbsp;</p>
 <p>Later,</p>
 <p>Yone</p>
-", null, "2020-02-03 10:34:53.44"),
+", null, "2023-09-06 10:34:53.44"),
 
 ("the_bear", "The Bear", 2, "
 <p>Yo, let me tell you something about where I come from. It's not your typical chef's tale, all fancy culinary schools and silver 
@@ -379,7 +379,7 @@ flowing, and the customers are loving it. Those moments, they're like magic. The
 that being a chef, a leader, it's about more than just cooking. It's about bringing people together, creating something bigger than yourself.</p><p>&nbsp;</p>
 <p>And the thing about fire? It can destroy, sure, but it can also forge something new, something stronger. That's what this season of my 
 life is about. It's about taking the heat, the pain, the love, and the passion, and turning it into something beautiful.</p>
-", "the_bear-story-bg.jpg", "2021-02-02 10:34:53.44"),
+", "the_bear-story-bg.jpg", "2023-12-11 10:34:53.44"),
 
 ("bblock", "Berkman", 2, "
 <p>Alright, let's get one thing straight - my life? It's like one of those weird indie films where you can't decide if you're watching a 
@@ -429,12 +429,12 @@ bringing a whole underworld of trouble to his doorstep.</p><p>&nbsp;</p>
 sleep, and confrontations that are more explosive than a Michael Bay movie. It's a whirlwind of action, emotion, and seriously bad decisions.</p><p>&nbsp;</p>
 <p>As the curtain falls on this season of my life, I'm left standing in the wreckage, wondering how I got here. It's like I'm trying to piece 
 together a jigsaw puzzle, but the pieces are from different boxes. I'm lost, man. Lost in a life that's a script I never wrote.</p>
-", "bblock-story-bg.PNG", "2021-02-02 10:34:53.44"),
+", "bblock-story-bg.PNG", "2023-11-06 10:34:53.44"),
 
 ("miguelito", "i hate you miles", 1, "
 <h1>I HATE YOU MILES</h2>
 <p>yeah</p>
-", null, "2023-02-02 10:34:53.44"),
+", null, "2024-01-05 10:34:53.44"),
 
 ("betterspiderman", "The Spiderverse", 2, "
 <p>I'm just a kid from Brooklyn, trying to figure life out one web-sling at a time. So, how did I go from being a regular teenager to, 
@@ -485,7 +485,7 @@ my new friends back to their dimensions.</p><p>&nbsp;</p>
 like me, but also totally different. And that's pretty awesome.</p><p>&nbsp;</p>
 <p>Back in my own dimension, I've got a new sense of purpose. I'm still Miles Morales, Brooklyn teenager, but I'm also Spider-Man. And I've 
 got a feeling this is just the beginning of my adventures. There are more battles to fight, more people to save, and hey, maybe more Spider-People to meet.</p>
-", "betterspiderman-story-bg.jpg", "2023-02-01 10:34:53.44"),
+", "betterspiderman-story-bg.jpg", "2024-01-04 10:34:53.44"),
 
 ("greenman123", "its always sunny", 3, "
 <p>ok so here's the thing, im charlie kelly and this is my life or whatever. its not fancy, but hey, it's mine. i hang out at paddy's pub with my 
@@ -538,7 +538,7 @@ road trip with frank. just hit the road and see where it takes us. that would be
 <p>so yeah, the future's looking bright for charlie kelly. sure, there'll be ups and downs, but that's life, right? as long as i've got my friends, 
 my schemes, and a little bit of green man action, i'm good.</p><p>&nbsp;</p>
 <p>whatever happens, u know i'm gonna keep things interesting. charlie kelly doesn't do boring. so, stay tuned, folks. the best is yet to come.</p>
-", "greenman123-story-bg.jpg", "2016-02-02 10:34:53.44");
+", "greenman123-story-bg.jpg", "2024-01-06 10:34:53.44");
 
 INSERT INTO page
 VALUES

@@ -53,6 +53,7 @@ const ExploreTop = () => {
           page: currentResultPage,
           limit: 50
         });
+        console.log(res);
         // Fill the data array with new data from the API request.
         const newData = res.data.data.map((story: any) => ({
           title: story.title,
@@ -83,17 +84,17 @@ const ExploreTop = () => {
 
       <div className="flex flex-row justify-center items-center my-10">
         <button 
-          onClick={() => { setMonthly(true); setYearly(false); setAllTime(false); }}
+          onClick={() => { setMonthly(true); setYearly(false); setAllTime(false); setData([]); }}
           className={`${monthly && "border-text"} flex justify-center items-center h-10 w-32 p-4 border-2 border-secondary bg-secondary text-sm rounded-xl shadow-lg font-bold hover:shadow-xl`}
           >This Month
         </button>
         <button 
-          onClick={() => { setMonthly(false); setYearly(true); setAllTime(false); }}
+          onClick={() => { setMonthly(false); setYearly(true); setAllTime(false); setData([]); }}
           className={`${yearly && "border-text"} flex justify-center items-center h-10 w-32 mx-4 p-4 border-2 border-secondary bg-secondary text-sm rounded-xl shadow-lg font-bold hover:shadow-xl`}
           >This Year
         </button>
         <button 
-          onClick={() => { setMonthly(false); setYearly(false); setAllTime(true); }}
+          onClick={() => { setMonthly(false); setYearly(false); setAllTime(true); setData([]); }}
           className={`${allTime && "border-text"} flex justify-center items-center h-10 w-32 p-4 border-2 border-secondary bg-secondary text-sm rounded-xl shadow-lg font-bold hover:shadow-xl`}
           >All Time
         </button>
