@@ -1,45 +1,67 @@
+/**
+ * Explore Top Page Component
+ * 
+ * This component renders an explore page that lists the top stories of either:
+ * all time, this month, or this year. Each story result is a link to the corresponding the story.
+ * 
+ * Author: Alejandro Cardona
+ * Date: 2024-01-06
+ */
+
 import { useEffect, useState } from "react";
 import SearchResult from "../../components/SearchResult";
 import axios from "axios";
 import ErrorDisplay from "../../components/ErrorDisplay";
 
+/**
+ * Interface for story search result data
+ * 
+ * @property {string} title - The title of the story.
+ * @property {string} image - The story banner image file name.
+ * @property {string} username - The story author's username.
+ */
 interface SearchData {
   title: string;
   image: string;
   username: string;
 }
 
-const ExploreTop = () => {
-  // State variables:
-  // - error: Boolean indicating if there is an error.
+const ExploreTop: React.FC = () => {
+  // Boolean indicating if there is an error
   const [error, setError] = useState<boolean>(false);
 
-  // - errorMessage: String containing the error message to display.
+  // String containing the error message to display
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  // - monthly: Boolean indicating if the user has selected top stories this month.
+  // Boolean indicating if the user has selected top stories this month
   const [monthly, setMonthly] = useState<boolean>(false);
   
-  // - yearly: Boolean indicating if the user has selected top stories this year.
+  // Boolean indicating if the user has selected top stories this year
   const [yearly, setYearly] = useState<boolean>(false);
 
-  // - allTime: Boolean indicating if the user has selected top stories of all time.
+  // Boolean indicating if the user has selected top stories of all time
   const [allTime, setAllTime] = useState<boolean>(true);
 
-  // - currentResultPage: Number indicating the current page number of stories.
+  // Number indicating the current page number of stories
   const [currentResultPage, setCurrentResultPage] = useState<number>(1);
 
-  // - resultCount: Number indicating the total number of stories loaded in.
+  // Number indicating the total number of stories loaded in
   const [resultCount, setResultCount] = useState<number>(0);
 
-  // - data: Array of objects containing information for search results.
+  // Array of objects containing information for search results
   const [data, setData] = useState<SearchData[]>([]);
 
+  /**
+   * Handles the show more stories event.
+   * 
+   * This function increases the current story result page by 1.
+   */
   const handleShowMore = () => {
     const nextPage = currentResultPage + 1;
     setCurrentResultPage(nextPage);
   }
 
+  // Fetches 50 of the top stories based on the selected filter, and fetches 50 more if currentResultPage changes
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -53,14 +75,13 @@ const ExploreTop = () => {
           page: currentResultPage,
           limit: 50
         });
-        console.log(res);
-        // Fill the data array with new data from the API request.
+        // Fill the data array with new data from the API request
         const newData = res.data.data.map((story: any) => ({
           title: story.title,
           username: story.username,
           image: story.image
         }));
-        // Update the state by appending new stories, avoiding duplicates.
+        // Update the state by appending new stories, avoiding duplicates
         setData(prevStories => {
           const existingUsernames = new Set(prevStories.map(s => s.username));
           const filteredUsernames = newData.filter((story: { username: string; }) => !existingUsernames.has(story.username));
@@ -70,7 +91,6 @@ const ExploreTop = () => {
         setError(true);
         if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error);
         else setErrorMessage("An unexpected error occurred.");
-        console.log(error);
       }
     }
     fetchData();

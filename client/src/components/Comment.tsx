@@ -1,6 +1,28 @@
+/**
+ * Comment Component
+ * 
+ * This component renders a comment to be displayed on a story. It contains 
+ * the user's username, and profile picture if they have one. It also contains the 
+ * timestamp of the comment and a button to delete the comment if the user has deletion privileges.
+ * 
+ * Author: Alejandro Cardona
+ * Date: 2024-01-06
+ */
+
 import { useEffect, useState } from "react"
 import axios from "axios";
 
+/**
+ * Interface for the comment's data
+ * 
+ * @property {string} comment_id - Comment's identification number.
+ * @property {string} text - Comment's text contents.
+ * @property {string} timestamp - Comment's date and time timestamp.
+ * @property {string} username - Comment author's username.
+ * @property {string} first_name - Comment author's first name.
+ * @property {string} last_name - Comment author's last name.
+ * @property {string} image - Comment author's profile picture.
+ */
 interface commentData {
     comment_id: string;
     text: string;
@@ -11,28 +33,40 @@ interface commentData {
     image: string;
 }
 
+/**
+ * Interface for the properties of a comment component
+ * 
+ * @property {commentData} commentData - An object containing the data.
+ */
 interface CommentProps {
     commentData: commentData;
 }
 
+// Comment Component
 const Comment: React.FC<CommentProps> = ({ commentData }) => {
-  // State variables:
-  // - error: Boolean indicating if there is an error.
+  // Boolean indicating if there is an error
   const [error, setError] = useState<boolean>(false);
 
-  // - errorMessage: String containing the error message to display.
+  // String containing the error message to display
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  // - isDeletable: Boolean indicating if the current user has deletion privileges.
+  // Boolean indicating if the current user has deletion privileges
   const [isDeletable, setIsDeletable] = useState<boolean>(false);
 
-  // - isDeleted: Boolean indicating if the comment has been deleted.
+  // Boolean indicating if the comment has been deleted
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
 
-  // Retrieve the user item from session storage and parse it if it's a valid JSON string.
+  // Retrieve the user item from session storage and parse it if it's a valid JSON string
   const storedUser = sessionStorage.getItem('user');
   const sessionUsername = storedUser && storedUser !== "null" ? JSON.parse(storedUser).user_info.username : null;
 
+  /**
+   * Handles comment deletion.
+   * 
+   * Function is triggered when the user clicks on the 'Delete' button on the comment component.
+   * The function presents a confirmation window to the user to confirm deletion,
+   * if confirmed, the function attempts to delete the comment through an API call.
+   */
   const handleDelete = async () => {
     const isConfirmed = window.confirm("Are you sure you want to delete your comment?");
 
@@ -46,12 +80,17 @@ const Comment: React.FC<CommentProps> = ({ commentData }) => {
       } catch (error) {
         setError(true);
         setErrorMessage("Failed to delete comment.");
-        console.log(error);
       }
     }
   }
 
-  function formatTimestamp(timestamp: string) {
+  /**
+   * Formats a DATETIME timestamp fetched from the backend to an easily read format.
+   * 
+   * @param {string} timestamp - A date and time timestamp.
+   * @returns {string} The timestamp formatted as 'YEAR MONTH DAY'.
+   */
+  const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
     return date.toLocaleString("en-US", { 
       year: "numeric",
@@ -61,6 +100,7 @@ const Comment: React.FC<CommentProps> = ({ commentData }) => {
   }
   const formattedDate = formatTimestamp(commentData.timestamp);
 
+  // Compares the comment author's username to the current user's username, sets deletable to true if same
   useEffect(() => {
     if (commentData.username === sessionUsername) setIsDeletable(true);
   }, []);

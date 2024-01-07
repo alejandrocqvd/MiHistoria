@@ -1,3 +1,14 @@
+/**
+ * Home/Landing Page Component
+ * 
+ * This component renders the home/landing page for users. It provides a 
+ * description for the application and its uses, and fetches 5 top stories of 
+ * all time to display.
+ * 
+ * Author: Alejandro Cardona
+ * Date: 2024-01-06
+ */
+
 import homeBg from "../assets/home-bg.png";
 import { Link } from "react-router-dom";
 import globeIcon from "../assets/globe-icon.png";
@@ -9,29 +20,38 @@ import axios from "axios";
 import SearchResult from "../components/SearchResult";
 import ErrorDisplay from "../components/ErrorDisplay";
 
+/**
+ * Interface for story results
+ * 
+ * @property {string} title - The title of the story.
+ * @property {string} image - The file name for the story's banner image.
+ * @property {string} username - The story author's username.
+ */
 interface SearchData {
   title: string;
   image: string;
   username: string;
 }
 
-const Home = () => {
-  // State variables:
-  // - error: Boolean indicating if there is an error.
+// Home/Landing Page Component
+const Home: React.FC = () => {
+  // Boolean indicating if there is an error
   const [error, setError] = useState<boolean>(false);
 
-  // - errorMessage: String containing the error message to display.
+  // String containing the error message to display
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  // - topData: Array of objects containing information for top 5 stories of all time.
+  // Array of objects containing information for top 5 stories of all time
   const [topData, setTopData] = useState<SearchData[]>([]);
 
+  // Retrieve the current user using AuthContext
   const { currentUser } = useContext(AuthContext)!;
 
-  // Retrieve the user item from session storage and parse it if it's a valid JSON string.
+  // Retrieve the user item from session storage and parse it if it's a valid JSON string
   const storedUser = sessionStorage.getItem('user');
   const sessionUsername = storedUser && storedUser !== "null" ? JSON.parse(storedUser).user_info.username : null;
 
+  // Fetch the top 5 stories of all time to display on component mount
   useEffect(() => {
     const fetchData = async () => {
       try {

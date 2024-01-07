@@ -1,25 +1,54 @@
+/**
+ * Navbar Component
+ * 
+ * This component renders the application's navigation bar. Contains links to the explore, 
+ * story, profile, and login/logout pages.
+ * 
+ * Author: Alejandro Cardona
+ * Date: 2024-01-06
+ */
+
 import { useContext, useState } from 'react'
-import { Link, To, useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { AuthContext } from '../context/authContext';
 
+// Navbar Component
 export const Navbar = () => {
+  // Boolean indicating if the mobile navbar is open or not
   const [isOpen, setIsOpen] = useState(false)
 
+  // Import the current user and the logout function from AuthContext
   const { currentUser, logout } = useContext(AuthContext)!;
 
-  // Retrieve the user item from session storage and parse it if it's a valid JSON string.
+  // Retrieve the user item from session storage and parse it if it's a valid JSON string
   const storedUser = sessionStorage.getItem('user');
   const sessionUsername = storedUser && storedUser !== "null" ? JSON.parse(storedUser).user_info.username : null;
 
+  // useNavigate will be used to navigate to homepage after logging out
   const navigate = useNavigate();
+
+  // useLocation will be used to check if the user's current position is in the story page
   const location = useLocation();
 
+  /**
+   * Handles logout event
+   * 
+   * Is triggered when the user attempts to logout using the navbar button 'Logout'.
+   * If successful, it closes the navbar (on mobile) and redirects the user to the homepage.
+   */
   const handleLogout = () => {
     logout();
     setIsOpen(false);
     navigate("/");
   }
 
+  /**
+   * Handles navbar link navigation and refresh (if necessary)
+   * 
+   * Is triggered when the user clicks any of the links in the navbar.
+   * 
+   * @param {string} path - Path in the application.
+   */
   const navigateAndRefresh = (path: string) => {
     if (location.pathname.startsWith('/story')) {
       window.location.href = path;

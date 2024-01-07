@@ -1,37 +1,61 @@
+/**
+ * Write Story Page Component
+ * 
+ * This component renders a page where the user can create or modify their story.
+ * Has a field for title, a rich text editor for story text, and a button to change 
+ * or delete the story's banner image.
+ * 
+ * Author: Alejandro Cardona
+ * Date: 2024-01-06
+ */
+
 import { useEffect, useState } from "react";
 import { Editor as TinyMCEEditor } from "@tinymce/tinymce-react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ErrorDisplay from "../../components/ErrorDisplay";
 
-const WriteStory = () => {
-  // State variables:
-  // - error: Boolean indicating if there is an error during form submission.
+const WriteStory: React.FC = () => {
+  // Boolean indicating if there is an error during form submission
   const [error, setError] = useState<boolean>(false);
 
-  // - errorMessage: String containing the error message to display.
+  // String containing the error message to display
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  // - text: String containing HTML for page text.
+  // String containing HTML for page text
   const [text, setText] = useState<string>("");
 
-  // - title: String containing the title of the story.
+  // String containing the title of the story
   const [title, setTitle] = useState<string>("");
 
-  // - image: String containing the filename of the story's banner image.
+  // String containing the filename of the story's banner image
   const [image, setImage] = useState<string>("");
  
-  // useNavigate used to go back to user's story after updating their story.
+  // useNavigate used to go back to user's story after updating their story
   const navigate = useNavigate();
 
-  // Retrieve the user item from session storage and parse it if it's a valid JSON string.
+  // Retrieve the user item from session storage and parse it if it's a valid JSON string
   const storedUser = sessionStorage.getItem('user');
   const sessionUsername = storedUser && storedUser !== "null" ? JSON.parse(storedUser).user_info.username : null;
 
+  /**
+   * Handles rich text editor input change event.
+   * 
+   * This function is triggered when the text changes inside the TinyMCE text editor.
+   * 
+   * @param {string} content - HTML content as a string.
+   */
   const handleTextChange = (content: string) => {
     setText(content);
   }
 
+  /**
+   * Handles story banner image deletion event.
+   * 
+   * This function is triggered when the user clicks on the 'Delete Banner' button.
+   * When clicked, it prompts the user with a confirmation screen to confirm deletion.
+   * If confirmed, attempts image deletion through an API call.
+   */
   const handleImageDelete = async () => {
     const isConfirmed = window.confirm("Are you sure you want to delete your story's banner?");
 
@@ -43,13 +67,18 @@ const WriteStory = () => {
         setError(true);
         if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error); 
         else setErrorMessage("An unexpected error occurred.");
-        console.log(error);
       }
     }
   }
 
+  /**
+   * Handles story saving event.
+   * 
+   * This function is triggered when the user clicks on the 'Save Story' button. 
+   * Attempts an API call to update or insert the story and all its values into the database.
+   */
   const handleSave = async () => {
-    // Reset error states.
+    // Reset error states
     setError(false);
     setErrorMessage("");
 
@@ -58,19 +87,18 @@ const WriteStory = () => {
       text: text,
     }
 
-    // Attempt story saving. Display error if any.
+    // Attempt story saving. Display error if any
     try {
-      console.log(text);
       await axios.post("/api/stories/save", data);
       navigate(`/story/${sessionUsername}/page/1`);
     } catch (error) {
       setError(true);
       if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error); 
       else setErrorMessage("An unexpected error occurred.");
-      console.log(error);
     }
   }
 
+  // Fetches the story's existing data to populate the input fields on mounting, if any.
   useEffect(() => {
     const fetchData = async () => {
         try {
@@ -84,7 +112,6 @@ const WriteStory = () => {
           setError(true);
           if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error);
           else setErrorMessage("An unexpected error occurred.");
-          console.log(error);
         }
     }
     fetchData();

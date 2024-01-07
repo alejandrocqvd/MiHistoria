@@ -1,3 +1,15 @@
+/**
+ * Edit Profile Page Component
+ * 
+ * This component renders a page where the current user can edit their profile information.
+ * Contains fields for first name, last name, date of birth. Has a button to switch their profile 
+ * from public to private and vice versa. Contains buttons to navigate to pages where they can 
+ * change their password, profile picture. And two buttons to save or delete their profile.
+ * 
+ * Author: Alejandro Cardona
+ * Date: 2024-01-06
+ */
+
 import { useContext, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope} from "@fortawesome/free-solid-svg-icons";
@@ -6,7 +18,16 @@ import axios from "axios";
 import { AuthContext } from "../../context/authContext";
 import ErrorDisplay from "../../components/ErrorDisplay";
 
-// Interface for holding and managing form data in the EditProfile component
+/**
+ * Interface for holding the user's pre-existing or updated information
+ * 
+ * @property {string} first_name - The user's first name.
+ * @property {string} last_name - The user's last name.
+ * @property {string} email - The user's email address.
+ * @property {string} dob - The user's date of birth.
+ * @property {string} image - The user's profile picture image file name.
+ * @property {string} is_private - The user's privacy value.
+ */
 interface FormData {
   first_name: string;
   last_name: string;
@@ -16,20 +37,15 @@ interface FormData {
   is_private: boolean;
 }
 
-/**
- * EditProfile component handles user profile editing/updating.
- * This component provides a form for users to enter their information.
- * @returns Edit profile page (/profile/edit)
- */
-const EditProfile = () => {
-  // State variables:
-  // - error: Boolean indicating if there is an error during form submission.
+// Edit Profile Page Component
+const EditProfile: React.FC = () => {
+  // Boolean indicating if there is an error during form submission
   const [error, setError] = useState<boolean>(true);
 
-  // - errorMessage: String containing the error message to display.
+  // String containing the error message to display
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  // - inputs: Object holding the form data for updating user profile information.
+  // Object holding the form data for updating user profile information
   const [inputs, setInputs] = useState<FormData>({
     first_name: "",
     last_name: "",
@@ -39,19 +55,20 @@ const EditProfile = () => {
     is_private: false
   });
 
-  // - username: String holding the user's username
+  // String holding the user's username
   const [username, setUsername] = useState<string>("");
 
-  // useNavigate used to go back to user profile after updating their profile.
+  // useNavigate used to go back to user profile after updating their profile
   const navigate = useNavigate();
 
-  // Using authContext's logout function to log the user out after they delete their account.
+  // Using authContext's logout function to log the user out after they delete their account
   const { logout } = useContext(AuthContext)!;
 
   /**
    * Converts the received date of birth from API to proper format.
-   * @param dob - User's date of birth as a string.
-   * @returns the users's date of birth properly formatted as a YYYY-MM-DD.
+   * 
+   * @param {string} dob - User's date of birth as a string.
+   * @returns {string} - The users's date of birth properly formatted as a YYYY-MM-DD.
    */
   const formatDOB = (dob: string): string => {
     // Parse the string to a Date object
@@ -66,7 +83,10 @@ const EditProfile = () => {
 
   /**
    * Handles input changes for edit profile form.
-   * @param e - The React change event.
+   * 
+   * Triggered when the user changes any of the inputs in the edit profile page.
+   * 
+   * @param {React.ChangeEvent<HTMLInputElement>} e - The event object.
    */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputs(prev => ({...prev, [e.target.name]: e.target.value}));
@@ -77,28 +97,34 @@ const EditProfile = () => {
 
   /**
    * Handles the submission of the edit profile form.
-   * @param e - The React form event.
+   * 
+   * Triggered when the user clicks on the 'Save Profile' button.
+   * Attempts to save the user's updated information through an API call.
+   * 
+   * @param {React.ChangeEvent<HTMLInputElement>} e - The event object.
    */
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Reset error states.
+    // Reset error states
     setError(false);
     setErrorMessage("");
 
-    // Attempt form submission. Display error message if any.
+    // Attempt form submission and display error message if any
     try {
       await axios.post("/api/users/edit", inputs);
       navigate("/profile");
     } catch (error) {
       setError(true);
       setErrorMessage("Email is already taken.");
-      console.log(error);
     }
   }
 
   /**
-   * Handles the deletion of a user's profile.
+   * Handles user profile deletion event.
+   * 
+   * Triggered when the user clicks on the 'Delete Account' button. 
+   * Attempts account deletion through an API call to the backend.
    */
   const handleDelete = async () => {
     const isConfirmed = window.confirm("Are you sure you want to delete your account?");
@@ -113,12 +139,11 @@ const EditProfile = () => {
       } catch (error) {
         setError(true);
         setErrorMessage("Failed to delete account.");
-        console.log(error);
       }
     }
   }
 
-  // useEffect fetches the user's existing profile data to populate the form inputs.
+  // Fetches the user's existing profile data to populate the form inputs
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -143,16 +168,11 @@ const EditProfile = () => {
           setError(true);
           setErrorMessage("An unexpected error occurred.");
         }
-        console.log(error);
       }
     }
     fetchData();
   }, []);
 
-  /**
-   * Renders the edit profile form with all necessary fields, and a submit button. 
-   * Displays an error message if profile updating fails.
-   */
   return (
     <>
       <div className="flex flex-col justify-items-center mt-32 w-9/12">

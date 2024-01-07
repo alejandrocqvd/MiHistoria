@@ -1,3 +1,15 @@
+/**
+ * Story Component
+ * 
+ * This component renders a story page for a specified story.
+ * Displays all necessary information like title, author information, and text.
+ * Contains buttons for liking and saving, where the user must be logged in to use.
+ * Contains a comment section populated with Comment components.
+ * 
+ * Author: Alejandro Cardona
+ * Date: 2024-01-06
+ */
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane, faHeart as solidHeart, faBookmark as solidBookmark } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as regularHeart, faBookmark as regularBookmark } from "@fortawesome/free-regular-svg-icons";
@@ -8,7 +20,20 @@ import axios from "axios";
 import { AuthContext } from "../../context/authContext.tsx";
 import ErrorDisplay from "../../components/ErrorDisplay.tsx";
 
-// Interface for holding and managing the story's data.
+/**
+ * Interface for story data
+ * 
+ * @property {string} title - The title of the story.
+ * @property {string} username - The story author's username.
+ * @property {string} first_name - The story author's first name.
+ * @property {string} last_name - The story author's last name.
+ * @property {string} dob - The story author's date of birth.
+ * @property {string} user_image - The story author's profile picture file name.
+ * @property {string} story_image - The story banner image file name.
+ * @property {string} text - The story's HTML text.
+ * @property {string} page_count - The story number of pages.
+ * @property {string} is_private - The story author's privacy setting.
+ */
 interface StoryData {
   title: string;
   username: string;
@@ -22,7 +47,17 @@ interface StoryData {
   is_private: string;
 }
 
-// Interface for holding and managing an individual comment's data.
+/**
+ * Interface for comment data
+ * 
+ * @property {string} comment_id - The comment's identification number.
+ * @property {string} username - The comment author's username.
+ * @property {string} first_name - The comment author's first name.
+ * @property {string} last_name - The comment author's last name.
+ * @property {string} text - The comment's text contents.
+ * @property {string} timestamp - The comment's post timestamp.
+ * @property {string} image - The comment author's profile picture file name.
+ */
 interface CommentData {
   comment_id: string;
   username: string;
@@ -33,51 +68,51 @@ interface CommentData {
   image: string;
 }
 
-const Story = () => {
-  // State variables:
-  // - error: Boolean indicating if there is an error.
+// Story Component
+const Story: React.FC = () => {
+  // Boolean indicating if there is an error
   const [error, setError] = useState<boolean>(false);
 
-  // - errorMessage: String containing the error message to display.
+  // String containing the error message to display
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  // - profile: Object containing all the story's data.
+  // Object containing all the story's data
   const [story, setStory] = useState<StoryData | null>(null);
 
-  // - exists: Boolean indicating if the user's story exists.
+  // Boolean indicating if the user's story exists
   const [exists, setExists] = useState<boolean>(false);
 
-  // - liked: Boolean indicating if the user has liked the post.
+  // Boolean indicating if the user has liked the post
   const [liked, setLiked] = useState<Boolean>(false);
 
-  // - saved: Boolean indicating if the user has saved the post.
+  // Boolean indicating if the user has saved the post
   const [saved, setSaved] = useState<Boolean>(false);
 
-  // - pageNumber: Number indicating the current page number.
+  // Number indicating the current page number
   const [pageNumber, setPageNumber] = useState<number>(1);
 
-  // - isEditable: Boolean indicating if the current user is allowed to edit the story.
+  // Boolean indicating if the current user is allowed to edit the story
   const [isEditable, setIsEditable] = useState<boolean>(false);
 
-  // - comment: String containing the user's typed comment.
+  // String containing the user's typed comment
   const [comment, setComment] = useState<string>("");
 
-  // - comments: Array containing comment objects.
+  // Array containing comment objects
   const [comments, setComments] = useState<CommentData[]>([]);
 
-  // - commentError: Boolean indicating if there is an error with comment creation.
+  // Boolean indicating if there is an error with comment creation
   const [commentError, setCommentError] = useState<boolean>(false);
 
-  // - commentErrorMessage: String containing the error message to display.
+  // String containing the error message to display
   const [commentErrorMessage, setCommentErrorMessage] = useState<string>("");
   
-  // - currentCommentPage: Number indicating the current index of the comment pages.
+  // Number indicating the current index of the comment pages
   const [currentCommentPage, setCurrentCommentPage] = useState<number>(1);
 
-  // - totalComments: Number indicating the total number of comments loaded in.
+  // Number indicating the total number of comments loaded in
   const [totalComments, setTotalComments] = useState<number>(0);
 
-  // useNavigate used to go to edit page.
+  // useNavigate used to go to edit page
   const navigate = useNavigate();
 
   // Use the useParams hook to get URL parameters.
@@ -90,19 +125,25 @@ const Story = () => {
   const authContext = useContext(AuthContext);
   const { currentUser } = authContext!;
 
-  // Retrieve the user item from session storage and parse it if it's a valid JSON string.
+  // Retrieve the user item from session storage and parse it if it's a valid JSON string
   const storedUser = sessionStorage.getItem('user');
   const sessionUsername = storedUser && storedUser !== "null" ? JSON.parse(storedUser).user_info.username : null;
 
-  // DOCUMENT THIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  /**
+   * Generates an array of page numbers.
+   * 
+   * @param {number} pageCount - The total number of pages.
+   * @returns {number[]} An array of page numbers starting from 1 to pageCount.
+   */
   const generatePageNumbers = (pageCount: number): number[] => {
     return Array.from({ length: pageCount }, (_, i) => i + 1);
   }  
 
   /**
    * Converts the user's date of birth string to a numerical age.
-   * @param dobString - Date of birth as a string.
-   * @returns the calculated age of the user.
+   * 
+   * @param {string} dobString - Date of birth as a string.
+   * @returns {number} The calculated age of the user.
    */
   const calculateAge = (dobString: string): number => {
     const dob = new Date(dobString);
@@ -114,6 +155,11 @@ const Story = () => {
     return age;
   }
 
+  /**
+   * Handles story liking event.
+   * 
+   * This function attempts an API call to insert a new like-story value into the database.
+   */
   const handleLike = async () => {
     try {
       await axios.post("/api/users/like", {
@@ -124,10 +170,14 @@ const Story = () => {
     } catch (error) {
       setError(true);
       setErrorMessage("Failed to like or unlike story.");
-      console.log(error);
     }
   }
 
+  /**
+   * Handles the story saving event.
+   * 
+   * This function attempts an API call to insert a new save-story value into the database.
+   */
   const handleSave = async () => {
     try {
       await axios.post("/api/users/save", {
@@ -138,10 +188,15 @@ const Story = () => {
     } catch (error) {
       setError(true);
       setErrorMessage("Failed to save or unsave story.");
-      console.log(error);
     }
   }
 
+  /**
+   * Handles story deletion event.
+   * 
+   * This function prompts the user with a window to confirm their action.
+   * If confirmed, attempts an API call to delete the story from the database.
+   */
   const handleDelete = async () => {
     const isConfirmed = window.confirm("Are you sure you want to delete your story?");
 
@@ -155,11 +210,15 @@ const Story = () => {
       } catch (error) {
         setError(true);
         setErrorMessage("Failed to delete story.");
-        console.log(error);
       }
     }
   }
 
+  /**
+   * Handles comment fetching through an API call to the database depending on the 
+   * current comment page number.
+   * @param {number} page - The current comment page number.
+   */
   const fetchComments = async (page: number) => {
     try {
       const res = await axios.post("/api/comments/get", {
@@ -167,7 +226,7 @@ const Story = () => {
         page: page,
         limit: 50
       });
-      // Fill the comments array with data from the API request.
+      // Fill the comments array with data from the API request
       const newComments = res.data.data.map((comment: any) => ({
         comment_id: comment.comment_id,
         username: comment.username,
@@ -177,7 +236,7 @@ const Story = () => {
         timestamp: comment.timestamp,
         image: comment.image
       }));
-      // Update the state by appending new comments, avoiding duplicates.
+      // Update the state by appending new comments, avoiding duplicates
       setComments(prevComments => {
         const existingCommentIds = new Set(prevComments.map(c => c.comment_id));
         const filteredNewComments = newComments.filter((comment: { comment_id: string; }) => !existingCommentIds.has(comment.comment_id));
@@ -188,15 +247,25 @@ const Story = () => {
       setError(true);
       if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error);
       else setErrorMessage("An unexpected error occurred.");
-      console.log(error);
     }
   }
 
+  /**
+   * Handles the show more comments event.
+   * 
+   * This function increases the current comment page by 1.
+   */
   const handleShowMore = () => {
     const nextPage = currentCommentPage + 1;
     setCurrentCommentPage(nextPage);
   }
 
+  /**
+   * Handles the comment creation event.
+   * 
+   * This function attempts an API call to the backend to insert a new comment-story 
+   * value into the database.
+   */
   const handleComment = async () => {
     try {
       await axios.post("/api/comments/create", {
@@ -207,14 +276,25 @@ const Story = () => {
     } catch (error) {
       setError(true);
       setErrorMessage("Failed to create comment.");
-      console.log(error);
     }
   }
 
+  /**
+   * Handles comment field input change event.
+   * 
+   * This function is triggered when the comment input field changes.
+   * 
+   * @param {React.ChangeEvent<HTMLInputElement>} e - The event object that contains information
+   * on the change event.
+   */
   const handleCommentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setComment(e.target.value);
   }
 
+  /**
+   * This function is used to scroll to the top of the story text when the user 
+   * clicks on a change page button at the bottom of the page.
+   */
   const scroll = () => {
     setTimeout(() => {
       const topNav = document.getElementById("TopNav");
@@ -224,7 +304,7 @@ const Story = () => {
     }, 50);
   }
 
-  // useEffect fetches the story page's text through an API request to the back end.
+  // Fetches story, author, and comment data on mount, param, current comment page, and comment change.
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -238,40 +318,40 @@ const Story = () => {
 
         setPageNumber(Number.parseInt(page_number));
 
-        // Check if the current user is allowed to edit the story.
+        // Check if the current user is allowed to edit the story
         if (sessionUsername == params.id) setIsEditable(true);
 
-        // API Request to get the data of the story.
+        // API Request to get the data of the story
         const storyRes = await axios.post("/api/stories/story", { username: id });
         
         if (sessionUsername) {
-          // API Request to get the stories the current user has liked.
+          // API Request to get the stories the current user has liked
           const likeRes = await axios.get("/api/users/liked", {
             withCredentials: true
           });
 
-          // API Request to get the stories the current user has saved.
+          // API Request to get the stories the current user has saved
           const saveRes = await axios.get("/api/users/saved", {
             withCredentials: true
           });
 
-          // Set the liked status of the story.
+          // Set the liked status of the story
           const hasLiked = likeRes.data.data.some((story: { story_username: string; }) => story.story_username === id);
           setLiked(hasLiked);
 
-          // Set the saved status of the story.
+          // Set the saved status of the story
           const hasSaved = saveRes.data.data.some(((story: { story_username: string; }) => story.story_username === id));
           setSaved(hasSaved);
         }
 
-        // API Request to get the total number of comments made on the story.
+        // API Request to get the total number of comments made on the story
         const countRes = await axios.post("/api/comments/count", { story_username: id });
         setTotalComments(countRes.data.data.count);
 
-        // API Request to get the first page of comments on the story.
+        // API Request to get the first page of comments on the story
         fetchComments(currentCommentPage);
         
-        // Check if the response has data for a story.
+        // Check if the response has data for a story
         if (!exists) {
           if (storyRes.data.data) {
             setStory(storyRes.data.data);
@@ -285,7 +365,6 @@ const Story = () => {
         setError(true);
         if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error);
         else setErrorMessage("An unexpected error occurred.");
-        console.log(error);
       }
     }
     fetchData();
@@ -294,7 +373,7 @@ const Story = () => {
   return (
     <div className="flex flex-col justify-center items-center mt-20 w-9/12">
       {!exists ? (
-        sessionUsername === params.id ? (
+        sessionUsername === params.id ? ( // Rendering if the story does not exist and current user is the author
           <div className="flex flex-col justify-center items-center h-screen w-full text-center">
             <p className="text-4xl font-bold mb-10">You haven't written a story yet!</p>
             <Link 
@@ -303,7 +382,7 @@ const Story = () => {
               >Start Writing Your Story
             </Link>
           </div>
-        ) : (
+        ) : ( // Rendering if the story does not exist and current user is not the author
           <div className="flex flex-col justify-center items-center h-screen w-full text-center">
             <p className="text-4xl font-bold mb-24">{params.id} hasn't written a story yet!</p>
           </div>

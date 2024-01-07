@@ -1,3 +1,13 @@
+/**
+ * Footer Component
+ * 
+ * This component renders the application's footer. Contains links to the home/landing, 
+ * about, help, and legal page.
+ * 
+ * Author: Alejandro Cardona
+ * Date: 2024-01-06
+ */
+
 import { Link } from "react-router-dom"
 
 export const Footer = () => {

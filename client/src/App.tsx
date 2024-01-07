@@ -1,3 +1,23 @@
+/**
+ * App Component
+ * 
+ * This is the root component of the MiHistoria application. It sets up the routing 
+ * for the entire application using React Router and defines the main layout structure.
+ * 
+ * Key Features:
+ * 1. Routing: Utilizes React Router to manage navigation between different pages in the application.
+ * 2. Layout: Defines the main layout that includes the Navbar and Footer components, 
+ *    which are consistent across different pages.
+ * 3. Page Components: Renders different page components based on the URL path. 
+ *    Each path is associated with a specific component.
+ * 4. Authentication: Implements routes that require authentication using the 'RequireAuth' component.
+ *    This restricts access to certain pages based on the user's authentication status.
+ * 5. Error Handling: Includes a catch-all route for unmatched URLs that directs users to a 'NotFound' page.
+ *
+ * Author: Alejandro Cardona
+ * Date: 2024-01-06
+ */
+
 import "./App.css"
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom"
 import Home from "./pages/Home"
@@ -22,6 +42,7 @@ import ExploreNew from "./pages/search/ExploreNew"
 import ExploreAllTimeTop from "./pages/search/ExploreTop"
 import Saved from "./pages/search/Saved"
 
+// Layout Component
 const Layout = () => {
   return (
     <>
@@ -32,6 +53,7 @@ const Layout = () => {
   )
 }
 
+// Router Configuration
 const router = createBrowserRouter([
   {
     path: "/",
@@ -115,8 +137,13 @@ const router = createBrowserRouter([
   },
 ])
 
+/**
+ * App Component
+ * 
+ * This is the root component of the application. It sets up the main layout and routing structure using React Router.
+ * The 'App' component is responsible for rendering the 'RouterProvider' with the application's routing configuration.
+ */
 function App() {
-
   return (
     <>
       <div className="flex flex-col w-full justify-center items-center overflow-hidden text-text">

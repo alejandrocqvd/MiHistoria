@@ -1,3 +1,13 @@
+/**
+ * Explore Page Component
+ * 
+ * This component renders the explore page a user can use to search for specified stories,
+ * or browse existing stories based on queries like top stories, new stories, saved stories.
+ * 
+ * Author: Alejandro Cardona
+ * Date: 2024-01-06
+ */
+
 import React, { useContext, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
@@ -7,33 +17,40 @@ import SearchResult from "../../components/SearchResult";
 import { Link } from "react-router-dom";
 import ErrorDisplay from "../../components/ErrorDisplay";
 
+/**
+ * Interface for story search result data
+ * 
+ * @property {string} title - The title of the story.
+ * @property {string} image - The story banner image file name.
+ * @property {string} username - The story author's username.
+ */
 interface SearchData {
   title: string;
   image: string;
   username: string;
 }
 
-const Explore = () => {
-  // State variables:
-  // - error: Boolean indicating if there is an error.
+// Explore Page Component
+const Explore: React.FC = () => {
+  // Boolean indicating if there is an error
   const [error, setError] = useState<boolean>(false);
 
-  // - errorMessage: String containing the error message to display.
+  // String containing the error message to display
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  // - searchTerm: String containing the user's search input.
+  // String containing the user's search input
   const [searchTerm, setSearchTerm] = useState<string>("");
 
-  // - data: Array of objects containing information for search results.
+  // Array of objects containing information for search results
   const [data, setData] = useState<SearchData[]>([]);
 
-  // - savedData: Array of objects containing information for 5 saved stories.
+  // Array of objects containing information for 5 saved stories
   const [savedData, setSavedData] = useState<SearchData[]>([]);
 
-  // - topData: Array of objects containing information for top 5 stories of all time.
+  // Array of objects containing information for top 5 stories of all time
   const [topData, setTopData] = useState<SearchData[]>([]);
 
-  // - newData: Array of objects containing information for the newest 5 stories.
+  // Array of objects containing information for the newest 5 stories
   const [newData, setNewData] = useState<SearchData[]>([]);
 
   // useStates for search parameters.
@@ -41,21 +58,34 @@ const Explore = () => {
 
   const [searchUsers, setSearchUsers] = useState<boolean>(false);
 
-  // useStates for identifying if the user has typed something in search bar.
+  // useStates for identifying if the user has typed something in search bar
   const [searching, setSearching] = useState<boolean>(false);
 
   // AuthContext to get current user
   const authContext = useContext(AuthContext);
   const { currentUser } = authContext!;
 
-  // Updates the search title according to chosen filters.
+  /**
+   * Handles search filter change event.
+   * 
+   * This function updates the search title according to chosen filters.
+   * @returns {string} - The title for the explore page based on the chosen filter.
+   */
   const getSearchTitle = () => {
     if (searchStories) return "Search by Story";
     if (searchUsers) return "Search by User";
     return "Search";
   }
 
-  // Used to determine whether or not to show top stories, newest stories, if the user has started searching.
+  /**
+   * Handles changes in the search input field.
+   * 
+   * This function is used to determine whether or not to show top stories,
+   * newest stories, if the user has started searching.
+   * 
+   * @param {React.ChangeEvent<HTMLInputElement>} e - The event object that contains all information
+   * on the change event.
+   */
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e?.target.value;
     if (value.length > 0) {
@@ -68,6 +98,12 @@ const Explore = () => {
     }
   }
 
+  /**
+   * Handles searching event.
+   * 
+   * This function is triggered in handleSearchChange() where when the user is searching, it 
+   * will call this function to automatically search without the user needing to press enter.
+   */
   const handleSearch = async () => {
     try {
       const apiEndpoint = searchStories ? "/api/searches/story" :
@@ -79,14 +115,15 @@ const Explore = () => {
       setError(true);
       if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error);
       else setErrorMessage("An unexpected error occurred.");
-      console.log(error);
     }
   }
 
+  // Redoes the search if the user changes the filter with the same search input
   useEffect(() => {
     if (searching) handleSearch();
   }, [searchStories, searchUsers]);
 
+  // Fetches the top 5 saved, newest, and top of all time stories
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -106,7 +143,6 @@ const Explore = () => {
         setError(true);
         if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error);
         else setErrorMessage("An unexpected error occurred.");
-        console.log(error);
       }
     }
     fetchData();

@@ -1,6 +1,17 @@
+/**
+ * Not Found Page Component
+ * 
+ * This component renders the 404NotFound Page for users. Contains 
+ * a list of possible actions to do if this page was reached. 
+ * Used as a catch-all in routing.
+ * 
+ * Author: Alejandro Cardona
+ * Date: 2024-01-06
+ */
+
 const NotFound = () => {
   return (
-    <div className="flex flex-col h-96 justify-items-center mt-32 mb-24 w-9/12 md:w-3/12">
+    <div className="flex flex-col h-screen justify-center items-center mt-32 mb-24 w-9/12 md:w-3/12">
       <a className="font-semibold text-5xl text-center mb-12">404 Not Found!</a>
       <p className="mb-6">
         Sorry, we couldn't find the page you were looking for. It might have been removed, had its name changed, or is temporarily unavailable. 
@@ -9,7 +20,7 @@ const NotFound = () => {
       <p className="font-bold mb-6 text-2xl text-center">
         Here's what you can do next:
       </p>
-      <ul className="mb-12">
+      <ul className="mb-44">
         <li><a href="./" className="font-bold">Go to Home Page</a>: Revisit our homepage and start your journey again.</li>
         <li><a href="./explore" className="font-bold">Explore Stories</a>: Dive into a sea of unique life stories.</li>
         <li><a href="./help" className="font-bold">Need Help?</a> If you’re stuck or need assistance, our help page is here for you.</li>

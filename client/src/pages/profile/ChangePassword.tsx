@@ -1,3 +1,12 @@
+/**
+ * Change Password Page Component
+ * 
+ * This component renders a page where the user can change their account's password.
+ * 
+ * Author: Alejandro Cardona
+ * Date: 2024-01-06
+ */
+
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -5,24 +14,24 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import ErrorDisplay from "../../components/ErrorDisplay";
 
-const ChangePassword = () => {
-  // State variables:
-  // - error: Boolean indicating if there is an error during form submission.
+// Change Password Page Component
+const ChangePassword: React.FC = () => {
+  // Boolean indicating if there is an error during form submission
   const [error, setError] = useState<boolean>(false);
 
-  // - errorMessage: String containing the error message to display.
+  // String containing the error message to display
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  // - passwordHidden1: Boolean indicating if the password input is hidden or visible.
+  // Boolean indicating if the password input is hidden or visible
   const [passwordHidden1, setPasswordHidden1] = useState<boolean>(true);
   
-  // - passwordHidden2: Boolean indicating if the confirm password input is hidden or visible.
+  // Boolean indicating if the confirm password input is hidden or visible
   const [passwordHidden2, setPasswordHidden2] = useState<boolean>(true);
 
-  // - confirmPassword: String containing the contents of the confirm password input.
+  // String containing the contents of the confirm password input
   const [confirmPassword, setConfirmPassword] = useState<string>("");
 
-  // - password: String containing the new password.
+  // String containing the new password
   const [password, setPassword] = useState<string>("");
 
   // useNavigate used to go to login page after registration
@@ -30,7 +39,8 @@ const ChangePassword = () => {
 
   /**
    * Handles input changes for password form.
-   * @param e - The React change event.
+   * 
+   * @param {React.ChangeEvent<HTMLInputElement>} e - The event object.
    */
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setPassword(e.target.value);
@@ -38,27 +48,36 @@ const ChangePassword = () => {
   
     /**
      * Handles changes in the confirm password input field.
-     * @param e - The React change event.
+     * 
+     * @param {React.ChangeEvent<HTMLInputElement>} e - The event object.
      */
     const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setConfirmPassword(e.target.value);
     }
 
+    /**
+     * Handles the submission of the change password form. 
+     * 
+     * This function checks if the two passwords field match, then attempts 
+     * password change through an API call.
+     * 
+     * @param {React.FormEvent<HTMLFormElement>} e - The form event object.
+     */
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
-      // Check if passwords match.
+      // Check if passwords match
       if (password !== confirmPassword) {
         setError(true);
         setErrorMessage("Passwords do not match.");
         return;
       }
 
-      // Reset error states.
+      // Reset error states
       setError(false);
       setErrorMessage("");
 
-      // Attempt form submission. Display error if any.
+      // Attempt form submission and display error if any
       try {
         const data = {
           password: password
@@ -71,14 +90,9 @@ const ChangePassword = () => {
         setError(true);
         if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error);
         else setErrorMessage("An unexpected error occurred.");
-        console.log(error);
       }
     }
 
-    /**
-   * Renders the change password form.
-   * Displays an error message if updating password fails.
-   */
   return (
     <div className="flex flex-col justify-center items-center h-screen w-9/12">
 

@@ -1,3 +1,13 @@
+/**
+ * Login Page Component
+ * 
+ * This component renders a page where the user can login. If they have no account, 
+ * they are presented with a link to the register page.
+ * 
+ * Author: Alejandro Cardona
+ * Date: 2024-01-06
+ */
+
 import { useContext, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash, faEnvelope } from "@fortawesome/free-solid-svg-icons";
@@ -5,39 +15,38 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/authContext";
 import ErrorDisplay from "../../components/ErrorDisplay";
 
-// Interface for holding and managing form data in the Login component.
+/**
+ * Interface for holding the inputted login information
+ * 
+ * @property {string} email - Inputted email address.
+ * @property {string} password - Inputted password.
+ */
 interface FormData {
   email: string;
   password: string;
 }
 
-/**
- * Login component for handling user authentication.
- * This component provides a form for users to input their email and password, and handles
- * the authentication process by communicating with the backend API.
- * @returns Login page (/login)
- */
-const Login = () => {
-  // State variables:
-  // - passwordHidden: Boolean indicating if the password input is hidden or visible.
+// Login Page Component
+const Login: React.FC = () => {
+  // Boolean indicating if the password input is hidden or visible
   const [passwordHidden, setPasswordHidden] = useState<boolean>(true);
 
-    // - error: Boolean indicating if there is an error during form submission.
+    // Boolean indicating if there is an error during form submission
   const [error, setError] = useState<boolean>(false);
 
-    // - errorMessage: String containing the error message to display.
+    // String containing the error message to display
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-    // - inputs: Object holding the form data for email and password.
+    // Object holding the form data for email and password
   const [inputs, setInputs] = useState<FormData>({
     email: "",
     password: "",
   });
 
-  // useNavigate used to go to homepage after authentication.
+  // useNavigate used to go to homepage after authentication
   const navigate = useNavigate();
 
-  // Authorization context and saving the login function.
+  // Authorization context and saving the login function
   const authContext = useContext(AuthContext);
   if (!authContext) {
     setError(true);
@@ -47,7 +56,10 @@ const Login = () => {
 
   /**
    * Handles input changes for login form.
-   * @param e - The React change event.
+   * 
+   * Triggered when the user changes any of the input fields.
+   * 
+   * @param {React.ChangeEvent<HTMLInputElement>} e - The event object.
    */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputs(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -55,30 +67,28 @@ const Login = () => {
 
   /**
    * Handles the submission of the login form.
-   * @param e - The React form event.
+   * 
+   * Triggered when the user clicks on the 'Login' button. 
+   * 
+   * @param {React.FormEvent<HTMLFormElement>} e - The form event object.
    */
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Reset error states.
+    // Reset error states
     setError(false);
     setErrorMessage("");
 
-    // Attempt form submission. Display error message if any.
+    // Attempt form submission and display error message if any
     try {
       await login(inputs);
       navigate("/");
     } catch (error) {
       setError(true);
       setErrorMessage("Incorrect email or password.");
-      console.log(error);
     }
   }
-
-  /**
-   * Renders the login form with email and password fields, and a submit button.
-   * Displays an error message if login fails. Provides a link to the registration page.
-   */
+  
   return (
     <div className="flex justify-center items-center w-screen h-screen bg-img-login">
 

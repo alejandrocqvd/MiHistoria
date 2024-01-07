@@ -1,3 +1,14 @@
+/**
+ * Profile Page Component
+ * 
+ * This component renders a page that displays all of the current user's information.
+ * Presents the user with buttons to edit their account details.
+ * Also contains a link to their story.
+ * 
+ * Author: Alejandro Cardona
+ * Date: 2024-01-06
+ */
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 import { useContext, useEffect, useState } from "react";
@@ -5,7 +16,16 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/authContext";
 
-// Interface for holding and managing the user's profile data.
+/**
+ * Interface for holding the user's pre-existing information
+ * 
+ * @property {string} first_name - The user's first name.
+ * @property {string} last_name - The user's last name.
+ * @property {string} email - The user's email address.
+ * @property {string} dob - The user's date of birth.
+ * @property {string} image - The user's profile picture image file name.
+ * @property {string} is_private - The user's privacy value.
+ */
 interface ProfileData {
   username: string;
   first_name: string;
@@ -16,43 +36,44 @@ interface ProfileData {
   is_private: boolean;
 }
 
-// Interface for holding and managing
+/**
+ * Interface for holding the user's story data
+ * 
+ * @property {string} title - The user's story title.
+ * @property {string} image - The user's story banner image file name.
+ */
 interface StoryData {
   title: string;
   image: string;
 }
 
-/**
- * Profile component for user's to view their profile information.
- * This component displays the user's information, their story, and their saved stories.
- * @returns Profile page (/profile)
- */
-const Profile = () => {
-  // State variables:
-  // - error: Boolean indicating if there is an error during form submission.
+// Profile Page Component
+const Profile: React.FC = () => {
+  // Boolean indicating if there is an error during form submission
   const [error, setError] = useState<boolean>(false);
 
-  // - errorMessage: String containing the error message to display.
+  // String containing the error message to display
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  // - profile: Object containing all the user's profile data.
+  // Object containing all the user's profile data
   const [profile, setProfile] = useState<ProfileData | null>(null);
 
-  // - story: Object containing the title and image for the user's story.
+  // Object containing the title and image for the user's story
   const [story, setStory] = useState<StoryData | null>(null); 
 
   // AuthContext to get current user
   const authContext = useContext(AuthContext);
   const { currentUser } = authContext!;
 
-  // Fetching user's username from session storage.
+  // Fetching user's username from session storage
   const storedData = sessionStorage.getItem('user');
   const username = storedData ? JSON.parse(storedData).user_info.username : null;
 
   /**
    * Converts the user's date of birth string to a numerical age.
-   * @param dobString - Date of birth as a string.
-   * @returns the calculated age of the user.
+   * 
+   * @param {string} dobString - Date of birth as a string.
+   * @returns {string} - The calculated age of the user.
    */
   const calculateAge = (dobString: string): number => {
     const dob = new Date(dobString);
@@ -64,7 +85,7 @@ const Profile = () => {
     return age;
   }
   
-  // useEffect fetches the user's profile information through an API request to the backend.
+  // Fetches the user's profile information through an API request on component mount
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -79,15 +100,11 @@ const Profile = () => {
         setError(true);
         if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error);
         else setErrorMessage("An unexpected error occurred.");
-        console.log(error);
       }
     }
     fetchData();
   }, []);
-
-  /**
-   * Renders the profile page with all relevant information.
-   */
+  
   return (
     <> 
       { error ? 

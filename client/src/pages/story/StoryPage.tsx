@@ -1,26 +1,35 @@
+/**
+ * Story Page Component
+ * 
+ * This component renders a specific story page for a specified story.
+ * Displays all HTML text that has been sanitized.
+ * 
+ * Author: Alejandro Cardona
+ * Date: 2024-01-06
+ */
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from 'react-router-dom';
 import ErrorDisplay from "../../components/ErrorDisplay";
 
-const StoryPage = () => {
-  // State variables:
-  // - error: Boolean indicating if there is an error.
+const StoryPage: React.FC = () => {
+  // Boolean indicating if there is an error
   const [error, setError] = useState<boolean>(false);
 
-  // - errorMessage: String containing the error message to display.
+  // String containing the error message to display
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  // - text: String containing HTML for page text.
+  // String containing HTML for page text
   const [text, setText] = useState<string>("");
 
-  // Use the useParams hook to get URL parameters.
+  // Use the useParams hook to get URL parameters
   const params = useParams() as {
     id: string;
     page_number: string;
   };
 
-  // useEffect fetches the story page's text through an API request to the back end.
+  // Fetches the story page's text through an API request, changes on mounting and param changes
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -38,7 +47,6 @@ const StoryPage = () => {
         setError(true);
         if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error);
         else setErrorMessage("An unexpected error occurred.");
-        console.log(error);
       }
     }
     fetchData();

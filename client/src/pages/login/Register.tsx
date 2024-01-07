@@ -1,3 +1,13 @@
+/**
+ * Register Page Component
+ * 
+ * This component renders a page where the user can register. If they already have an account, 
+ * they are presented with a link to the login page.
+ * 
+ * Author: Alejandro Cardona
+ * Date: 2024-01-06
+ */
+
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash, faEnvelope, faUser } from "@fortawesome/free-solid-svg-icons";
@@ -6,7 +16,16 @@ import { useNavigate } from "react-router-dom";
 import ErrorDisplay from "../../components/ErrorDisplay";
 
 
-// Interface for holding and managing form data in the Register component.
+/**
+ * Interface for holding the inputted registration information
+ * 
+ * @property {string} first_name - Inputted first name.
+ * @property {string} last_name - Inputted last name.
+ * @property {string} username - Inputted username.
+ * @property {string} email - Inputted email address.
+ * @property {string} dob - Inputted date of birth.
+ * @property {string} password - Inputted password.
+ */
 interface FormData {
   first_name: string;
   last_name: string;
@@ -16,30 +35,24 @@ interface FormData {
   password: string;
 };
 
-/**
- * Register component for handling user registration.
- * This component provides a form for users to input their information,
- * and handles the registration process by communicating with the backend API.
- * @returns Register Page (/register)
- */
+// Register Page Component
 const Register: React.FC = () => {
-  // State variables:
-  // - passwordHidden1: Boolean indicating if the password input is hidden or visible.
+  // Boolean indicating if the password input is hidden or visible
   const [passwordHidden1, setPasswordHidden1] = useState<boolean>(true);
   
-  // - passwordHidden2: Boolean indicating if the confirm password input is hidden or visible.
+  // Boolean indicating if the confirm password input is hidden or visible
   const [passwordHidden2, setPasswordHidden2] = useState<boolean>(true);
 
-  // - confirmPassword: String containing the contents of the confirm password input.
+  // String containing the contents of the confirm password input
   const [confirmPassword, setConfirmPassword] = useState<string>("");
 
-  // - error: Boolean indicating if there is an error during form submission.
+  // Boolean indicating if there is an error during form submission
   const [error, setError] = useState<boolean>(false);
 
-  // - errorMessage: String containing the error message to display.
+  // String containing the error message to display
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  // - inputs: Object holding the form data for user registration.
+  // - inputs: Object holding the form data for user registration
   const [inputs, setInputs] = useState<FormData>({
     first_name: "",
     last_name: "",
@@ -54,7 +67,10 @@ const Register: React.FC = () => {
 
   /**
    * Handles input changes for registration form.
-   * @param e - The React change event.
+   * 
+   * Triggers when the user changes any of the input fields.
+   * 
+   * @param {React.ChangeEvent<HTMLInputElement>} e - The event object.
    */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputs(prev => ({...prev, [e.target.name]: e.target.value}));
@@ -62,7 +78,10 @@ const Register: React.FC = () => {
 
   /**
    * Handles changes in the confirm password input field.
-   * @param e - The React change event.
+   * 
+   * Triggers when the user changes the input inside the 'change password' field.
+   * 
+   * @param {React.ChangeEvent<HTMLInputElement>} e - The event object.
    */
   const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setConfirmPassword(e.target.value);
@@ -70,52 +89,50 @@ const Register: React.FC = () => {
 
   /**
    * Handles the submission of the registration form.
-   * @param e - The React form event.
+   * 
+   * Triggers when the user clicks on the 'Register' button.
+   * Attempts inserting a new user into the database through an API call.
+   * 
+   * @param {React.FormEvent<HTMLFormElement>} e - The form event object.
    */
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Calculate age to verify later.
+    // Calculate age to verify later
     const birthday = new Date(inputs.dob);
     const ageDifMs = Date.now() - birthday.getTime();
     const ageDate = new Date(ageDifMs);
     const age = Math.abs(ageDate.getUTCFullYear() - 1970);
     
-    // Check if user is older than 16 years.
+    // Check if user is older than 16 years
     if (age < 16) {
       setError(true);
       setErrorMessage("You must be at least 16 years old to register.");
       return;
     }
 
-    // Check if passwords match.
+    // Check if passwords match
     if (inputs.password !== confirmPassword) {
       setError(true);
       setErrorMessage("Passwords do not match.");
       return;
     }
 
-    // Reset error states.
+    // Reset error states
     setError(false);
     setErrorMessage("");
 
-    // Attempt form submission. Display error if any.
+    // Attempt form submission and display error if any
     try {
-      const res = await axios.post("/api/auth/register", inputs);
-      console.log(res);
+      await axios.post("/api/auth/register", inputs);
       navigate("/login");
     } catch (error) {
       setError(true);
       if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error); 
       else setErrorMessage("An unexpected error occurred.");
-      console.log(error);
     }
   }
 
-  /**
-   * Renders the registration form with all necessary fields as defined in the database schema.
-   * Displays an error message if registration fails. Provides a link to login page.
-   */
   return (
     <div className="flex justify-center items-center w-screen h-screen bg-img-login">
 
