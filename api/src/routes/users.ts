@@ -1,3 +1,10 @@
+/**
+ * User Routes
+ * 
+ * Author: Alejandro Cardona
+ * Date: 2024-01-06
+ */
+
 import express from "express";
 import { 
   deletePicture,
@@ -15,6 +22,7 @@ import {
 
 const router = express.Router();
 
+// Routes
 router.get("/profile", getProfile);
 router.get("/username", getUsername);
 router.get("/liked", getLiked);

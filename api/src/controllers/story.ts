@@ -1,3 +1,12 @@
+/**
+ * Story Module
+ * 
+ * This module provides the necessary functions for stories and all their functionalities.
+ * 
+ * Author: Alejandro Cardona
+ * Date: 2024-01-06
+ */
+
 import { Request, Response } from "express";
 import { db, getConnection } from "../db";
 import jwt, { JwtPayload } from "jsonwebtoken";
@@ -15,7 +24,7 @@ import { JSDOM } from 'jsdom';
 export const getPage = (req: Request, res: Response) => {
     const { username, page_number } = req.body;
 
-    // Query to get story page text.
+    // Query to get story page text
     const q = `SELECT text
                 FROM page
                 WHERE username = ? AND page_number = ?`;
@@ -25,7 +34,7 @@ export const getPage = (req: Request, res: Response) => {
         const typedData = data as RowDataPacket[];
         if (typedData.length === 0) return res.status(400).json({ error: `Page number ${page_number} for user '${username}' does not exist.` });
         
-        // Sanitize the HTML.
+        // Sanitize the HTML
         const rawHTML = typedData[0].text;
         const sanitizedHTML = sanitizeHtml(rawHTML, {
                 allowedTags: sanitizeHtml.defaults.allowedTags.concat([
@@ -68,19 +77,19 @@ export const updatePage = (req: Request, res: Response) => {
     try {
         const { story_username, page_number, text } = req.body;
 
-        // Get JWT.
+        // Get JWT
         const token = req.cookies["access_token"];
         if (!token) return res.status(401).json({ error: "Access denied, no token provided." });
         
-        // Verify the token and save username.
+        // Verify the token and save username
         const decoded = jwt.verify(token, "jwtkey") as JwtPayload;
         if (!decoded.username) return res.status(401).json({ error: "Invalid token." });
         const username = decoded.username;
 
-        // Check if the story belongs to the user.
+        // Check if the story belongs to the user
         if (story_username !== username) return res.status(401).json({ error: "Access denied. Story does not belong to user." });
         
-        // Sanitize the HTML text.
+        // Sanitize the HTML text
         const sanitizedHTML = sanitizeHtml(text, {
             allowedTags: sanitizeHtml.defaults.allowedTags.concat([
                 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol',
@@ -107,7 +116,7 @@ export const updatePage = (req: Request, res: Response) => {
             },
         });
         
-        // Query to update page.
+        // Query to update page
         const q = `UPDATE page
                     SET text = ?
                     WHERE page_number = ? AND username = ?`;
@@ -132,13 +141,12 @@ export const updatePage = (req: Request, res: Response) => {
 export const getStory = (req: Request, res: Response) => {
     const { username } = req.body;
 
-    // Query to get story information, author information, save count, and like count.
+    // Query to get story information, author information, save count, and like count
     const q = `SELECT u.username, u.first_name, u.last_name, u.dob, u.image AS user_image, s.title, s.image AS story_image, s.text, s.page_count, u.is_private
                 FROM story AS s
                 LEFT JOIN user AS u ON u.username = s.username
                 WHERE s.username = ?`;
     db.query(q, username, (error, data) => {
-        // Error checking
         if (error) return res.status(500).json({ error: error });
         
         const typedData = data as RowDataPacket[];
@@ -162,16 +170,16 @@ export const saveStory = async (req: Request, res: Response) => {
         }
 
         try {
-            // Get JWT.
+            // Get JWT
             const token = req.cookies["access_token"];
             if (!token) return res.status(401).json({ error: "Access denied, no token provided." });
             
-            // Verify the token and save username.
+            // Verify the token and save username
             const decoded = jwt.verify(token, "jwtkey") as JwtPayload;
             if (!decoded.username) return res.status(401).json({ error: "Invalid token." });
             const username = decoded.username;
 
-            // Start a transaction.
+            // Start a transaction
             await new Promise((resolve, reject) => {
                 connection?.beginTransaction(error => {
                     if (error) reject(error);
@@ -179,33 +187,33 @@ export const saveStory = async (req: Request, res: Response) => {
                 });
             });
     
-            // Check if story already exists.
+            // Check if story already exists
             const q = `SELECT page_count FROM story WHERE username = ?`;
             connection?.query(q, [username], async (error, data) => {
                 // Error checking.
                 if (error) throw error;
                 const typedData = data as RowDataPacket[];
     
-                // Split the story into pages of 900 words or less.
+                // Split the story into pages of 900 words or less
                 const pages = splitToPages(text, 900);
     
-                // If the story already exists, update it's content.
+                // If the story already exists, update it's content
                 if (typedData.length) {
                     const q = `UPDATE story 
                                 SET title = ?, text = ?, page_count = ?
                                 WHERE username = ?`;
                     connection?.query(q, [title, text, pages.length, username], async (error) => {
-                        // Error checking.
+                        // Error checking
                         if (error) throw error;
     
-                        // Go through each page, and if it already exists -> update it, if it does not -> insert it.
+                        // Go through each page, and if it already exists -> update it, if it does not -> insert it
                         let page_number = 1;
                         for (const page of pages) {
                             pageQuery(page, username, page_number);
                             page_number++;
                         }
 
-                        // If the current page count for the story is greater than the new page count, delete the unnecessary pages.
+                        // If the current page count for the story is greater than the new page count, delete the unnecessary pages
                         if (typedData[0].page_count > page_number) {
                             for (let i = typedData[0].page_count; i > page_number; i--) {
                                 deletePageQuery(username, page_number);
@@ -214,15 +222,15 @@ export const saveStory = async (req: Request, res: Response) => {
                     });
                 }
     
-                // If the story does not exist, insert it into the appropriate tables.
+                // If the story does not exist, insert it into the appropriate tables
                 else {
                     const q = `INSERT INTO story (username, title, page_count, text)
                                 VALUES (?, ?, ?, ?)`;
                     connection?.query(q, [username, title, pages.length, text], (error) => {
-                        // Error checking,
+                        // Error checking
                         if (error) throw error;
     
-                        // Insert each page.
+                        // Insert each page
                         const q = `INSERT INTO page (page_number, username, text)
                                     VALUES (?, ?, ?)`;
                         let page_number = 1;
@@ -235,7 +243,7 @@ export const saveStory = async (req: Request, res: Response) => {
                     });
                 }
 
-                // Commit the transaction.
+                // Commit the transaction
                 await new Promise((resolve, reject) => {
                     connection?.commit(error => {
                         if (error) reject(error);
@@ -246,7 +254,7 @@ export const saveStory = async (req: Request, res: Response) => {
             connection?.release();
             res.status(201).json({ message: "Story successfully created or updated." });
         } catch (error) {
-            // Rollback in case of an error.
+            // Rollback in case of an error
             await new Promise(resolve => {
                 connection?.rollback(() => resolve(null));
             });
@@ -256,20 +264,27 @@ export const saveStory = async (req: Request, res: Response) => {
     });
 }
 
+/**
+ * Handles saving a story's image banner to the database.
+ * 
+ * @param {Request} req - Contains the user's JWT and the file name for the story banner image.
+ * @param {Response} res - Object used to send back the appropriate response to the client.
+ * @returns A response and if successful, sends the story text for the appropriate page.
+ */
 export const saveBanner = async (req: Request, res: Response) => {
     const { image } = req.body;
 
     try {
-        // Get JWT.
+        // Get JWT
         const token = req.cookies["access_token"];
         if (!token) return res.status(401).json({ error: "Access denied, no token provided." });
         
-        // Verify the token and save username.
+        // Verify the token and save username
         const decoded = jwt.verify(token, "jwtkey") as JwtPayload;
         if (!decoded.username) return res.status(401).json({ error: "Invalid token." });
         const username = decoded.username;
 
-        // Query to update the story's banner image.
+        // Query to update the story's banner image
         const q = `UPDATE story SET image = ? WHERE username = ?`;
         db.query(q, [image, username], (error) => {
             if (error) return res.status(500).json({ error });
@@ -281,18 +296,25 @@ export const saveBanner = async (req: Request, res: Response) => {
     }
 }
 
+/**
+ * Handles deleting a story's image banner from the database.
+ * 
+ * @param {Request} req - Contains the user's JWT.
+ * @param {Response} res - Object used to send back the appropriate response to the client.
+ * @returns A response and if successful, sends the story text for the appropriate page.
+ */
 export const deleteBanner = async (req: Request, res: Response) => {
     try {
-        // Get JWT.
+        // Get JWT
         const token = req.cookies["access_token"];
         if (!token) return res.status(401).json({ error: "Access denied, no token provided." });
         
-        // Verify the token and save username.
+        // Verify the token and save username
         const decoded = jwt.verify(token, "jwtkey") as JwtPayload;
         if (!decoded.username) return res.status(401).json({ error: "Invalid token." });
         const username = decoded.username;
 
-        // Query to delete the story's banner image.
+        // Query to delete the story's banner image
         const q = `UPDATE story SET image = ? WHERE username = ?`;
         db.query(q, [null, username], (error) => {
             if (error) return res.status(500).json({ error });
@@ -315,22 +337,23 @@ export const deleteStory = (req: Request, res: Response) => {
     const { story_username } = req.body;
 
     try {
-        // Get JWT.
+        // Get JWT
         const token = req.cookies["access_token"];
         if (!token) return res.status(401).json({ error: "Access denied, no token provided." });
         
-        // Verify the token and save username.
+        // Verify the token and save username
         const decoded = jwt.verify(token, "jwtkey") as JwtPayload;
         if (!decoded.username) return res.status(401).json({ error: "Invalid token." });
         const username = decoded.username;
 
-        // Check if user's username and story username don't match.
+        // Check if user's username and story username don't match
         if ( username !== story_username ) return res.status(401).json({ error: "Unauthorized request. User cannot delete this story." });
 
-        // Query to delete the story.
+        // Query to delete the story
+        // Note: I realize this looks very messy, and it could have all been avoided if I designed the database better LOL
         const q = `DELETE FROM page WHERE username = ?`;
         db.query(q, [username], (error) => {
-            // Error checking.
+            // Error checking
             if (error) return res.status(500).json({ error });
 
             const q = `DELETE FROM comment WHERE story_username = ?`;
@@ -398,21 +421,28 @@ function splitToPages(htmlString: string, maxWordsPerPage: number): string[] {
     return pages;
 }
 
+/**
+ * Handles inserting or updating a story's page in the database.
+ * 
+ * @param {string} page - The HTML text content of the page.
+ * @param {string} username - The story's username.
+ * @param {string} page_number - The page number.
+ */
 const pageQuery = (page: string, username: string, page_number: number) => {
     const q = `SELECT * FROM page WHERE username = ? AND page_number = ?`;
     
     db.query(q, [username, page_number], (error, data) => {
-        // Error checking.
+        // Error checking
         if (error) return error;
 
         const typedData = data as RowDataPacket[];
 
         if (typedData.length) {
-            // Update case.
+            // Update case
             const q = `UPDATE page SET text = ? WHERE username = ? AND page_number = ?`;
             db.query(q, [page, username, page_number]);
         } else {
-            // Insert case.
+            // Insert case
             const q = `INSERT INTO page (page_number, username, text)
                         VALUES (?, ?, ?)`;
             db.query(q, [page_number, username, page]);
@@ -420,6 +450,12 @@ const pageQuery = (page: string, username: string, page_number: number) => {
     });
 }
 
+/**
+ * Handles deleting a story's page from the database.
+ * 
+ * @param {string} username - The story's username.
+ * @param {string} page_number - The page number.
+ */
 const deletePageQuery = (username: string, page_number: number) => {
     const q = `DELETE FROM page WHERE username = ? AND page_number = ?`;
     db.query(q, [username, page_number], (error) => {

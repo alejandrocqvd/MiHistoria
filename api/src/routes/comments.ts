@@ -1,3 +1,10 @@
+/**
+ * Comment Routes
+ * 
+ * Author: Alejandro Cardona
+ * Date: 2024-01-06
+ */
+
 import express from "express";
 import { 
   createComment, 
@@ -8,6 +15,7 @@ import {
 
 const router = express.Router();
 
+// Routes
 router.post("/get", getComments);
 router.post("/count", getCommentCount);
 router.post("/create", createComment);

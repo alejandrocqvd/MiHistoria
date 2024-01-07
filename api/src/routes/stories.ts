@@ -1,3 +1,10 @@
+/**
+ * Story Routes
+ * 
+ * Author: Alejandro Cardona
+ * Date: 2024-01-06
+ */
+
 import express from "express";
 import { 
   deleteBanner, 
@@ -11,6 +18,7 @@ import {
 
 const router = express.Router();
 
+// Routes
 router.post("/page", getPage);
 router.post("/edit", updatePage);
 router.post("/story", getStory);
