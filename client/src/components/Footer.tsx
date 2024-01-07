@@ -35,7 +35,7 @@ export const Footer = () => {
           </div>
           <div className='flex flex-grow justify-end items-center font-bold'>
             <Link className='hover-underline-animation' to='./'>About</Link>
-            <Link className='hover-underline-animation mx-24' to='./help'>Help</Link>
+            <Link className='hover-underline-animation mx-24' to='./legal'>Help</Link>
             <Link className='hover-underline-animation' to='./legal'>Legal</Link>
           </div>
         </div>
