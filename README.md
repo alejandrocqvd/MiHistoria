@@ -1,7 +1,7 @@
 
-# Vite React App
+# MiHistoria
 
-This project is a [React](https://reactjs.org/) application powered by [Vite](https://vitejs.dev/). It leverages the fast build times and developer experience enhancements of Vite, along with the powerful features of React. This setup includes TypeScript for type-safe code and Tailwind CSS for utility-first styling.
+MiHistoria is a [React](https://reactjs.org/) application powered by [Vite](https://vitejs.dev/). It serves as a social-media type application where each user is given one, and only one post, where they can share their life story in its entirety. Users can search, like, and save stories they find. This setup includes TypeScript for type-safe code and Tailwind CSS for utility-first styling.
 
 ## Getting Started
 
@@ -18,13 +18,13 @@ Before running this project, you'll need to have the following installed:
    ```sh
    git clone https://github.com/alejandrocqvd/MiHistoria.git
    ```
-2. Navigate to the project directory:
+2. Navigate to the backend project directory:
    ```sh
-   cd client
+   cd api
    ```
 3. Install dependencies:
    ```sh
-   npm install
+   npm install mysql2 express nodemon bcryptjs jsonwebtoken sanitize-html jsdom path cookie-parser multer
    ```
 
 ### Running the App
@@ -53,20 +53,6 @@ This command will generate a `dist` folder that contains the production-ready fi
 - Vite 2+
 - TypeScript
 - Tailwind CSS
-
-## Contributing
-
-Contributions to this project are welcome. Please follow these steps to contribute:
-
-1. Fork the repository.
-2. Create a new branch: `git checkout -b my-new-feature`.
-3. Make your changes and commit them: `git commit -m 'Add some feature'`.
-4. Push to the branch: `git push origin my-new-feature`.
-5. Submit a pull request.
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
 
 ## Contact
 
