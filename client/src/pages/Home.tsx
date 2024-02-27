@@ -119,7 +119,7 @@ const Home: React.FC = () => {
             <p className="font-semibold text-center">Let the world hear your story. Travel back in your time to recollect and write down your life.</p>
         </a>
         <a href={ currentUser ? "./profile/edit" : "./login"} className="flex-1 flex flex-col justify-between items-center w-full p-16 mb-8 text-center bg-[#292929] shadow-xl hover:shadow-2xl rounded-xl hover:scale-105 transition duration-300 ease-in-out">
-            <p className="text-4xl font-bold mb-8 text-center">Be yourself or be anonymous</p>
+            <p className="text-4xl font-bold mb-8 text-center">Be Yourself or Be Anonymous</p>
             <img src={privacyIcon} className="h-24 w-auto mb-8" />
             <p className="font-semibold text-center">No need to expose your identity, feel free to write anonymously and tell your truth with no filter.</p>
         </a>
