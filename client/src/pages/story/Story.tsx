@@ -83,10 +83,10 @@ const Story: React.FC = () => {
   const [exists, setExists] = useState<boolean>(false);
 
   // Boolean indicating if the user has liked the post
-  const [liked, setLiked] = useState<Boolean>(false);
+  const [liked, setLiked] = useState<boolean>(false);
 
   // Boolean indicating if the user has saved the post
-  const [saved, setSaved] = useState<Boolean>(false);
+  const [saved, setSaved] = useState<boolean>(false);
 
   // Number indicating the current page number
   const [pageNumber, setPageNumber] = useState<number>(1);

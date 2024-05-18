@@ -33,7 +33,7 @@ interface FormData {
   email: string;
   dob: string;
   password: string;
-};
+}
 
 // Register Page Component
 const Register: React.FC = () => {
