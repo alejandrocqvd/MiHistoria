@@ -127,7 +127,7 @@ const Home: React.FC = () => {
 
       <p className="text-5xl font-bold mb-12 mt-28 pb-2 bg-clip-text text-transparent bg-gradient">Explore Top Stories</p>
 
-      {error && <ErrorDisplay errorMessage={errorMessage}></ErrorDisplay>}
+      {/* {error && <ErrorDisplay errorMessage={errorMessage}></ErrorDisplay>} */}
 
       <div className="flex flex-col justify-center items-stretch h-auto w-9/12 md:w-1/2 mb-32">
         {topData.map(searchResult => (
