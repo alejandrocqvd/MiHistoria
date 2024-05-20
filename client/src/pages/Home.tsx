@@ -107,7 +107,7 @@ const Home: React.FC = () => {
 
       <p className="text-5xl font-bold mb-12 mt-28 pb-2 bg-clip-text text-transparent bg-gradient">What To Do</p>
       <div className="flex flex-col lg:flex-row justify-stretch items-stretch w-9/12 mb-24">
-        <a href={"./explore"} 
+        <a href={"/explore"} 
           className="flex-1 flex flex-col justify-between items-center w-full p-16 mb-8 text-center bg-[#292929] shadow-xl rounded-xl hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out">
             <p className="text-4xl font-bold mb-8 text-center">Read Human Experiences</p>
             <img src={globeIcon} className="h-24 w-auto mb-8" />
@@ -118,7 +118,7 @@ const Home: React.FC = () => {
             <img src={bookIcon} className="h-24 w-auto mb-8" />
             <p className="font-semibold text-center">Let the world hear your story. Travel back in your time to recollect and write down your life.</p>
         </a>
-        <a href={ currentUser ? "./profile/edit" : "./login"} className="flex-1 flex flex-col justify-between items-center w-full p-16 mb-8 text-center bg-[#292929] shadow-xl hover:shadow-2xl rounded-xl hover:scale-105 transition duration-300 ease-in-out">
+        <a href={ currentUser ? "/profile/edit" : "/login"} className="flex-1 flex flex-col justify-between items-center w-full p-16 mb-8 text-center bg-[#292929] shadow-xl hover:shadow-2xl rounded-xl hover:scale-105 transition duration-300 ease-in-out">
             <p className="text-4xl font-bold mb-8 text-center">Be Yourself or Be Anonymous</p>
             <img src={privacyIcon} className="h-24 w-auto mb-8" />
             <p className="font-semibold text-center">No need to expose your identity, feel free to write anonymously and tell your truth with no filter.</p>
