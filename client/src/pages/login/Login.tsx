@@ -138,7 +138,7 @@ const Login: React.FC = () => {
             {error && <ErrorDisplay errorMessage={errorMessage}></ErrorDisplay>}
 
             <div>
-              <p className="text-center">Don't have an account? <a href="./register" className="hover-underline-animation font-bold">Register</a></p>
+              <p className="text-center">Don't have an account? <a href="/register" className="hover-underline-animation font-bold">Register</a></p>
             </div>
 
         </form>

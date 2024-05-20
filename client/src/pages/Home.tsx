@@ -76,10 +76,10 @@ const Home: React.FC = () => {
           <p className="my-10 py-5">Write your story, <span className="bg-clip-text text-transparent bg-gradient font-extrabold underline">here.</span></p>
           <div className="flex flex-row justify-start items-center">
             <button className="hidden md:flex justify-center items-center h-10 w-auto p-4 mr-8 bg-gradient text-sm rounded-xl shadow-lg font-bold transition duration-200 ease-in-out hover:scale-105">
-              <Link to={ currentUser ? `/story/${sessionUsername}/page/1` : "./register"}>Start your journey</Link>
+              <Link to={ currentUser ? `/story/${sessionUsername}/page/1` : "/register"}>Start your journey</Link>
             </button>
             <button className="hidden md:flex justify-center items-center h-10 w-auto p-4 text-sm border-2 rounded-xl shadow-lg font-bold transition duration-200 ease-in-out hover:scale-105">
-              <Link to={ currentUser ? `/story/${sessionUsername}/page/1` : "./login"}>Continue your story</Link>
+              <Link to={ currentUser ? `/story/${sessionUsername}/page/1` : "/login"}>Continue your story</Link>
             </button>
           </div>
         </div>
