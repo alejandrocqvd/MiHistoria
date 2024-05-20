@@ -59,7 +59,7 @@ const Home: React.FC = () => {
         setTopData(res.data.data);
       } catch (error) {
         setError(true);
-        if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error);
+        if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.message);
         else setErrorMessage("An unexpected error occurred.");
         console.log(error);
       }

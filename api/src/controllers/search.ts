@@ -390,7 +390,7 @@ export const get5AllTimeTop = (req: Request, res: Response) => {
               ORDER BY like_count DESC
               LIMIT 5`;
   db.query(q, (error, data) => {
-    if (error) return res.status(500).json({ error });
+    if (error) return res.status(500).json({ message: error.message });
 
     const typedData = data as RowDataPacket[];
     return res.status(200).json({ message: "Successfully fetched top 5 stories of all time.", data: typedData });
