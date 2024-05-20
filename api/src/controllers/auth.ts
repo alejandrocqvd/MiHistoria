@@ -40,7 +40,7 @@ export const register = (req: Request, res: Response) => {
     const q = `SELECT * FROM user WHERE email = ? OR username = ?`;
     db.query(q, [email, username], (error, data) => {
         // Error checking
-        if (error) return res.status(500).json({ error });
+        if (error) return res.status(500).json({ message: error.message });
         const typedData = data as RowDataPacket[];
         if (typedData.length) return res.status(409).json({ error: "User already exists." });
 
@@ -62,7 +62,7 @@ export const register = (req: Request, res: Response) => {
             false,
         ];
         db.query(q, [v], (error) => {
-            if (error) return res.status(500).json({ error });
+            if (error) return res.status(500).json({ message: error.message });
             
             return res.status(201).json({ message: "User successfully created." });
         });

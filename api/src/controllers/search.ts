@@ -29,7 +29,7 @@ export const searchAll = (req: Request, res: Response) => {
               OR username LIKE ?`;
   const v = ["%" + searchTerm + "%", "%" + searchTerm + "%"];
   db.query(q, v, (error, data) => {
-    if (error) return res.status(500).json({ error });
+    if (error) return res.status(500).json({ message: error.message });
 
     const typedData = data as RowDataPacket[];
     return res.status(200).json({ message: "Successfully fetched results.", data: typedData });
@@ -52,7 +52,7 @@ export const searchStories = (req: Request, res: Response) => {
               WHERE title LIKE ?`;
   const v = ["%" + searchTerm + "%"];
   db.query(q, v, (error, data) => {
-    if (error) return res.status(500).json({ error });
+    if (error) return res.status(500).json({ message: error.message });
 
     const typedData = data as RowDataPacket[];
     return res.status(200).json({ message: "Successfully fetched story results.", data: typedData });
@@ -75,7 +75,7 @@ export const searchUsers = (req: Request, res: Response) => {
               WHERE username LIKE ?`;
   const v = ["%" + searchTerm + "%"];
   db.query(q, v, (error, data) => {
-    if (error) return res.status(500).json({ error });
+    if (error) return res.status(500).json({ message: error.message });
 
     const typedData = data as RowDataPacket[];
     return res.status(200).json({ message: "Successfully fetched user results.", data: typedData });
@@ -115,7 +115,7 @@ export const getSaved = (req: Request, res: Response) => {
                 LIMIT ?
                 OFFSET ?`;
     db.query(q, [username, limit, offset], (error, data) => {
-      if (error) return res.status(500).json({ error });
+      if (error) return res.status(500).json({ message: error.message });
 
       const typedData = data as RowDataPacket[];
       return res.status(200).json({ message: "Successfully fetched saved stories.", data: typedData });
@@ -151,7 +151,7 @@ export const get5Saved = (req: Request, res: Response) => {
                 ORDER BY sv.timestamp DESC
                 LIMIT 5`;
     db.query(q, [username], (error, data) => {
-      if (error) return res.status(500).json({ error });
+      if (error) return res.status(500).json({ message: error.message });
 
       const typedData = data as RowDataPacket[];
       return res.status(200).json({ message: "Successfully fetched 5 saved stories.", data: typedData });
@@ -184,7 +184,7 @@ export const getSavedCount = (req: Request, res: Response) => {
                 FROM saves
                 WHERE save_username = ?`;
     db.query(q, [username], (error, data) => {
-      if (error) return res.status(500).json({ error });
+      if (error) return res.status(500).json({ message: error.message });
 
       const typedData = data as RowDataPacket[];
       return res.status(200).json({ message: "Successfully fetched number of stories saved by user.", data: typedData[0] });
@@ -218,7 +218,7 @@ export const getMonthlyTop = (req: Request, res: Response) => {
               LIMIT ?
               OFFSET ?`;
   db.query(q, [limit, offset], (error, data) => {
-    if (error) return res.status(500).json({ error });
+    if (error) return res.status(500).json({ message: error.message });
 
     const typedData = data as RowDataPacket[];
     return res.status(200).json({ message: "Successfully fetched top monthly stories.", data: typedData });
@@ -242,7 +242,7 @@ export const get5MonthlyTop = (req: Request, res: Response) => {
               ORDER BY like_count DESC
               LIMIT 5`;
   db.query(q, (error, data) => {
-    if (error) return res.status(500).json({ error });
+    if (error) return res.status(500).json({ message: error.message });
 
     const typedData = data as RowDataPacket[];
     return res.status(200).json({ message: "Successfully fetched 5 top monthly stories.", data: typedData });
@@ -262,7 +262,7 @@ export const getMonthlyCount = (req: Request, res: Response) => {
               FROM story AS s
               WHERE s.timestamp >= NOW() - INTERVAL 30 DAY`;
   db.query(q, (error, data) => {
-    if (error) return res.status(500).json({ error });
+    if (error) return res.status(500).json({ message: error.message });
 
     const typedData = data as RowDataPacket[];
     return res.status(200).json({ message: "Successfully fetched number of stories made in past 30 days.", data: typedData[0] });
@@ -293,7 +293,7 @@ export const getYearlyTop = (req: Request, res: Response) => {
               LIMIT ?
               OFFSET ?`;
   db.query(q, [limit, offset], (error, data) => {
-    if (error) return res.status(500).json({ error });
+    if (error) return res.status(500).json({ message: error.message });
 
     const typedData = data as RowDataPacket[];
     return res.status(200).json({ message: "Successfully fetched top yearly stories.", data: typedData });
@@ -317,7 +317,7 @@ export const get5YearlyTop = (req: Request, res: Response) => {
               ORDER BY like_count DESC
               LIMIT 5`;
   db.query(q, (error, data) => {
-    if (error) return res.status(500).json({ error });
+    if (error) return res.status(500).json({ message: error.message });
 
     const typedData = data as RowDataPacket[];
     return res.status(200).json({ message: "Successfully fetched 5 top yearly stories.", data: typedData });
@@ -337,7 +337,7 @@ export const getYearlyCount = (req: Request, res: Response) => {
               FROM story AS s
               WHERE s.timestamp >= NOW() - INTERVAL 1 YEAR`;
   db.query(q, (error, data) => {
-    if (error) return res.status(500).json({ error });
+    if (error) return res.status(500).json({ message: error.message });
 
     const typedData = data as RowDataPacket[];
     return res.status(200).json({ message: "Successfully fetched number of stories made in past year.", data: typedData[0] });
@@ -367,7 +367,7 @@ export const getAllTimeTop = (req: Request, res: Response) => {
               LIMIT ?
               OFFSET ?`;
   db.query(q, [limit, offset], (error, data) => {
-    if (error) return res.status(500).json({ error });
+    if (error) return res.status(500).json({ message: error.message });
 
     const typedData = data as RowDataPacket[];
     return res.status(200).json({ message: "Successfully fetched top stories of all time.", data: typedData });
@@ -409,7 +409,7 @@ export const getAllCount = (req: Request, res: Response) => {
   const q = `SELECT COUNT(*) AS count
               FROM story AS s`;
   db.query(q, (error, data) => {
-    if (error) return res.status(500).json({ error });
+    if (error) return res.status(500).json({ message: error.message });
 
     const typedData = data as RowDataPacket[];
     return res.status(200).json({ message: "Successfully fetched total number of stories made.", data: typedData[0] });
@@ -437,7 +437,7 @@ export const getNew = (req: Request, res: Response) => {
               LIMIT ?
               OFFSET ?`;
   db.query(q, [limit, offset], (error, data) => {
-    if (error) return res.status(500).json({ error });
+    if (error) return res.status(500).json({ message: error.message });
 
     const typedData = data as RowDataPacket[];
     return res.status(200).json({ message: "Successfully fetched new stories.", data: typedData });
@@ -458,7 +458,7 @@ export const get5New = (req: Request, res: Response) => {
               ORDER BY timestamp DESC
               LIMIT 5`;
   db.query(q, (error, data) => {
-    if (error) return res.status(500).json({ error });
+    if (error) return res.status(500).json({ message: error.message });
 
     const typedData = data as RowDataPacket[];
     return res.status(200).json({ message: "Successfully fetched 5 newest stories.", data: typedData });

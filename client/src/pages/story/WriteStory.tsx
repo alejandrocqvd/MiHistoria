@@ -65,7 +65,7 @@ const WriteStory: React.FC = () => {
         setImage("");
       } catch (error) {
         setError(true);
-        if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error); 
+        if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.message); 
         else setErrorMessage("An unexpected error occurred.");
       }
     }
@@ -93,7 +93,7 @@ const WriteStory: React.FC = () => {
       navigate(`/story/${sessionUsername}/page/1`);
     } catch (error) {
       setError(true);
-      if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error); 
+      if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.message); 
       else setErrorMessage("An unexpected error occurred.");
     }
   }
@@ -110,7 +110,7 @@ const WriteStory: React.FC = () => {
           }
         } catch (error) {
           setError(true);
-          if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error);
+          if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.message);
           else setErrorMessage("An unexpected error occurred.");
         }
     }

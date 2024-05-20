@@ -1,3 +1,4 @@
+
 /**
  * Edit Profile Page Component
  * 
@@ -163,7 +164,7 @@ const EditProfile: React.FC = () => {
       } catch (error) {
         if (axios.isAxiosError(error) && error.response) {
           setError(true);
-          setErrorMessage(error.response.data.error);
+          setErrorMessage(error.response.data.message);
         } else {
           setError(true);
           setErrorMessage("An unexpected error occurred.");

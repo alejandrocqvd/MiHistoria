@@ -113,7 +113,7 @@ const Explore: React.FC = () => {
       setData(res.data.data);
     } catch (error) {
       setError(true);
-      if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error);
+      if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.message);
       else setErrorMessage("An unexpected error occurred.");
     }
   }
@@ -141,7 +141,7 @@ const Explore: React.FC = () => {
         setNewData(newRes.data.data);
       } catch (error) {
         setError(true);
-        if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error);
+        if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.message);
         else setErrorMessage("An unexpected error occurred.");
       }
     }

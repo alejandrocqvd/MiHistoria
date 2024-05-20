@@ -122,7 +122,7 @@ export const updatePage = (req: Request, res: Response) => {
                     WHERE page_number = ? AND username = ?`;
         db.query(q, [text, page_number, username], (error) => {
             // Error checking
-            if (error) return res.status(500).json({ error });
+            if (error) return res.status(500).json({ message: error.message });
 
             return res.status(200).json({ message: `Successfully updated page ${page_number} of ${username}'s story.` });
         });
@@ -287,7 +287,7 @@ export const saveBanner = async (req: Request, res: Response) => {
         // Query to update the story's banner image
         const q = `UPDATE story SET image = ? WHERE username = ?`;
         db.query(q, [image, username], (error) => {
-            if (error) return res.status(500).json({ error });
+            if (error) return res.status(500).json({ message: error.message });
 
             return res.status(200).json({ message: "Successfully updated story banner image." });
         });
@@ -317,7 +317,7 @@ export const deleteBanner = async (req: Request, res: Response) => {
         // Query to delete the story's banner image
         const q = `UPDATE story SET image = ? WHERE username = ?`;
         db.query(q, [null, username], (error) => {
-            if (error) return res.status(500).json({ error });
+            if (error) return res.status(500).json({ message: error.message });
 
             return res.status(200).json({ message: "Successfully deleted story banner image." });
         });
@@ -354,23 +354,23 @@ export const deleteStory = (req: Request, res: Response) => {
         const q = `DELETE FROM page WHERE username = ?`;
         db.query(q, [username], (error) => {
             // Error checking
-            if (error) return res.status(500).json({ error });
+            if (error) return res.status(500).json({ message: error.message });
 
             const q = `DELETE FROM comment WHERE story_username = ?`;
             db.query(q, [username], (error) => {
-                if (error) return res.status(500).json({ error });
+                if (error) return res.status(500).json({ message: error.message });
 
                 const q = `DELETE FROM likes WHERE story_username = ?`;
                 db.query(q, [username], (error) => {
-                    if (error) return res.status(500).json({ error });
+                    if (error) return res.status(500).json({ message: error.message });
 
                     const q = `DELETE FROM saves WHERE story_username = ?`;
                     db.query(q, [username], (error) => {
-                        if (error) return res.status(500).json({ error });
+                        if (error) return res.status(500).json({ message: error.message });
     
                         const q = `DELETE FROM story WHERE username = ?`;
                         db.query(q, [username], (error) => {
-                            if (error) return res.status(500).json({ error });
+                            if (error) return res.status(500).json({ message: error.message });
         
                             return res.status(200).json({ message: "Successfully deleted story and all its pages." });
                         });                    

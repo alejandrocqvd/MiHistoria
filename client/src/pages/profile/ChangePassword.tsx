@@ -88,7 +88,7 @@ const ChangePassword: React.FC = () => {
         navigate("/profile/edit");
       } catch (error) {
         setError(true);
-        if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.error);
+        if (axios.isAxiosError(error) && error.response) setErrorMessage(error.response.data.message);
         else setErrorMessage("An unexpected error occurred.");
       }
     }

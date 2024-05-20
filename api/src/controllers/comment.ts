@@ -28,7 +28,7 @@ export const getCommentCount = (req: Request, res: Response) => {
               FROM comment
               WHERE story_username = ?`;
   db.query(q, [story_username], (error, data) => {
-      if (error) return res.status(500).json({ error });
+      if (error) return res.status(500).json({ message: error.message });
 
       const typedData = data as RowDataPacket[];
       return res.status(200).json({ message: "Successfully fetched story comment count.", data: typedData[0] });
@@ -58,7 +58,7 @@ export const getComments = (req: Request, res: Response) => {
               LIMIT ?
               OFFSET ?`;
   db.query(q, [story_username, limit, offset], (error, data) => {
-      if (error) return res.status(500).json({ error });
+      if (error) return res.status(500).json({ message: error.message });
 
       const typedData = data as RowDataPacket[];
       return res.status(200).json({ message: "Successfully fetched story comments.", data: typedData });
@@ -89,7 +89,7 @@ export const createComment = (req: Request, res: Response) => {
       const q = `INSERT INTO comment (comment_username, story_username, text)
                   VALUES (?, ?, ?)`;
       db.query(q, [username, story_username, text], (error) => {
-          if (error) return res.status(500).json({ error });
+          if (error) return res.status(500).json({ message: error.message });
 
           return res.status(201).json({ message: "Successfully created comment." });
       });
@@ -124,7 +124,7 @@ export const deleteComment = (req: Request, res: Response) => {
       // Query to delete the comment
       const q = `DELETE FROM comment WHERE comment_id = ?`;
       db.query(q, [comment_id], (error) => {
-        if (error) return res.status(500).json({ error });
+        if (error) return res.status(500).json({ message: error.message });
 
         return res.status(200).json({ message: "Successfully deleted comment." });
       });

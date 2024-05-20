@@ -141,7 +141,7 @@ export const updatePicture = (req: Request, res: Response) => {
         // Query to update the user's profile picture
         const q = `UPDATE user SET image = ? WHERE username = ?`;
         db.query(q, [image, username], (error) => {
-            if (error) return res.status(500).json({ error });
+            if (error) return res.status(500).json({ message: error.message });
 
             return res.status(200).json({ message: "Successfully updated user's profile picture." });
         });
@@ -171,7 +171,7 @@ export const deletePicture = (req: Request, res: Response) => {
         // Query to delete the user's profile picture
         const q = `UPDATE user SET image = ? WHERE username = ?`;
         db.query(q, [null, username], (error) => {
-            if (error) return res.status(500).json({ error });
+            if (error) return res.status(500).json({ message: error.message });
 
             return res.status(200).json({ message: "Successfully deleted user's profile picture." });
         });
@@ -219,27 +219,27 @@ export const deleteProfile = (req: Request, res: Response) => {
         
                     const q = `DELETE FROM page WHERE username = ?`;
                     db.query(q, [username], (error) => {
-                        if (error) return res.status(500).json({ error });
+                        if (error) return res.status(500).json({ message: error.message });
 
                         const q = `DELETE FROM comment WHERE story_username = ?`;
                         db.query(q, [username], (error) => {
-                            if (error) return res.status(500).json({ error });
+                            if (error) return res.status(500).json({ message: error.message });
 
                             const q = `DELETE FROM likes WHERE story_username = ?`;
                             db.query(q, [username], (error) => {
-                                if (error) return res.status(500).json({ error });
+                                if (error) return res.status(500).json({ message: error.message });
 
                                 const q = `DELETE FROM saves WHERE story_username = ?`;
                                 db.query(q, [username], (error) => {
-                                    if (error) return res.status(500).json({ error });
+                                    if (error) return res.status(500).json({ message: error.message });
 
                                     const q = `DELETE FROM story WHERE username = ?`;
                                     db.query(q, [username], (error) => {
-                                        if (error) return res.status(500).json({ error });
+                                        if (error) return res.status(500).json({ message: error.message });
                     
                                         const q = `DELETE FROM user WHERE username = ?`;
                                         db.query(q, [username], (error) => {
-                                            if (error) return res.status(500).json({ error });
+                                            if (error) return res.status(500).json({ message: error.message });
                         
                                             return res.status(200).json({ message: "Successfully deleted user." });
                                         });                                       
@@ -301,7 +301,7 @@ export const getLiked = (req: Request, res: Response) => {
         // Query to get the stories the user has liked
         const q = `SELECT story_username FROM likes WHERE like_username = ?`;
         db.query(q, [username], (error, data) => {
-            if (error) return res.status(500).json({ error });
+            if (error) return res.status(500).json({ message: error.message });
 
             const typedData = data as RowDataPacket[];
             return res.status(200).json({ message: "Successfully fetched user's liked stories.", data: typedData });
@@ -335,7 +335,7 @@ export const updateLiked = (req: Request, res: Response) => {
             // Unlike the story
             const q = `DELETE FROM likes WHERE like_username = ? AND story_username = ?`;
             db.query(q, [username, story_username], (error) => {
-                if (error) return res.status(500).json({ error });
+                if (error) return res.status(500).json({ message: error.message });
 
                 return res.status(200).json({ message: "Successfully unliked story." });
             });
@@ -344,7 +344,7 @@ export const updateLiked = (req: Request, res: Response) => {
             const q = `INSERT INTO likes (like_username, story_username)
                         VALUES (?, ?)`;
             db.query(q, [username, story_username], (error) => {
-                if (error) return res.status(500).json({ error });
+                if (error) return res.status(500).json({ message: error.message });
 
                 return res.status(201).json({ message: "Successfully liked story." });
             });
@@ -375,7 +375,7 @@ export const getSaved = (req: Request, res: Response) => {
         // Query to get the stories the user has saved
         const q = `SELECT story_username FROM saves WHERE save_username = ?`;
         db.query(q, [username], (error, data) => {
-            if (error) return res.status(500).json({ error });
+            if (error) return res.status(500).json({ message: error.message });
 
             const typedData = data as RowDataPacket[];
             return res.status(200).json({ message: "Successfully fetched user's saved stories.", data: typedData });
@@ -409,7 +409,7 @@ export const updateSaved = (req: Request, res: Response) => {
             // Unsave the story
             const q = `DELETE FROM saves WHERE save_username = ? AND story_username = ?`;
             db.query(q, [username, story_username], (error) => {
-                if (error) return res.status(500).json({ error });
+                if (error) return res.status(500).json({ message: error.message });
 
                 return res.status(200).json({ message: "Successfully unsaved story." });
             });
@@ -418,7 +418,7 @@ export const updateSaved = (req: Request, res: Response) => {
             const q = `INSERT INTO saves (save_username, story_username)
                         VALUES (?, ?)`;
             db.query(q, [username, story_username], (error) => {
-                if (error) return res.status(500).json({ error });
+                if (error) return res.status(500).json({ message: error.message });
 
                 return res.status(201).json({ message: "Successfully saved story." });
             });
