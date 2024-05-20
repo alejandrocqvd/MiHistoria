@@ -49,7 +49,7 @@ const Home: React.FC = () => {
 
   // Retrieve the user item from session storage and parse it if it's a valid JSON string
   const storedUser = sessionStorage.getItem('user');
-  const sessionUsername = storedUser && storedUser !== "null" ? JSON.parse(storedUser).user_info.username : null;
+  const sessionUsername: string | null = storedUser && storedUser !== "null" ? JSON.parse(storedUser).user_info.username : null;
 
   // Fetch the top 5 stories of all time to display on component mount
   useEffect(() => {

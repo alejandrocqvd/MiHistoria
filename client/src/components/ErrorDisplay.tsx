@@ -15,7 +15,7 @@
  * @property {string} [errorMessage] - Optional string that contains the error message to be displayed.
  */
 type ErrorProps =  {
-  errorMessage?: string;
+  errorMessage: string;
 }
 
 // Error Display Component

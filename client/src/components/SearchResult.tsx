@@ -18,7 +18,7 @@
  */
 interface ResultData {
   title: string;
-  image: string;
+  image: string | null;
   username: string;
 }
 
