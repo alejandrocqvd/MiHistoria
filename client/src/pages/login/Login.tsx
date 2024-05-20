@@ -11,7 +11,7 @@
 import { useContext, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash, faEnvelope } from "@fortawesome/free-solid-svg-icons";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/authContext";
 import ErrorDisplay from "../../components/ErrorDisplay";
 
@@ -138,7 +138,7 @@ const Login: React.FC = () => {
             {error && <ErrorDisplay errorMessage={errorMessage}></ErrorDisplay>}
 
             <div>
-              <p className="text-center">Don't have an account? <a href="/register" className="hover-underline-animation font-bold">Register</a></p>
+              <p className="text-center">Don't have an account? <Link to="/register" className="hover-underline-animation font-bold">Register</Link></p>
             </div>
 
         </form>

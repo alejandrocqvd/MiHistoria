@@ -9,6 +9,8 @@
  * Date: 2024-01-06
  */
 
+import { Link } from "react-router-dom"
+
 const NotFound = () => {
   return (
     <div className="flex flex-col h-screen justify-center items-center mt-32 mb-24 w-9/12 md:w-3/12">
@@ -21,10 +23,10 @@ const NotFound = () => {
         Here's what you can do next:
       </p>
       <ul className="mb-44">
-        <li><a href="./" className="font-bold">Go to Home Page</a>: Revisit our homepage and start your journey again.</li>
-        <li><a href="./explore" className="font-bold">Explore Stories</a>: Dive into a sea of unique life stories.</li>
-        <li><a href="./help" className="font-bold">Need Help?</a> If you’re stuck or need assistance, our help page is here for you.</li>
-        <li><a href="./legal" className="font-bold">Report a Problem</a>: If you believe this is an error, let us know here.</li>
+        <li><Link to="./" className="font-bold">Go to Home Page</Link>: Revisit our homepage and start your journey again.</li>
+        <li><Link to="./explore" className="font-bold">Explore Stories</Link>: Dive into a sea of unique life stories.</li>
+        <li><Link to="./help" className="font-bold">Need Help?</Link> If you’re stuck or need assistance, our help page is here for you.</li>
+        <li><Link to="./legal" className="font-bold">Report a Problem</Link>: If you believe this is an error, let us know here.</li>
         </ul>
     </div>
   )

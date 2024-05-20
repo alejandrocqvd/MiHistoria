@@ -147,15 +147,15 @@ const Profile: React.FC = () => {
 
           <div className="flex flex-col justify-items-center w-9/12 md:w-4/12 mb-24">
             <p className="text-4xl font-bold mb-8 text-center">Your Story</p>
-            <a 
-              href={currentUser ? "../story/" + username + "/page/1" : "/"} 
+            <Link 
+              to={currentUser ? "../story/" + username + "/page/1" : "/"} 
               className="flex flex-row justify-items-center w-full h-auto p-8 bg-secondary shadow-xl rounded-xl hover:shadow-2xl hover:scale-105 transition duration-300 ease-in-out"
             >
               <div className={`flex flex-row ${story?.image ? "justify-between" : "justify-center"} items-center overflow-hidden w-full`}>
                 <img src={story?.image} className={story?.image ? "h-20 flex-shrink-0 rounded-xl" : "hidden"} />
                 <p className="text-3xl text-center font-bold overflow-hidden text-ellipsis line-clamp-1">{story?.title ?? "Start Writing"}</p>
               </div>
-            </a>
+            </Link>
           </div>
         </>
       }

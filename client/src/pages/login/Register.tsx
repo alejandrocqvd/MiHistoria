@@ -12,7 +12,7 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash, faEnvelope, faUser } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ErrorDisplay from "../../components/ErrorDisplay";
 
 
@@ -231,7 +231,7 @@ const Register: React.FC = () => {
             {error && <ErrorDisplay errorMessage={errorMessage}></ErrorDisplay>}
 
             <div>
-              <p className="text-center">Already have an account? <a href="/login" className="hover-underline-animation font-bold">Login</a></p>
+              <p className="text-center">Already have an account? <Link to="/login" className="hover-underline-animation font-bold">Login</Link></p>
             </div>
 
         </form>

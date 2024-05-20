@@ -11,6 +11,7 @@
 
 import { useEffect, useState } from "react"
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 /**
  * Interface for the comment's data
@@ -110,7 +111,7 @@ const Comment: React.FC<CommentProps> = ({ commentData }) => {
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row justify-start items-center mb-2">
               <img src={`/public/uploads/${commentData.image}`} className={commentData.image !== null ? "h-8 rounded-xl w-8 object-cover mr-3" : "hidden"} />
-              <a href={`/story/${commentData.username}/page/1`} className="text-md md:text-lg font-semibold ml-1">{commentData.username}</a>
+              <Link to={`/story/${commentData.username}/page/1`} className="text-md md:text-lg font-semibold ml-1">{commentData.username}</Link>
           </div>
           <div className="flex flex-row justify-end items-center">
               <button 
