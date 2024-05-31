@@ -24,7 +24,7 @@ Before running this project, you'll need to have the following installed:
    ```
 3. Install dependencies:
    ```sh
-   npm install mysql2 express nodemon bcryptjs jsonwebtoken sanitize-html jsdom path cookie-parser multer
+   npm i
    ```
 
 ### Running the App
