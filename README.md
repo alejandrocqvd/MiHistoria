@@ -1,7 +1,7 @@
 
 # MiHistoria
 
-MiHistoria is a [React](https://reactjs.org/) application powered by [Vite](https://vitejs.dev/). It serves as a social-media type application where each user is given one, and only one post, where they can share their life story in its entirety. Users can search, like, and save stories they find. This setup includes TypeScript for type-safe code and Tailwind CSS for utility-first styling.
+MiHistoria is a [React](https://reactjs.org/) application powered by [Vite](https://vitejs.dev/). It serves as a social-media type application where each user is given one, and only one post, where they can share their life story in its entirety. Users can search, like, and save stories they find. This setup includes TypeScript for type-safe code and Tailwind CSS for utility-first styling. A demo of the working application can be seen [here](https://acardona.ca/mihistoria).
 
 ## Getting Started
 
