@@ -321,18 +321,7 @@ a swordsman shaped by tragedy, honed by conflict, and forever guided by the wind
 
 ("yasuoHater999", "my brother killed me", 1, "
 <p>Dude, why'd you have to mess everything up? I mean, seriously? Our master is gone, and everyone thinks you did it. 
-You just ran away like the wind, and I had to come after you. And then, bam! I'm dead. Not cool, man. :(
-Remember all that stuff we learned about being honorable and all? What happened to that, huh? I was just trying to do the 
-right thing, and there you went, swinging that sword like nobody's business. :0
-Ionia's a mess now, and it's kinda on you. I've been floating around here, watching, and let me tell you, it's not been 
-great. You're out there with your guilt and your sword, and I'm just here, thinking about how everything went so wrong.
-But hey, I hear you're trying to fix things. That's good, at least. Maybe you're finally getting it - it's not all about fighting 
-and being angry. It's about doing the right thing, you know?
-Look, I'm not writing this to make you feel worse. I don't want to haunt you or anything. I just want you to think, really think, 
-about what you're doing. It's about honor, about protecting what's right. It's not about revenge.
-So, here's the deal. I'm letting go of all that anger. I forgive you, man. But you gotta forgive yourself, too. That's the tough part. 
-Lillia's helping me out here, sending some dreamy vibes your way. Hope it helps you figure things out.
-Take care of yourself, Yasuo. And maybe try to fix some of the stuff you've messed up, okay?</p><p>&nbsp;</p>
+You just ran away like the wind, and I had to come after you. And then, bam I'm dead. Not cool man. :(</p><p>&nbsp;</p>
 <p>Later,</p>
 <p>Yone</p>
 ", null, "2023-09-06 10:34:53.44"),
