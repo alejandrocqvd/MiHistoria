@@ -2,8 +2,8 @@ INSERT INTO user
 VALUES
 ("alejandrocqvd", "Alejandro", "Cardona", "2004-05-11", "alejandrocqvd@gmail.com", "$2a$10$cLUQwlbJ/fWDaT7K0Qf54O.6FyReScz4zLNYBaW51hZm3JgaOwdU6", null, null),
 ("artur", "Arthur", "Morgan", "1863-11-19", "rdr2@gmail.com", "$2a$10$cLUQwlbJ/fWDaT7K0Qf54O.6FyReScz4zLNYBaW51hZm3JgaOwdU6", "artur.PNG", null),
-("albert._.einsteinXD", "Albert", "Einstein", "1897-03-14", "albert.einstein@gmail.com", "$2a$10$cLUQwlbJ/fWDaT7K0Qf54O.6FyReScz4zLNYBaW51hZm3JgaOwdU6", "albert._.einsteinXD.PNG", null),
-("oppieTheHeimer", "Robert", "Oppenheimer", "1904-04-22", "oppie@gmail.com", "$2a$10$cLUQwlbJ/fWDaT7K0Qf54O.6FyReScz4zLNYBaW51hZm3JgaOwdU6", "oppieTheHeimer.PNG", null),
+("albert._.einstein", "Albert", "Einstein", "1897-03-14", "albert.einstein@gmail.com", "$2a$10$cLUQwlbJ/fWDaT7K0Qf54O.6FyReScz4zLNYBaW51hZm3JgaOwdU6", "albert._.einstein.PNG", null),
+("oppenHeimer_", "Robert", "Oppenheimer", "1904-04-22", "oppie@gmail.com", "$2a$10$cLUQwlbJ/fWDaT7K0Qf54O.6FyReScz4zLNYBaW51hZm3JgaOwdU6", "oppenHeimer_.PNG", null),
 ("theUnforgiven", "Yasuo", null, "1999-01-30", "yasuo@gmail.com", "$2a$10$cLUQwlbJ/fWDaT7K0Qf54O.6FyReScz4zLNYBaW51hZm3JgaOwdU6", "theUnforgiven.PNG", null),
 ("yasuoHater999", "Yone", null, "1998-07-11", "ihateyasuo@gmail.com", "$2a$10$cLUQwlbJ/fWDaT7K0Qf54O.6FyReScz4zLNYBaW51hZm3JgaOwdU6", "yasuoHater999.PNG", null),
 ("the_bear", "Carmen", "Berzatto", "1999-09-23", "carmy@gmail.com", "$2a$10$cLUQwlbJ/fWDaT7K0Qf54O.6FyReScz4zLNYBaW51hZm3JgaOwdU6", null, null),
@@ -90,7 +90,7 @@ bullets flew and my vision faded to black, I found a strange peace.</p><p>&nbsp;
 heroism or villainy, but of a life lived in shades of gray, a tale of a man caught in the currents of a changing world, trying to find his way home.</p>
 ", "artur-story-bg.PNG", "1899-02-02 10:34:53.44"),
 
-("albert._.einsteinXD", "e = mc^2", 3, "
+("albert._.einstein", "e = mc^2", 3, "
 <p>As I sit here in the twilight of my years, my thoughts often wander back to the days of my youth. I am Albert Einstein, 
 known to many as a physicist, but what many might not know is the journey that led me to the revelations that changed our understanding 
 of the universe.</p><p>&nbsp;</p>
@@ -186,9 +186,9 @@ those who, like me, are captivated by the beauty and mystery of the world around
 <p>Farewell, and may the pursuit of knowledge continue to light the way.</p><p>&nbsp;</p>
 <p>Albert Einstein</p>
 <p>April 1955</p><p>&nbsp;</p>
-", "albert._.einsteinXD-story-bg.PNG", "1960-02-02 10:34:53.44"),
+", "albert._.einstein-story-bg.PNG", "1960-02-02 10:34:53.44"),
 
-("oppieTheHeimer", "American Prometheus", 3, "
+("oppenHeimer_", "American Prometheus", 3, "
 <p>As I sit here, in the quiet solitude of my study, the memories of my early years unfold before me like the pages 
 of a well-read book. I am J. Robert Oppenheimer, often remembered as the `father of the atomic bomb,`
  but there is much more to my story than this singular title suggests.</p><p>&nbsp;</p>
@@ -285,9 +285,9 @@ and responsibility that come with the pursuit of knowledge.</p><p>&nbsp;</p>
 <p>As I lay down my pen, I leave you with a thought: May we always strive to use our understanding of the natural world for the 
 betterment of humanity, ever mindful of the delicate balance between our quest for knowledge and the ethical boundaries that should guide us.</p><p>&nbsp;</p>
 <p>J. Robert Oppenheimer</p>
-", "oppieTheHeimer-story-bg.jpg", "1970-02-02 10:34:53.44"),
+", "oppenHeimer_-story-bg.jpg", "1970-02-02 10:34:53.44"),
 
-("theUnforgiven", "Follow the Wind", 1, "
+("theUnforgiven", "Airborne", 1, "
 <p>As I sit beneath the ancient ginkgo tree, its leaves whispering tales as old as Ionia itself, I, Yasuo, find myself reflecting 
 upon the tumultuous journey that has been my life. Born a swordsman, marked by tragedy, and branded a traitor, my story is one of 
 honor, redemption, and the unrelenting pursuit of truth.</p><p>&nbsp;</p>
@@ -431,7 +431,7 @@ sleep, and confrontations that are more explosive than a Michael Bay movie. It's
 together a jigsaw puzzle, but the pieces are from different boxes. I'm lost, man. Lost in a life that's a script I never wrote.</p>
 ", "bblock-story-bg.PNG", "2023-11-06 10:34:53.44"),
 
-("miguelito", "i hate you miles", 1, "
+("miguelito", "rant about miles morales", 1, "
 <h1>I HATE YOU MILES</h2>
 <p>yeah</p>
 ", null, "2024-01-05 10:34:53.44"),
@@ -622,7 +622,7 @@ bullets flew and my vision faded to black, I found a strange peace.</p><p>&nbsp;
 heroism or villainy, but of a life lived in shades of gray, a tale of a man caught in the currents of a changing world, trying to find his way home.</p>
 "),
 
-(1, "albert._.einsteinXD", "
+(1, "albert._.einstein", "
 <p>As I sit here in the twilight of my years, my thoughts often wander back to the days of my youth. I am Albert Einstein, 
 known to many as a physicist, but what many might not know is the journey that led me to the revelations that changed our understanding 
 of the universe.</p><p>&nbsp;</p>
@@ -656,7 +656,7 @@ the stage for my later discoveries - discoveries that would forever alter our un
 <p>As I pen down these memories, I am filled with gratitude for the experiences and people that shaped my young life. 
 They fostered in me a spirit of inquiry and resilience that guided me through the challenges and triumphs of my scientific endeavors.</p>
 "),
-(2, "albert._.einsteinXD", "
+(2, "albert._.einstein", "
 <p>As I reminisce about my journey beyond graduation, I find myself at the threshold of my professional career, a period marked by both 
 struggle and profound discovery.</p><p>&nbsp;</p>
 <p>After leaving the Swiss Federal Polytechnic School, my initial years were fraught with challenges. Despite my academic credentials,
@@ -692,7 +692,7 @@ would spend the rest of my career and life.</p><p>&nbsp;</p>
 for peace and a vocal opponent of the Nazi regime. My letters to President Franklin D. Roosevelt played a role in the US government's decision 
 to initiate the Manhattan Project, though I was not directly involved in the project due to security concerns.</p>
 "),
-(3, "albert._.einsteinXD", "
+(3, "albert._.einstein", "
 <p>As I pen down these final words, the twilight of my journey is upon me. My life, a tapestry of inquiry, discovery, and reflection, 
 is nearing its natural conclusion. I find myself in April 1955, in the quiet town of Princeton, where I have spent the last two 
 decades of my life.</p><p>&nbsp;</p>
@@ -724,7 +724,7 @@ those who, like me, are captivated by the beauty and mystery of the world around
 <p>April 1955</p><p>&nbsp;</p>
 "),
 
-(1, "oppieTheHeimer", "
+(1, "oppenHeimer_", "
 <p>As I sit here, in the quiet solitude of my study, the memories of my early years unfold before me like the pages 
 of a well-read book. I am J. Robert Oppenheimer, often remembered as the `father of the atomic bomb,`
  but there is much more to my story than this singular title suggests.</p><p>&nbsp;</p>
@@ -762,7 +762,7 @@ a role that would forever alter the course of human history and raise profound e
 <p>In these memories, I find both shadows and light, the dualities of a life lived in the relentless pursuit of truth, in a world 
 where truth often comes with a heavy price.</p>
 "),
-(2, "oppieTheHeimer", "
+(2, "oppenHeimer_", "
 <p>As I continue to reflect on my life's journey, I find myself drawn to a chapter that is both the pinnacle of my scientific career 
 and the source of my deepest contemplations - my role in the Manhattan Project.</p><p>&nbsp;</p>
 The year was 1942, and the world was engulfed in the throes of the Second World War. It was during this tumultuous time that I was 
@@ -794,7 +794,7 @@ role of science in society and the ethical implications of our work as scientist
 My hope is that future generations will learn from our experiences, harnessing the power of science for the betterment of humanity 
 and the preservation of our world.</p>
 "),
-(3, "oppieTheHeimer", "
+(3, "oppenHeimer_", "
 <p>As I approach the closing passages of this narrative, the twilight of my career and the inevitable march towards life's 
 end beckon for reflection. The years following the Manhattan Project were a period of both professional acclaim and personal 
 introspection, marked by accolades and controversies.</p><p>&nbsp;</p>
@@ -1094,16 +1094,16 @@ my schemes, and a little bit of green man action, i'm good.</p><p>&nbsp;</p>
 INSERT INTO comment
 VALUES 
 (1, "artur", "artur", "comment test hello its arthur", "1899-01-06 10:34:53.44"),
-(2, "albert._.einsteinXD", "artur", "Truly inspiring story! I'm still curious about what happened in Blackwater...", "1945-02-12 10:34:53.44"),
+(2, "albert._.einstein", "artur", "Truly inspiring story! I'm still curious about what happened in Blackwater...", "1945-02-12 10:34:53.44"),
 (3, "greenman123", "artur", "wow", "2012-05-05 10:34:53.44"),
 
-(4, "bblock", "albert._.einsteinXD", "Wow I never knew your life was this intricate, I hope you're doing well Mr. Einstein!", "2012-09-06 10:34:53.44"),
-(5, "oppieTheHeimer", "albert._.einsteinXD", "I'll never forget you for everything you did to help me out. Your story is one that will never be forgotten, my friend.", "1945-12-05 10:34:53.44"),
-(6, "greenman123", "albert._.einsteinXD", "dude bblock hes dead", "2012-09-24 10:34:53.44"),
+(4, "bblock", "albert._.einstein", "Wow I never knew your life was this intricate, I hope you're doing well Mr. Einstein!", "2012-09-06 10:34:53.44"),
+(5, "oppenHeimer_", "albert._.einstein", "I'll never forget you for everything you did to help me out. Your story is one that will never be forgotten, my friend.", "1945-12-05 10:34:53.44"),
+(6, "greenman123", "albert._.einstein", "dude bblock hes dead", "2012-09-24 10:34:53.44"),
 
-(7, "the_bear", "oppieTheHeimer", "sick story, if you ever come down to Chicago make sure to visit The Beef, we'll give you some free food bro", "2020-05-24 10:34:53.44"),
-(8, "artur", "oppieTheHeimer", "what is world war ii", "1899-01-06 10:34:53.44"),
-(9, "greenman123", "oppieTheHeimer", "this story was tHE BOMB!! get it", "2013-01-14 10:34:53.44"),
+(7, "the_bear", "oppenHeimer_", "sick story, if you ever come down to Chicago make sure to visit The Beef, we'll give you some free food bro", "2020-05-24 10:34:53.44"),
+(8, "artur", "oppenHeimer_", "what is world war ii", "1899-01-06 10:34:53.44"),
+(9, "greenman123", "oppenHeimer_", "this story was tHE BOMB!! get it", "2013-01-14 10:34:53.44"),
 
 (10, "yasuoHater999", "theUnforgiven", "Yasuo, I hope this finds you well. My 'username' was made by Lilia as joke and I cannot change it. I am sorry if it causes you any discomfort. Just remember, you are forgiven. -Yone", "2020-11-15 10:34:53.44"),
 (11, "bblock", "theUnforgiven", "Erm, what is Ionia? Is this a fictional story? You're not supposed to lie on here!", "2020-05-11 10:34:53.44"),
@@ -1114,7 +1114,7 @@ VALUES
 (15, "greenman123", "yasuoHater999", "can u also teach me how to do the wind stuff pls", "2020-05-20 10:34:53.44"),
 
 (16, "yasuoHater999", "the_bear", "What a beautiful story Carmen! You went through so many hardships but yet, you came out on top. The way you wrote...I makes me feel like I am truly there. I hope the best for you and for your restauraunt. -Yone", "2021-11-05 10:34:53.44"),
-(17, "albert._.einsteinXD", "the_bear", "Truly fascinating! I would love to go down to Chicago and try your restaurant but unfortunately I am dead.", "1945-06-30 10:34:53.44"),
+(17, "albert._.einstein", "the_bear", "Truly fascinating! I would love to go down to Chicago and try your restaurant but unfortunately I am dead.", "1945-06-30 10:34:53.44"),
 (18, "greenman123", "the_bear", "do u give out free food", "2014-02-02 10:34:53.44"),
 
 (19, "artur", "bblock", "i like this", "1899-03-03 10:34:53.44"),
@@ -1125,7 +1125,7 @@ VALUES
 (23, "bblock", "miguelito", "Wait so spider-man is real?! That's so spider-tacular! Haha, get it? I'm sorry.", "2021-07-07 10:34:53.44"),
 (24, "greenman123", "miguelito", "how is the spider web stuff made", "2016-07-23 10:34:53.44"),
 
-(25, "albert._.einsteinXD", "betterspiderman", "None of this should be possible, I refuse to believe the contents of this story.", "1945-01-06 10:34:53.44"),
+(25, "albert._.einstein", "betterspiderman", "None of this should be possible, I refuse to believe the contents of this story.", "1945-01-06 10:34:53.44"),
 (26, "miguelito", "betterspiderman", "Im coming for you, you mistake.", "2023-05-23 10:34:53.44"),
 (27, "greenman123", "betterspiderman", "chillax albert ur not even tat smart", "2016-06-22 10:34:53.44"),
 
@@ -1135,24 +1135,24 @@ VALUES
 
 INSERT INTO likes
 VALUES
-("oppieTheHeimer", "artur"),
+("oppenHeimer_", "artur"),
 ("miguelito", "artur"),
 ("betterspiderman", "artur"),
 ("yasuoHater999", "artur"),
 ("theUnforgiven", "artur"),
-("theUnforgiven", "albert._.einsteinXD"),
-("artur", "albert._.einsteinXD"),
-("greenman123", "albert._.einsteinXD"),
-("miguelito", "albert._.einsteinXD"),
+("theUnforgiven", "albert._.einstein"),
+("artur", "albert._.einstein"),
+("greenman123", "albert._.einstein"),
+("miguelito", "albert._.einstein"),
 ("greenman123", "the_bear"),
 ("artur", "the_bear"),
-("oppieTheHeimer", "the_bear"),
+("oppenHeimer_", "the_bear"),
 ("the_bear", "bblock"),
 ("greenman123", "bblock"),
-("oppieTheHeimer", "bblock"),
+("oppenHeimer_", "bblock"),
 ("the_bear", "greenman123"),
-("oppieTheHeimer", "greenman123"),
-("the_bear", "oppieTheHeimer"),
-("greenman123", "oppieTheHeimer"),
+("oppenHeimer_", "greenman123"),
+("the_bear", "oppenHeimer_"),
+("greenman123", "oppenHeimer_"),
 ("greenman123", "theUnforgiven"),
 ("greenman123", "betterspiderman");
