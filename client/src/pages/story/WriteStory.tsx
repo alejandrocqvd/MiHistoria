@@ -12,6 +12,7 @@
 import { useEffect, useState } from "react";
 import { Editor as TinyMCEEditor } from "@tinymce/tinymce-react";
 import axios from "axios";
+import api from "../../services/api";
 import { useNavigate } from "react-router-dom";
 import ErrorDisplay from "../../components/ErrorDisplay";
 
@@ -61,7 +62,7 @@ const WriteStory: React.FC = () => {
 
     if (isConfirmed) {
       try {
-        await axios.delete("/api/stories/upload/delete")
+        await api.delete("/api/stories/upload/delete")
         setImage("");
       } catch (error) {
         setError(true);
@@ -89,7 +90,7 @@ const WriteStory: React.FC = () => {
 
     // Attempt story saving. Display error if any
     try {
-      await axios.post("/api/stories/save", data);
+      await api.post("/api/stories/save", data);
       navigate(`/story/${sessionUsername}/page/1`);
     } catch (error) {
       setError(true);
@@ -102,7 +103,7 @@ const WriteStory: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
         try {
-          const res = await axios.post("/api/stories/story", { username: sessionUsername });
+          const res = await api.post("/api/stories/story", { username: sessionUsername });
           if (res.data.data) {
             setText(res.data.data.text);
             setTitle(res.data.data.title);

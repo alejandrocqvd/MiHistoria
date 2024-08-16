@@ -1,41 +1,31 @@
-/**
- * MySQL Database Connection Pool
- *
- * This file configures and exports a MySQL database connection pool for the application. 
- * It uses mysql2 to create a connection pool and provides a utility function 
- * to obtain a connection from the pool.
- * 
- * Note: Ensure that the MySQL server is running and accessible with the provided credentials.
- * 
- * Author: Alejandro Cardona
- * Date: 2024-01-06
- */
+import { Pool, PoolClient, QueryResult } from 'pg';
 
-import mysql, { PoolConnection } from "mysql2";
-
-// MySQL Connection
-const pool = mysql.createPool({
-    connectionLimit: 10,
-    host: "localhost",
-    user: "root",
-    password: "DDegasi[545]?",
-    database: "mi_historia"
+// PostgreSQL Connection Pool
+const pool = new Pool({
+    host: process.env.SUPABASE_HOST,      // Supabase host
+    user: process.env.SUPABASE_USER,      // Supabase user
+    password: process.env.SUPABASE_PASSWORD, // Supabase password
+    database: process.env.SUPABASE_DATABASE, // Database name
+    port: Number(process.env.SUPABASE_PORT),   // Database port
+    max: 10,  // Connection pool limit
 });
 
 /**
- * A custom type representing a callback function. 
- * 
+ * A custom type representing a callback function.
+ *
  * This function is called when a database connection is obtained or if an error occurs.
- * @param {Error} error - object if an error occurs, otherwise null.
- * @param {PoolConnection} connection - Object if the connection is successful, otherwise null.
+ * @param {Error | null} error - object if an error occurs, otherwise null.
+ * @param {PoolClient | null} client - Object if the connection is successful, otherwise null.
  */
-type Callback = (error: Error | null, connection: PoolConnection | null) => void;
+type Callback = (error: Error | null, client: PoolClient | null) => void;
 
 export const getConnection = (callback: Callback) => {
-    pool.getConnection((error, connection) => {
-        if (error) return callback(error, null)
-        callback(null, connection)
+    pool.connect((error, client) => {
+        if (error) return callback(error, null);
+
+        // Ensure the client is not undefined before passing it to the callback
+        callback(null, client ?? null);
     });
-}
+};
 
 export const db = pool;

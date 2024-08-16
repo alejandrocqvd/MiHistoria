@@ -10,6 +10,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
+import api from "../../services/api";
 import { useParams } from 'react-router-dom';
 import ErrorDisplay from "../../components/ErrorDisplay";
 
@@ -41,7 +42,7 @@ const StoryPage: React.FC = () => {
           return;
         }
 
-        const res = await axios.post("/api/stories/page", { username: id, page_number });
+        const res = await api.post("/api/stories/page", { username: id, page_number });
         setText(res.data.data);
       } catch (error) {
         setError(true);

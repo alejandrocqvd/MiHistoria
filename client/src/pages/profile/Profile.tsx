@@ -13,6 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import api from "../../services/api";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/authContext";
 
@@ -89,12 +90,12 @@ const Profile: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("/api/users/profile", {
+        const res = await api.get("/api/users/profile", {
           withCredentials: true
         });
         setProfile(res.data.data);
 
-        const storyRes = await axios.post("/api/stories/story", { username });
+        const storyRes = await api.post("/api/stories/story", { username });
         setStory(storyRes.data.data);
       } catch (error) {
         setError(true);
@@ -103,7 +104,7 @@ const Profile: React.FC = () => {
       }
     }
     fetchData();
-  }, []);
+  }, [username]);
   
   return (
     <> 

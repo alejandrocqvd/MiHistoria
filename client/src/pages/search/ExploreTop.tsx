@@ -11,6 +11,7 @@
 import { useEffect, useState } from "react";
 import SearchResult from "../../components/SearchResult";
 import axios from "axios";
+import api from "../../services/api";
 import ErrorDisplay from "../../components/ErrorDisplay";
 
 /**
@@ -68,14 +69,15 @@ const ExploreTop: React.FC = () => {
         const apiEndpoint = monthly ? "/api/searches/top/monthly" :
                             yearly ? "/api/searches/top/yearly" :
                             "/api/searches/top";
-        const countRes = await axios.get(apiEndpoint + "/count");
+        const countRes = await api.get(apiEndpoint + "/count");
         setResultCount(countRes.data.data.count);
 
-        const res = await axios.post(apiEndpoint, {
+        const res = await api.post(apiEndpoint, {
           page: currentResultPage,
           limit: 50
         });
         // Fill the data array with new data from the API request
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const newData = res.data.data.map((story: any) => ({
           title: story.title,
           username: story.username,

@@ -9,6 +9,7 @@
  */
 
 import axios from "axios";
+import api from "../../services/api";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ErrorDisplay from "../../components/ErrorDisplay";
@@ -62,7 +63,7 @@ const ChangeBanner: React.FC = () => {
       if (file) {
         const formData = new FormData();
         formData.append("file", file);
-        const res = await axios.post("/api/upload", formData);
+        const res = await api.post("/api/upload", formData);
         return res.data.data;
       }
     } catch (error) {
@@ -80,7 +81,7 @@ const ChangeBanner: React.FC = () => {
    */
   const handleSubmit = async () => {
     const filename = await uploadFile();
-    await axios.post("/api/stories/upload", { image: filename})
+    await api.post("/api/stories/upload", { image: filename})
     navigate("/story/write");
   }
   
@@ -88,7 +89,7 @@ const ChangeBanner: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
         try {
-          const res = await axios.post("/api/stories/story", { username: sessionUsername });
+          const res = await api.post("/api/stories/story", { username: sessionUsername });
           setTitle(res.data.data.title);
         } catch (error) {
           setError(true);

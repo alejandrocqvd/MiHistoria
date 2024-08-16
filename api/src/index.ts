@@ -11,6 +11,9 @@
  * Author: Alejandro Cardona
  * Date: 2024-01-06
  */
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 import express from "express";
 import authRoutes from "./routes/auth";
@@ -20,34 +23,53 @@ import commentRoutes from "./routes/comments";
 import searchRoutes from "./routes/searches";
 import cookieParser from "cookie-parser";
 import multer from "multer";
-import path from "path";
+import { supabase } from "./supabaseClient";
+import { v4 as uuidv4 } from "uuid";
+import cors from "cors";
 
 const app = express();
 
+const corsOptions = {
+    origin: process.env.FRONTEND_URL,
+    credentials: true
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
-/**
- * Handles file upload storage
- * 
- * The multer.diskStorage function is configured to save files in the '/client/public/uploads' directory.
- * Uploaded files are renamed with the current timestamp and the original file name to avoid naming conflicts.
- */
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        const uploadPath = path.join(__dirname, '../../client/public/uploads');
-        cb(null, uploadPath);
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + file.originalname);
-    }
-});
+const upload = multer({ storage: multer.memoryStorage() });
 
-const upload = multer({ storage });
-
-app.post("/api/upload", upload.single("file"), function (req, res) {
+app.post("/api/upload", upload.single("file"), async function (req, res) {
     const file = req.file;
-    res.status(201).json({ data: file?.filename });
+    if (!file) {
+        return res.status(400).json({ error: "No file uploaded" });
+    }
+
+    try {
+        // Create a unique filename using UUID
+        const uniqueFilename = `${uuidv4()}-${file.originalname}`;
+
+        // Upload file to Supabase storage
+        const { data, error } = await supabase.storage
+            .from('uploads')
+            .upload(uniqueFilename, file.buffer, {
+                contentType: file.mimetype,
+            });
+
+        if (error) {
+            throw error;
+        }
+
+        // Generate a public URL for the uploaded file
+        const { data: publicUrlData } = supabase.storage
+            .from('uploads')
+            .getPublicUrl(uniqueFilename);
+
+        res.status(201).json({ data: publicUrlData.publicUrl });
+    } catch (error) {
+        res.status(500).json({ error: (error as Error).message });
+    }
 });
 
 // Routes
@@ -57,6 +79,7 @@ app.use("/api/stories", storyRoutes);
 app.use("/api/comments", commentRoutes);
 app.use("/api/searches", searchRoutes);
 
-app.listen(8800, () => {
-    console.log("Connected to backend\n");
+const port = process.env.PORT || 8800;
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
 });

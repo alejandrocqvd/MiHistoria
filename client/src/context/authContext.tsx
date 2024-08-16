@@ -1,5 +1,5 @@
-import axios from "axios";
 import React, { createContext, useEffect, useState, ReactNode } from "react";
+import api from "../services/api";
 
 // Interface defining the structure of a user object
 interface User {
@@ -36,13 +36,13 @@ export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({ childre
 
   // Function to log in a user
   const login = async (inputs: LoginInputs) => {
-    const res = await axios.post("/api/auth/login", inputs);
+    const res = await api.post("/api/auth/login", inputs);
     setCurrentUser(res.data);
   }
 
   // Function to log out the user
   const logout = async () => {
-    await axios.post("/api/auth/logout");
+    await api.post("/api/auth/logout");
     setCurrentUser(null);
   }
 

@@ -13,6 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { AuthContext } from "../../context/authContext";
 import axios from "axios";
+import api from "../../services/api";
 import SearchResult from "../../components/SearchResult";
 import { Link } from "react-router-dom";
 import ErrorDisplay from "../../components/ErrorDisplay";
@@ -109,7 +110,7 @@ const Explore: React.FC = () => {
       const apiEndpoint = searchStories ? "/api/searches/story" :
                           searchUsers ? "/api/searches/user" :
                           "/api/searches/all";
-      const res = await axios.post(apiEndpoint, { searchTerm });
+      const res = await api.post(apiEndpoint, { searchTerm });
       setData(res.data.data);
     } catch (error) {
       setError(true);
@@ -128,16 +129,16 @@ const Explore: React.FC = () => {
     const fetchData = async () => {
       try {
         if (currentUser) {
-          const savedRes = await axios.post("/api/searches/saved/5", {
+          const savedRes = await api.post("/api/searches/saved/5", {
             withCredentials: true
           });
           setSavedData(savedRes.data.data);
         }
 
-        const topRes = await axios.get("/api/searches/top/5");
+        const topRes = await api.get("/api/searches/top/5");
         setTopData(topRes.data.data);
 
-        const newRes = await axios.get("/api/searches/new/5");
+        const newRes = await api.get("/api/searches/new/5");
         setNewData(newRes.data.data);
       } catch (error) {
         setError(true);

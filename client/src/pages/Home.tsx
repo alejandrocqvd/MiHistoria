@@ -17,6 +17,7 @@ import privacyIcon from "../assets/privacy-icon.png";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/authContext";
 import axios from "axios";
+import api from "../services/api";
 import SearchResult from "../components/SearchResult";
 import ErrorDisplay from "../components/ErrorDisplay";
 
@@ -55,7 +56,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("/api/searches/top/5");
+        const res = await api.get("/api/searches/top/5");
         setTopData(res.data.data);
       } catch (error) {
         setError(true);

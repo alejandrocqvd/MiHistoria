@@ -8,6 +8,7 @@
  */
 
 import axios from "axios";
+import api from "../../services/api";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ErrorDisplay from "../../components/ErrorDisplay";
@@ -54,7 +55,7 @@ const ChangePicture: React.FC = () => {
       if (file) {
         const formData = new FormData();
         formData.append("file", file);
-        const res = await axios.post("/api/upload", formData);
+        const res = await api.post("/api/upload", formData);
         return res.data.data;
       }
     } catch (error) {
@@ -72,7 +73,7 @@ const ChangePicture: React.FC = () => {
    */
   const handleSubmit = async () => {
     const filename = await uploadFile();
-    await axios.post("/api/users/upload", { image: filename})
+    await api.post("/api/users/upload", { image: filename})
     navigate("/profile/edit");
   }
 
@@ -88,7 +89,7 @@ const ChangePicture: React.FC = () => {
 
     if (isConfirmed) {
       try {
-        await axios.delete("/api/users/upload/delete");
+        await api.delete("/api/users/upload/delete");
         navigate("/profile/edit");
       } catch (error) {
         setError(true);

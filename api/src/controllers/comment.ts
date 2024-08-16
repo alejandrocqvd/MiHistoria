@@ -11,7 +11,6 @@
 import { Request, Response } from "express";
 import { db } from "../db";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { RowDataPacket } from "mysql2";
 
 /**
  * Fetches the number of comments on a given story.
@@ -20,19 +19,19 @@ import { RowDataPacket } from "mysql2";
  * @param {Response} res - Object used to send back the appropriate response to the client.
  * @returns {Response} A response to the client with either a success or error message.
  */
-export const getCommentCount = (req: Request, res: Response) => {
-  const { story_username } = req.body;
+export const getCommentCount = async (req: Request, res: Response) => {
+    const { story_username } = req.body;
 
-  // Query to get the comments and their information
-  const q = `SELECT COUNT(*) AS count
-              FROM comment
-              WHERE story_username = ?`;
-  db.query(q, [story_username], (error, data) => {
-      if (error) return res.status(500).json({ message: error.message });
-
-      const typedData = data as RowDataPacket[];
-      return res.status(200).json({ message: "Successfully fetched story comment count.", data: typedData[0] });
-  });
+    try {
+        // Query to get the comment count
+        const q = `SELECT COUNT(*) AS count FROM mi_historia.comment WHERE story_username = $1`;
+        const result = await db.query(q, [story_username]);
+        const count = result.rows[0].count;
+        
+        return res.status(200).json({ message: "Successfully fetched story comment count.", data: { count } });
+    } catch (error) {
+        return res.status(500).json({ message: (error as Error).message });
+    }
 }
 
 /**
@@ -42,27 +41,29 @@ export const getCommentCount = (req: Request, res: Response) => {
  * @param {Response} res - Object used to send back the appropriate response to the client.
  * @returns {Response} A response to the client with either a success or error message.
  */
-export const getComments = (req: Request, res: Response) => {
-  const { story_username } = req.body;
-  const page = req.body.page ? parseInt(req.body.page as string) : 1;
-  const limit = req.body.limit ? parseInt(req.body.limit as string) : 50;
+export const getComments = async (req: Request, res: Response) => {
+    const { story_username } = req.body;
+    const page = req.body.page ? parseInt(req.body.page as string) : 1;
+    const limit = req.body.limit ? parseInt(req.body.limit as string) : 50;
 
-  // Offset for the query
-  const offset = (page - 1) * limit;
+    // Offset for the query
+    const offset = (page - 1) * limit;
 
-  // Query to get the comments and their information
-  const q = `SELECT c.comment_id, c.comment_username AS username, c.text, c.timestamp, u.first_name, u.last_name, u.image 
-              FROM comment AS c LEFT JOIN user AS u ON comment_username = username
-              WHERE story_username = ?
-              ORDER BY c.timestamp DESC
-              LIMIT ?
-              OFFSET ?`;
-  db.query(q, [story_username, limit, offset], (error, data) => {
-      if (error) return res.status(500).json({ message: error.message });
-
-      const typedData = data as RowDataPacket[];
-      return res.status(200).json({ message: "Successfully fetched story comments.", data: typedData });
-  });
+    try {
+        // Query to get the comments and their information
+        const q = `
+            SELECT c.comment_id, c.comment_username AS username, c.text, c.timestamp, u.first_name, u.last_name, u.image 
+            FROM mi_historia.comment AS c 
+            LEFT JOIN mi_historia.user AS u ON c.comment_username = u.username
+            WHERE c.story_username = $1
+            ORDER BY c.timestamp DESC
+            LIMIT $2 OFFSET $3
+        `;
+        const result = await db.query(q, [story_username, limit, offset]);
+        return res.status(200).json({ message: "Successfully fetched story comments.", data: result.rows });
+    } catch (error) {
+        return res.status(500).json({ message: (error as Error).message });
+    }
 }
 
 /**
@@ -72,30 +73,30 @@ export const getComments = (req: Request, res: Response) => {
  * @param {Response} res - Object used to send back the appropriate response to the client.
  * @returns {Response} A response to the client with either a success or error message.
  */
-export const createComment = (req: Request, res: Response) => {
-  const { story_username, text } = req.body.data;
+export const createComment = async (req: Request, res: Response) => {
+    const { story_username, text } = req.body.data;
 
-  try {
-      // Get JWT
-      const token = req.cookies["access_token"];
-      if (!token) return res.status(401).json({ error: "Access denied, no token provided." });
-      
-      // Verify the token and save username
-      const decoded = jwt.verify(token, "jwtkey") as JwtPayload;
-      if (!decoded.username) return res.status(401).json({ error: "Invalid token." });
-      const username = decoded.username;
+    try {
+        // Get JWT
+        const token = req.cookies["access_token"];
+        if (!token) return res.status(401).json({ error: "Access denied, no token provided." });
+        
+        // Verify the token and save username
+        const decoded = jwt.verify(token, "jwtkey") as JwtPayload;
+        if (!decoded.username) return res.status(401).json({ error: "Invalid token." });
+        const username = decoded.username;
 
-      // Query to create the comment
-      const q = `INSERT INTO comment (comment_username, story_username, text)
-                  VALUES (?, ?, ?)`;
-      db.query(q, [username, story_username, text], (error) => {
-          if (error) return res.status(500).json({ message: error.message });
+        // Query to create the comment
+        const q = `
+            INSERT INTO mi_historia.comment (comment_username, story_username, text)
+            VALUES ($1, $2, $3)
+        `;
+        await db.query(q, [username, story_username, text]);
 
-          return res.status(201).json({ message: "Successfully created comment." });
-      });
-  } catch (error) {
-      res.status(400).json({ error: "Invalid token." });
-  }
+        return res.status(201).json({ message: "Successfully created comment." });
+    } catch (error) {
+        return res.status(500).json({ message: (error as Error).message });
+    }
 }
 
 /**
@@ -105,30 +106,28 @@ export const createComment = (req: Request, res: Response) => {
  * @param {Response} res - Object used to send back the appropriate response to the client.
  * @returns {Response} A response to the client with either a success or error message.
  */
-export const deleteComment = (req: Request, res: Response) => {
-  const { comment_id, comment_username } = req.body;
+export const deleteComment = async (req: Request, res: Response) => {
+    const { comment_id, comment_username } = req.body;
 
-  try {
-      // Get JWT
-      const token = req.cookies["access_token"];
-      if (!token) return res.status(401).json({ error: "Access denied, no token provided." });
-      
-      // Verify the token and save username
-      const decoded = jwt.verify(token, "jwtkey") as JwtPayload;
-      if (!decoded.username) return res.status(401).json({ error: "Invalid token." });
-      const username = decoded.username;
+    try {
+        // Get JWT
+        const token = req.cookies["access_token"];
+        if (!token) return res.status(401).json({ error: "Access denied, no token provided." });
+        
+        // Verify the token and save username
+        const decoded = jwt.verify(token, "jwtkey") as JwtPayload;
+        if (!decoded.username) return res.status(401).json({ error: "Invalid token." });
+        const username = decoded.username;
 
-      // Check if user's username and comment's author don't match
-      if ( username !== comment_username ) return res.status(401).json({ error: "Unauthorized request. User cannot delete this comment." });
+        // Check if user's username and comment's author don't match
+        if (username !== comment_username) return res.status(401).json({ error: "Unauthorized request. User cannot delete this comment." });
 
-      // Query to delete the comment
-      const q = `DELETE FROM comment WHERE comment_id = ?`;
-      db.query(q, [comment_id], (error) => {
-        if (error) return res.status(500).json({ message: error.message });
+        // Query to delete the comment
+        const q = `DELETE FROM mi_historia.comment WHERE comment_id = $1`;
+        await db.query(q, [comment_id]);
 
         return res.status(200).json({ message: "Successfully deleted comment." });
-      });
-  } catch (error) {
-      res.status(400).json({ error: "Invalid token." });
-  }
+    } catch (error) {
+        return res.status(500).json({ message: (error as Error).message });
+    }
 }

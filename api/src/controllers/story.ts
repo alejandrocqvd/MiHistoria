@@ -8,11 +8,11 @@
  */
 
 import { Request, Response } from "express";
-import { db, getConnection } from "../db";
+import { db } from "../db";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { RowDataPacket } from "mysql2";
 import sanitizeHtml from "sanitize-html";
 import { JSDOM } from 'jsdom';
+import { PoolClient } from "pg";
 
 /**
  * Handles fetching a story's page contents.
@@ -21,23 +21,26 @@ import { JSDOM } from 'jsdom';
  * @param {Response} res - Object used to send back the appropriate response to the client.
  * @returns A response and if successful, sends the story text for the appropriate page.
  */
-export const getPage = (req: Request, res: Response) => {
+export const getPage = async (req: Request, res: Response) => {
     const { username, page_number } = req.body;
 
-    // Query to get story page text
-    const q = `SELECT text
-                FROM page
-                WHERE username = ? AND page_number = ?`;
-    db.query(q, [username, page_number], (error, data) => {
-        // Error checking
-        if (error) return res.status(500).json({ error: error });
-        const typedData = data as RowDataPacket[];
-        if (typedData.length === 0) return res.status(400).json({ error: `Page number ${page_number} for user '${username}' does not exist.` });
+    try {
+        // Query to get story page text
+        const q = `
+            SELECT text
+            FROM mi_historia.page
+            WHERE username = $1 AND page_number = $2
+        `;
+        const result = await db.query(q, [username, page_number]);
+
+        if (result.rows.length === 0) {
+            return res.status(400).json({ error: `Page number ${page_number} for user '${username}' does not exist.` });
+        }
         
         // Sanitize the HTML
-        const rawHTML = typedData[0].text;
+        const rawHTML = result.rows[0].text;
         const sanitizedHTML = sanitizeHtml(rawHTML, {
-                allowedTags: sanitizeHtml.defaults.allowedTags.concat([
+            allowedTags: sanitizeHtml.defaults.allowedTags.concat([
                 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'p', 'a', 'ul', 'ol',
                 'nl', 'li', 'b', 'i', 'strong', 'em', 'strike', 'code', 'hr', 'br', 'div',
                 'table', 'thead', 'caption', 'tbody', 'tr', 'th', 'td', 'pre', 'iframe', 'span',
@@ -63,7 +66,9 @@ export const getPage = (req: Request, res: Response) => {
         });
 
         return res.status(200).json({ message: "Successfully fetched story page text", data: sanitizedHTML });
-    });
+    } catch (error) {
+        return res.status(500).json({ error: (error as Error).message });
+    }
 }
 
 /**
@@ -71,9 +76,9 @@ export const getPage = (req: Request, res: Response) => {
  * 
  * @param {Request} req - Contains the text for the page being updated.
  * @param {Response} res - Object used to send back the appropriate response to the client.
- * @returns A response and if successful, updated the story's page.
+ * @returns A response and if successful, updates the story's page.
  */
-export const updatePage = (req: Request, res: Response) => {
+export const updatePage = async (req: Request, res: Response) => {
     try {
         const { story_username, page_number, text } = req.body;
 
@@ -115,43 +120,46 @@ export const updatePage = (req: Request, res: Response) => {
                 },
             },
         });
-        
-        // Query to update page
-        const q = `UPDATE page
-                    SET text = ?
-                    WHERE page_number = ? AND username = ?`;
-        db.query(q, [text, page_number, username], (error) => {
-            // Error checking
-            if (error) return res.status(500).json({ message: error.message });
 
-            return res.status(200).json({ message: `Successfully updated page ${page_number} of ${username}'s story.` });
-        });
+        // Query to update page
+        const q = `
+            UPDATE mi_historia.page
+            SET text = $1
+            WHERE page_number = $2 AND username = $3
+        `;
+        await db.query(q, [sanitizedHTML, page_number, username]);
+
+        return res.status(200).json({ message: `Successfully updated page ${page_number} of ${username}'s story.` });
     } catch (error) {
-        res.status(400).json({ error: "Invalid token." });
+        return res.status(400).json({ error: (error as Error).message });
     }
 }
 
 /**
  * Handles retrieving a story's basic information.
  * 
- * @param {Request} req - Contains the ID of the story.
+ * @param {Request} req - Contains the username of the story.
  * @param {Response} res - Object used to send back the appropriate response to the client.
  * @returns A response and if successful, returns story details.
  */
-export const getStory = (req: Request, res: Response) => {
+export const getStory = async (req: Request, res: Response) => {
     const { username } = req.body;
 
-    // Query to get story information, author information, save count, and like count
-    const q = `SELECT u.username, u.first_name, u.last_name, u.dob, u.image AS user_image, s.title, s.image AS story_image, s.text, s.page_count, u.is_private
-                FROM story AS s
-                LEFT JOIN user AS u ON u.username = s.username
-                WHERE s.username = ?`;
-    db.query(q, username, (error, data) => {
-        if (error) return res.status(500).json({ error: error });
-        
-        const typedData = data as RowDataPacket[];
-        return res.status(200).json({ message: "Successfully fetched story information. ", data: typedData[0] });
-    });
+    try {
+        // Query to get story information, author information, save count, and like count
+        const q = `
+            SELECT u.username, u.first_name, u.last_name, u.dob, u.image AS user_image, 
+                   s.title, s.image AS story_image, s.text, s.page_count, u.is_private
+            FROM mi_historia.story AS s
+            LEFT JOIN mi_historia.user AS u ON u.username = s.username
+            WHERE s.username = $1
+        `;
+        const result = await db.query(q, [username]);
+
+        return res.status(200).json({ message: "Successfully fetched story information. ", data: result.rows[0] });
+    } catch (error) {
+        return res.status(500).json({ error: (error as Error).message });
+    }
 }
 
 /**
@@ -164,104 +172,73 @@ export const getStory = (req: Request, res: Response) => {
 export const saveStory = async (req: Request, res: Response) => {
     const { title, text } = req.body;
 
-    getConnection(async (error, connection) => {
-        if (error) {
-            return res.status(500).json({ error: "Error getting database connection." });
+    const client = await db.connect();
+    try {
+        // Get JWT
+        const token = req.cookies["access_token"];
+        if (!token) return res.status(401).json({ error: "Access denied, no token provided." });
+        
+        // Verify the token and save username
+        const decoded = jwt.verify(token, "jwtkey") as JwtPayload;
+        if (!decoded.username) return res.status(401).json({ error: "Invalid token." });
+        const username = decoded.username;
+
+        // Start a transaction
+        await client.query('BEGIN');
+    
+        // Check if story already exists
+        const q = `SELECT page_count FROM mi_historia.story WHERE username = $1`;
+        const result = await client.query(q, [username]);
+
+        // Split the story into pages of 900 words or less
+        const pages = splitToPages(text, 900);
+    
+        if (result.rows.length > 0) {
+            // If the story already exists, update its content
+            const updateQuery = `
+                UPDATE mi_historia.story 
+                SET title = $1, text = $2, page_count = $3
+                WHERE username = $4
+            `;
+            await client.query(updateQuery, [title, text, pages.length, username]);
+
+            // Update or insert pages
+            for (let i = 0; i < pages.length; i++) {
+                await pageQuery(client, pages[i], username, i + 1);
+            }
+
+            // Delete unnecessary pages if the new page count is less than the previous one
+            if (result.rows[0].page_count > pages.length) {
+                for (let i = pages.length + 1; i <= result.rows[0].page_count; i++) {
+                    await deletePageQuery(client, username, i);
+                }
+            }
+        } else {
+            // If the story does not exist, insert it into the appropriate tables
+            const insertStoryQuery = `
+                INSERT INTO mi_historia.story (username, title, page_count, text)
+                VALUES ($1, $2, $3, $4)
+            `;
+            await client.query(insertStoryQuery, [username, title, pages.length, text]);
+
+            // Insert pages
+            for (let i = 0; i < pages.length; i++) {
+                await client.query(`
+                    INSERT INTO mi_historia.page (page_number, username, text)
+                    VALUES ($1, $2, $3)
+                `, [i + 1, username, pages[i]]);
+            }
         }
 
-        try {
-            // Get JWT
-            const token = req.cookies["access_token"];
-            if (!token) return res.status(401).json({ error: "Access denied, no token provided." });
-            
-            // Verify the token and save username
-            const decoded = jwt.verify(token, "jwtkey") as JwtPayload;
-            if (!decoded.username) return res.status(401).json({ error: "Invalid token." });
-            const username = decoded.username;
-
-            // Start a transaction
-            await new Promise((resolve, reject) => {
-                connection?.beginTransaction(error => {
-                    if (error) reject(error);
-                    else resolve(null);
-                });
-            });
-    
-            // Check if story already exists
-            const q = `SELECT page_count FROM story WHERE username = ?`;
-            connection?.query(q, [username], async (error, data) => {
-                // Error checking.
-                if (error) throw error;
-                const typedData = data as RowDataPacket[];
-    
-                // Split the story into pages of 900 words or less
-                const pages = splitToPages(text, 900);
-    
-                // If the story already exists, update it's content
-                if (typedData.length) {
-                    const q = `UPDATE story 
-                                SET title = ?, text = ?, page_count = ?
-                                WHERE username = ?`;
-                    connection?.query(q, [title, text, pages.length, username], async (error) => {
-                        // Error checking
-                        if (error) throw error;
-    
-                        // Go through each page, and if it already exists -> update it, if it does not -> insert it
-                        let page_number = 1;
-                        for (const page of pages) {
-                            pageQuery(page, username, page_number);
-                            page_number++;
-                        }
-
-                        // If the current page count for the story is greater than the new page count, delete the unnecessary pages
-                        if (typedData[0].page_count > page_number) {
-                            for (let i = typedData[0].page_count; i > page_number; i--) {
-                                deletePageQuery(username, page_number);
-                            }
-                        }
-                    });
-                }
-    
-                // If the story does not exist, insert it into the appropriate tables
-                else {
-                    const q = `INSERT INTO story (username, title, page_count, text)
-                                VALUES (?, ?, ?, ?)`;
-                    connection?.query(q, [username, title, pages.length, text], (error) => {
-                        // Error checking
-                        if (error) throw error;
-    
-                        // Insert each page
-                        const q = `INSERT INTO page (page_number, username, text)
-                                    VALUES (?, ?, ?)`;
-                        let page_number = 1;
-                        for (const page of pages) {
-                            connection?.query(q, [page_number, username, page], (error) => {
-                                if (error) throw error;
-                            });
-                            page_number++;
-                        }
-                    });
-                }
-
-                // Commit the transaction
-                await new Promise((resolve, reject) => {
-                    connection?.commit(error => {
-                        if (error) reject(error);
-                        else resolve(null);
-                    });
-                });
-            });
-            connection?.release();
-            res.status(201).json({ message: "Story successfully created or updated." });
-        } catch (error) {
-            // Rollback in case of an error
-            await new Promise(resolve => {
-                connection?.rollback(() => resolve(null));
-            });
-            connection?.release();
-            res.status(400).json({ error: "Invalid token." });
-        }
-    });
+        // Commit the transaction
+        await client.query('COMMIT');
+        res.status(201).json({ message: "Story successfully created or updated." });
+    } catch (error) {
+        await client.query('ROLLBACK');
+        res.status(400).json({ error: "An error occurred while saving the story." });
+    } finally {
+        client.release();
+    }
 }
 
 /**
@@ -285,14 +262,12 @@ export const saveBanner = async (req: Request, res: Response) => {
         const username = decoded.username;
 
         // Query to update the story's banner image
-        const q = `UPDATE story SET image = ? WHERE username = ?`;
-        db.query(q, [image, username], (error) => {
-            if (error) return res.status(500).json({ message: error.message });
+        const q = `UPDATE mi_historia.story SET image = $1 WHERE username = $2`;
+        await db.query(q, [image, username]);
 
-            return res.status(200).json({ message: "Successfully updated story banner image." });
-        });
+        return res.status(200).json({ message: "Successfully updated story banner image." });
     } catch (error) {
-        res.status(400).json({ error: "Invalid token." });
+        return res.status(400).json({ error: (error as Error).message });
     }
 }
 
@@ -301,7 +276,7 @@ export const saveBanner = async (req: Request, res: Response) => {
  * 
  * @param {Request} req - Contains the user's JWT.
  * @param {Response} res - Object used to send back the appropriate response to the client.
- * @returns A response and if successful, sends the story text for the appropriate page.
+ * @returns A response and if successful, deletes the story's image banner.
  */
 export const deleteBanner = async (req: Request, res: Response) => {
     try {
@@ -315,27 +290,26 @@ export const deleteBanner = async (req: Request, res: Response) => {
         const username = decoded.username;
 
         // Query to delete the story's banner image
-        const q = `UPDATE story SET image = ? WHERE username = ?`;
-        db.query(q, [null, username], (error) => {
-            if (error) return res.status(500).json({ message: error.message });
+        const q = `UPDATE mi_historia.story SET image = NULL WHERE username = $1`;
+        await db.query(q, [username]);
 
-            return res.status(200).json({ message: "Successfully deleted story banner image." });
-        });
+        return res.status(200).json({ message: "Successfully deleted story banner image." });
     } catch (error) {
-        res.status(400).json({ error: "Invalid token." });
+        res.status(400).json({ error: (error as Error).message });
     }
 }
 
 /**
- * Handles updating a story's page.
+ * Handles deleting a story and its associated data.
  * 
- * @param {Request} req - Contains the text for the page being updated.
+ * @param {Request} req - Contains the user's JWT.
  * @param {Response} res - Object used to send back the appropriate response to the client.
- * @returns A response and if successful, updated the story's page.
+ * @returns A response and if successful, deletes the story.
  */
-export const deleteStory = (req: Request, res: Response) => {
+export const deleteStory = async (req: Request, res: Response) => {
     const { story_username } = req.body;
 
+    const client = await db.connect();
     try {
         // Get JWT
         const token = req.cookies["access_token"];
@@ -347,39 +321,26 @@ export const deleteStory = (req: Request, res: Response) => {
         const username = decoded.username;
 
         // Check if user's username and story username don't match
-        if ( username !== story_username ) return res.status(401).json({ error: "Unauthorized request. User cannot delete this story." });
+        if (username !== story_username) return res.status(401).json({ error: "Unauthorized request. User cannot delete this story." });
 
-        // Query to delete the story
-        // Note: I realize this looks very messy, and it could have all been avoided if I designed the database better LOL
-        const q = `DELETE FROM page WHERE username = ?`;
-        db.query(q, [username], (error) => {
-            // Error checking
-            if (error) return res.status(500).json({ message: error.message });
+        // Start a transaction
+        await client.query('BEGIN');
 
-            const q = `DELETE FROM comment WHERE story_username = ?`;
-            db.query(q, [username], (error) => {
-                if (error) return res.status(500).json({ message: error.message });
+        // Delete associated data and the story
+        await client.query(`DELETE FROM mi_historia.page WHERE username = $1`, [username]);
+        await client.query(`DELETE FROM mi_historia.comment WHERE story_username = $1`, [username]);
+        await client.query(`DELETE FROM mi_historia.likes WHERE story_username = $1`, [username]);
+        await client.query(`DELETE FROM mi_historia.saves WHERE story_username = $1`, [username]);
+        await client.query(`DELETE FROM mi_historia.story WHERE username = $1`, [username]);
 
-                const q = `DELETE FROM likes WHERE story_username = ?`;
-                db.query(q, [username], (error) => {
-                    if (error) return res.status(500).json({ message: error.message });
-
-                    const q = `DELETE FROM saves WHERE story_username = ?`;
-                    db.query(q, [username], (error) => {
-                        if (error) return res.status(500).json({ message: error.message });
-    
-                        const q = `DELETE FROM story WHERE username = ?`;
-                        db.query(q, [username], (error) => {
-                            if (error) return res.status(500).json({ message: error.message });
-        
-                            return res.status(200).json({ message: "Successfully deleted story and all its pages." });
-                        });                    
-                    });                
-                });
-            });
-        });
+        // Commit the transaction
+        await client.query('COMMIT');
+        return res.status(200).json({ message: "Successfully deleted story and all its pages." });
     } catch (error) {
-        res.status(400).json({ error: "Invalid token." });
+        await client.query('ROLLBACK');
+        res.status(400).json({ error: "An error occurred while deleting the story." });
+    } finally {
+        client.release();
     }
 }
 
@@ -424,41 +385,41 @@ function splitToPages(htmlString: string, maxWordsPerPage: number): string[] {
 /**
  * Handles inserting or updating a story's page in the database.
  * 
+ * @param {PoolClient} client - The PostgreSQL client.
  * @param {string} page - The HTML text content of the page.
  * @param {string} username - The story's username.
- * @param {string} page_number - The page number.
+ * @param {number} page_number - The page number.
  */
-const pageQuery = (page: string, username: string, page_number: number) => {
-    const q = `SELECT * FROM page WHERE username = ? AND page_number = ?`;
-    
-    db.query(q, [username, page_number], (error, data) => {
-        // Error checking
-        if (error) return error;
+const pageQuery = async (client: PoolClient, page: string, username: string, page_number: number) => {
+    const q = `SELECT * FROM mi_historia.page WHERE username = $1 AND page_number = $2`;
+    const result = await client.query(q, [username, page_number]);
 
-        const typedData = data as RowDataPacket[];
-
-        if (typedData.length) {
-            // Update case
-            const q = `UPDATE page SET text = ? WHERE username = ? AND page_number = ?`;
-            db.query(q, [page, username, page_number]);
-        } else {
-            // Insert case
-            const q = `INSERT INTO page (page_number, username, text)
-                        VALUES (?, ?, ?)`;
-            db.query(q, [page_number, username, page]);
-        }
-    });
+    if (result.rows.length > 0) {
+        // Update case
+        const updateQuery = `
+            UPDATE mi_historia.page 
+            SET text = $1 
+            WHERE username = $2 AND page_number = $3
+        `;
+        await client.query(updateQuery, [page, username, page_number]);
+    } else {
+        // Insert case
+        const insertQuery = `
+            INSERT INTO mi_historia.page (page_number, username, text)
+            VALUES ($1, $2, $3)
+        `;
+        await client.query(insertQuery, [page_number, username, page]);
+    }
 }
 
 /**
  * Handles deleting a story's page from the database.
  * 
+ * @param {PoolClient} client - The PostgreSQL client.
  * @param {string} username - The story's username.
- * @param {string} page_number - The page number.
+ * @param {number} page_number - The page number.
  */
-const deletePageQuery = (username: string, page_number: number) => {
-    const q = `DELETE FROM page WHERE username = ? AND page_number = ?`;
-    db.query(q, [username, page_number], (error) => {
-        if (error) return error;
-    });
+const deletePageQuery = async (client: PoolClient, username: string, page_number: number) => {
+    const q = `DELETE FROM mi_historia.page WHERE username = $1 AND page_number = $2`;
+    await client.query(q, [username, page_number]);
 }

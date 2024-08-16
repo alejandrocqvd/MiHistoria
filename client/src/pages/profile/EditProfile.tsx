@@ -16,6 +16,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope} from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import api from "../../services/api";
 import { AuthContext } from "../../context/authContext";
 import ErrorDisplay from "../../components/ErrorDisplay";
 
@@ -113,7 +114,7 @@ const EditProfile: React.FC = () => {
 
     // Attempt form submission and display error message if any
     try {
-      await axios.post("/api/users/edit", inputs);
+      await api.post("/api/users/edit", inputs);
       navigate("/profile");
     } catch (error) {
       setError(true);
@@ -132,7 +133,7 @@ const EditProfile: React.FC = () => {
 
     if (isConfirmed) {
       try {
-        await axios.delete("/api/users/delete", {
+        await api.delete("/api/users/delete", {
           withCredentials: true
         });
         await logout();
@@ -148,7 +149,7 @@ const EditProfile: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("/api/users/profile", {
+        const res = await api.get("/api/users/profile", {
           withCredentials: true
         });
         const formattedData = {
@@ -157,7 +158,7 @@ const EditProfile: React.FC = () => {
         };
         setInputs(formattedData);
 
-        const userRes = await axios.get("/api/users/username", {
+        const userRes = await api.get("/api/users/username", {
           withCredentials: true
         });
         setUsername(userRes.data.data);

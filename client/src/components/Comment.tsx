@@ -10,8 +10,8 @@
  */
 
 import { useEffect, useState } from "react"
-import axios from "axios";
 import { Link } from "react-router-dom";
+import api from "../services/api"
 
 /**
  * Interface for the comment's data
@@ -73,7 +73,7 @@ const Comment: React.FC<CommentProps> = ({ commentData }) => {
 
     if (isConfirmed) {
       try {
-        await axios.delete("/api/comments/delete", {
+        await api.delete("/api/comments/delete", {
           data: { comment_id: commentData.comment_id, comment_username: commentData.username },
           withCredentials: true
         });

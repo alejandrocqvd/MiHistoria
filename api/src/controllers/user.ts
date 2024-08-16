@@ -1,7 +1,7 @@
 /**
  * User Module
  * 
- * This module provides the necessary functions for user's and their profiles.
+ * This module provides the necessary functions for users and their profiles.
  * 
  * Author: Alejandro Cardona
  * Date: 2024-01-06
@@ -10,8 +10,8 @@
 import { Request, Response } from "express";
 import { db } from "../db";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { RowDataPacket } from "mysql2";
 import bcrypt from "bcryptjs";
+import { supabase } from "../supabaseClient";
 
 /**
  * Handles fetching the user's profile information.
@@ -20,7 +20,7 @@ import bcrypt from "bcryptjs";
  * @param {Response} res - Object used to send back the appropriate response to the client.
  * @returns A response and if successful, all the user's information to display on their profile.
  */
-export const getProfile = (req: Request, res: Response) => {
+export const getProfile = async (req: Request, res: Response) => {
     try {
         // Get JWT
         const token = req.cookies["access_token"];
@@ -33,14 +33,10 @@ export const getProfile = (req: Request, res: Response) => {
 
         // Query to get all the user's information
         const q = `SELECT username, first_name, last_name, dob, email, image, is_private 
-                    FROM user 
-                    WHERE username = ?`;
-        db.query(q, [username], (error, data) => {
-            if (error) return res.status(500).json({ error: error });
-
-            const typedData = data as RowDataPacket[];
-            return res.status(200).json({ message: "Successfully fetched user profile information", data: typedData[0] });
-        });
+                    FROM mi_historia.user 
+                    WHERE username = $1`;
+        const { rows } = await db.query(q, [username]);
+        return res.status(200).json({ message: "Successfully fetched user profile information", data: rows[0] });
     } catch (error) {
         res.status(400).json({ error: "Invalid token." });
     }
@@ -51,9 +47,9 @@ export const getProfile = (req: Request, res: Response) => {
  * 
  * @param {Request} req - Contains form data submitted from client.
  * @param {Response} res - Object used to send back the appropriate response to the client.
- * @returns A response and if successful, and updates the user's profile information.
+ * @returns A response and if successful, updates the user's profile information.
  */
-export const updateProfile = (req: Request, res: Response) => {
+export const updateProfile = async (req: Request, res: Response) => {
     try {
         const { first_name, last_name, email, dob, is_private } = req.body;
 
@@ -67,14 +63,11 @@ export const updateProfile = (req: Request, res: Response) => {
         const username = decoded.username;
     
         // Query to update user's information
-        const q = `UPDATE user 
-                    SET first_name = ?, last_name = ?, dob = ?, email = ?, is_private = ? 
-                    WHERE username = ?`;
-        db.query(q, [first_name, last_name, dob, email, is_private, username], (error) => {
-            if (error) return res.status(500).json({ error: error });
-
-            return res.status(200).json({ message: "Successfully updated user profile information" });
-        });
+        const q = `UPDATE mi_historia.user 
+                    SET first_name = $1, last_name = $2, dob = $3, email = $4, is_private = $5 
+                    WHERE username = $6`;
+        await db.query(q, [first_name, last_name, dob, email, is_private, username]);
+        return res.status(200).json({ message: "Successfully updated user profile information" });
     } catch (error) {
         res.status(400).json({ error: "Invalid token." });
     }
@@ -85,9 +78,9 @@ export const updateProfile = (req: Request, res: Response) => {
  * 
  * @param {Request} req - Contains form data submitted from client.
  * @param {Response} res - Object used to send back the appropriate response to the client.
- * @returns A response and if successful, and updates the user's password.
+ * @returns A response and if successful, updates the user's password.
  */
-export const updatePassword = (req: Request, res: Response) => {
+export const updatePassword = async (req: Request, res: Response) => {
     try {
         const { password } = req.body;
 
@@ -105,14 +98,11 @@ export const updatePassword = (req: Request, res: Response) => {
         const hash = bcrypt.hashSync(password, salt);
     
         // Query to update user's information
-        const q = `UPDATE user 
-                    SET password = ?
-                    WHERE username = ?`;
-        db.query(q, [hash, username], (error) => {
-            if (error) return res.status(500).json({ error: error });
-
-            return res.status(200).json({ message: "Successfully updated user password." });
-        });
+        const q = `UPDATE mi_historia.user 
+                    SET password = $1
+                    WHERE username = $2`;
+        await db.query(q, [hash, username]);
+        return res.status(200).json({ message: "Successfully updated user password." });
     } catch (error) {
         res.status(400).json({ error: "Invalid token." });
     }
@@ -123,9 +113,9 @@ export const updatePassword = (req: Request, res: Response) => {
  * 
  * @param {Request} req - Contains cookies with the JWT token.
  * @param {Response} res - Object used to send back the appropriate response to the client.
- * @returns A response and if successful, all the user's information to display on their profile.
+ * @returns A response and if successful, updates the user's profile picture.
  */
-export const updatePicture = (req: Request, res: Response) => {
+export const updatePicture = async (req: Request, res: Response) => {
     const { image } = req.body;
 
     try {
@@ -139,12 +129,9 @@ export const updatePicture = (req: Request, res: Response) => {
         const username = decoded.username;
 
         // Query to update the user's profile picture
-        const q = `UPDATE user SET image = ? WHERE username = ?`;
-        db.query(q, [image, username], (error) => {
-            if (error) return res.status(500).json({ message: error.message });
-
-            return res.status(200).json({ message: "Successfully updated user's profile picture." });
-        });
+        const q = `UPDATE mi_historia.user SET image = $1 WHERE username = $2`;
+        await db.query(q, [image, username]);
+        return res.status(200).json({ message: "Successfully updated user's profile picture." });
     } catch (error) {
         res.status(400).json({ error: "Invalid token." });
     }
@@ -155,9 +142,9 @@ export const updatePicture = (req: Request, res: Response) => {
  * 
  * @param {Request} req - Contains cookies with the JWT token.
  * @param {Response} res - Object used to send back the appropriate response to the client.
- * @returns A response and if successful, all the user's information to display on their profile.
+ * @returns A response and if successful, deletes the user's profile picture.
  */
-export const deletePicture = (req: Request, res: Response) => {
+export const deletePicture = async (req: Request, res: Response) => {
     try {
         // Get JWT
         const token = req.cookies["access_token"];
@@ -168,26 +155,47 @@ export const deletePicture = (req: Request, res: Response) => {
         if (!decoded.username) return res.status(401).json({ error: "Invalid token." });
         const username = decoded.username;
 
-        // Query to delete the user's profile picture
-        const q = `UPDATE user SET image = ? WHERE username = ?`;
-        db.query(q, [null, username], (error) => {
-            if (error) return res.status(500).json({ message: error.message });
+        // Query to get the current image URL from the database
+        const getImageQuery = `SELECT image FROM mi_historia.user WHERE username = $1`;
+        const result = await db.query(getImageQuery, [username]);
+        
+        const imageUrl = result.rows[0]?.image;
+        if (!imageUrl) {
+            return res.status(404).json({ error: "No image found for this user." });
+        }
 
-            return res.status(200).json({ message: "Successfully deleted user's profile picture." });
-        });
+        // Extract the file path from the image URL
+        const filePath = imageUrl.split('/').pop();
+
+        // Delete the file from Supabase storage
+        const { error: supabaseError } = await supabase.storage
+            .from('uploads')
+            .remove([filePath]);
+
+        if (supabaseError) {
+            throw supabaseError;
+        }
+
+        // Query to delete the user's profile picture reference in the database
+        const updateQuery = `UPDATE mi_historia.user SET image = NULL WHERE username = $1`;
+        await db.query(updateQuery, [username]);
+
+        return res.status(200).json({ message: "Successfully deleted user's profile picture." });
     } catch (error) {
-        res.status(400).json({ error: "Invalid token." });
+        res.status(500).json({ error: (error as Error).message });
     }
 }
+
 
 /**
  * Handles deleting the user's account.
  * 
  * @param {Request} req - Contains cookies with the JWT token.
  * @param {Response} res - Object used to send back the appropriate response to the client.
- * @returns A response and if successful, and deletes the user's account.
+ * @returns A response and if successful, deletes the user's account.
  */
-export const deleteProfile = (req: Request, res: Response) => {
+export const deleteProfile = async (req: Request, res: Response) => {
+    const client = await db.connect();
     try {
         // Get JWT
         const token = req.cookies["access_token"];
@@ -197,62 +205,29 @@ export const deleteProfile = (req: Request, res: Response) => {
         const decoded = jwt.verify(token, "jwtkey") as JwtPayload;
         if (!decoded.username) return res.status(401).json({ error: "Invalid token." });
         const username = decoded.username;
-    
-        // Query to delete user's account
-        /**
-         * Note: yeah this one is pretty bad, but once again, if I designed my database
-         * schema better and took deletion into account, I would have been able to avoid
-         * this nasty looking code.
-         * tldr: lesson learned and I will prevent this from ever happening in the future lol
-         */
-        const q = `DELETE FROM comment WHERE comment_username = ?`;
-        db.query(q, [username], (error) => {
-            if (error) return res.status(500).json({ error: error });
 
-            const q = `DELETE FROM likes WHERE like_username = ?`;
-            db.query(q, [username], (error) => {
-                if (error) return res.status(500).json({ error: error });
-    
-                const q = `DELETE FROM saves WHERE save_username = ?`;
-                db.query(q, [username], (error) => {
-                    if (error) return res.status(500).json({ error: error });
-        
-                    const q = `DELETE FROM page WHERE username = ?`;
-                    db.query(q, [username], (error) => {
-                        if (error) return res.status(500).json({ message: error.message });
+        // Start transaction
+        await client.query('BEGIN');
 
-                        const q = `DELETE FROM comment WHERE story_username = ?`;
-                        db.query(q, [username], (error) => {
-                            if (error) return res.status(500).json({ message: error.message });
+        // Delete related data
+        await client.query(`DELETE FROM mi_historia.comment WHERE comment_username = $1`, [username]);
+        await client.query(`DELETE FROM mi_historia.likes WHERE like_username = $1`, [username]);
+        await client.query(`DELETE FROM mi_historia.saves WHERE save_username = $1`, [username]);
+        await client.query(`DELETE FROM mi_historia.page WHERE username = $1`, [username]);
+        await client.query(`DELETE FROM mi_historia.comment WHERE story_username = $1`, [username]);
+        await client.query(`DELETE FROM mi_historia.likes WHERE story_username = $1`, [username]);
+        await client.query(`DELETE FROM mi_historia.saves WHERE story_username = $1`, [username]);
+        await client.query(`DELETE FROM mi_historia.story WHERE username = $1`, [username]);
+        await client.query(`DELETE FROM mi_historia.user WHERE username = $1`, [username]);
 
-                            const q = `DELETE FROM likes WHERE story_username = ?`;
-                            db.query(q, [username], (error) => {
-                                if (error) return res.status(500).json({ message: error.message });
-
-                                const q = `DELETE FROM saves WHERE story_username = ?`;
-                                db.query(q, [username], (error) => {
-                                    if (error) return res.status(500).json({ message: error.message });
-
-                                    const q = `DELETE FROM story WHERE username = ?`;
-                                    db.query(q, [username], (error) => {
-                                        if (error) return res.status(500).json({ message: error.message });
-                    
-                                        const q = `DELETE FROM user WHERE username = ?`;
-                                        db.query(q, [username], (error) => {
-                                            if (error) return res.status(500).json({ message: error.message });
-                        
-                                            return res.status(200).json({ message: "Successfully deleted user." });
-                                        });                                       
-                                    });                    
-                                });                
-                            });
-                        });
-                    });                
-                });               
-            });        
-        });
+        // Commit transaction
+        await client.query('COMMIT');
+        return res.status(200).json({ message: "Successfully deleted user." });
     } catch (error) {
+        await client.query('ROLLBACK');
         res.status(400).json({ error: "Invalid token." });
+    } finally {
+        client.release();
     }
 }
 
@@ -285,9 +260,9 @@ export const getUsername = (req: Request, res: Response) => {
  * 
  * @param {Request} req - Contains cookies with the JWT token.
  * @param {Response} res - Object used to send back the appropriate response to the client.
- * @returns A response and if successful, returns the user's username.
+ * @returns A response and if successful, returns the stories liked by the user.
  */
-export const getLiked = (req: Request, res: Response) => {
+export const getLiked = async (req: Request, res: Response) => {
     try {
         // Get JWT
         const token = req.cookies["access_token"];
@@ -299,13 +274,9 @@ export const getLiked = (req: Request, res: Response) => {
         const username = decoded.username;
 
         // Query to get the stories the user has liked
-        const q = `SELECT story_username FROM likes WHERE like_username = ?`;
-        db.query(q, [username], (error, data) => {
-            if (error) return res.status(500).json({ message: error.message });
-
-            const typedData = data as RowDataPacket[];
-            return res.status(200).json({ message: "Successfully fetched user's liked stories.", data: typedData });
-        });
+        const q = `SELECT story_username FROM mi_historia.likes WHERE like_username = $1`;
+        const { rows } = await db.query(q, [username]);
+        return res.status(200).json({ message: "Successfully fetched user's liked stories.", data: rows });
     } catch (error) {
         res.status(400).json({ error: "Invalid token." });
     }
@@ -316,9 +287,9 @@ export const getLiked = (req: Request, res: Response) => {
  * 
  * @param {Request} req - Contains cookies with the JWT token, and the story's username.
  * @param {Response} res - Object used to send back the appropriate response to the client.
- * @returns A response and if successful, returns the user's username.
+ * @returns A response and if successful, returns a message indicating whether the story was liked or unliked.
  */
-export const updateLiked = (req: Request, res: Response) => {
+export const updateLiked = async (req: Request, res: Response) => {
     const { liked, story_username } = req.body.data;
 
     try {
@@ -333,21 +304,15 @@ export const updateLiked = (req: Request, res: Response) => {
 
         if (liked) {
             // Unlike the story
-            const q = `DELETE FROM likes WHERE like_username = ? AND story_username = ?`;
-            db.query(q, [username, story_username], (error) => {
-                if (error) return res.status(500).json({ message: error.message });
-
-                return res.status(200).json({ message: "Successfully unliked story." });
-            });
+            const q = `DELETE FROM mi_historia.likes WHERE like_username = $1 AND story_username = $2`;
+            await db.query(q, [username, story_username]);
+            return res.status(200).json({ message: "Successfully unliked story." });
         } else {
             // Like the story
-            const q = `INSERT INTO likes (like_username, story_username)
-                        VALUES (?, ?)`;
-            db.query(q, [username, story_username], (error) => {
-                if (error) return res.status(500).json({ message: error.message });
-
-                return res.status(201).json({ message: "Successfully liked story." });
-            });
+            const q = `INSERT INTO mi_historia.likes (like_username, story_username)
+                        VALUES ($1, $2)`;
+            await db.query(q, [username, story_username]);
+            return res.status(201).json({ message: "Successfully liked story." });
         }
     } catch (error) {
         res.status(400).json({ error: "Invalid token." });
@@ -359,9 +324,9 @@ export const updateLiked = (req: Request, res: Response) => {
  * 
  * @param {Request} req - Contains cookies with the JWT token.
  * @param {Response} res - Object used to send back the appropriate response to the client.
- * @returns A response and if successful, returns the user's username.
+ * @returns A response and if successful, returns the user's saved stories.
  */
-export const getSaved = (req: Request, res: Response) => {
+export const getSaved = async (req: Request, res: Response) => {
     try {
         // Get JWT
         const token = req.cookies["access_token"];
@@ -373,13 +338,9 @@ export const getSaved = (req: Request, res: Response) => {
         const username = decoded.username;
 
         // Query to get the stories the user has saved
-        const q = `SELECT story_username FROM saves WHERE save_username = ?`;
-        db.query(q, [username], (error, data) => {
-            if (error) return res.status(500).json({ message: error.message });
-
-            const typedData = data as RowDataPacket[];
-            return res.status(200).json({ message: "Successfully fetched user's saved stories.", data: typedData });
-        });
+        const q = `SELECT story_username FROM mi_historia.saves WHERE save_username = $1`;
+        const { rows } = await db.query(q, [username]);
+        return res.status(200).json({ message: "Successfully fetched user's saved stories.", data: rows });
     } catch (error) {
         res.status(400).json({ error: "Invalid token." });
     }
@@ -390,9 +351,9 @@ export const getSaved = (req: Request, res: Response) => {
  * 
  * @param {Request} req - Contains cookies with the JWT token, and the story's username.
  * @param {Response} res - Object used to send back the appropriate response to the client.
- * @returns A response and if successful, returns the user's username.
+ * @returns A response and if successful, returns a message indicating whether the story was saved or unsaved.
  */
-export const updateSaved = (req: Request, res: Response) => {
+export const updateSaved = async (req: Request, res: Response) => {
     const { saved, story_username } = req.body.data;
 
     try {
@@ -407,21 +368,15 @@ export const updateSaved = (req: Request, res: Response) => {
 
         if (saved) {
             // Unsave the story
-            const q = `DELETE FROM saves WHERE save_username = ? AND story_username = ?`;
-            db.query(q, [username, story_username], (error) => {
-                if (error) return res.status(500).json({ message: error.message });
-
-                return res.status(200).json({ message: "Successfully unsaved story." });
-            });
+            const q = `DELETE FROM mi_historia.saves WHERE save_username = $1 AND story_username = $2`;
+            await db.query(q, [username, story_username]);
+            return res.status(200).json({ message: "Successfully unsaved story." });
         } else {
             // Save the story
-            const q = `INSERT INTO saves (save_username, story_username)
-                        VALUES (?, ?)`;
-            db.query(q, [username, story_username], (error) => {
-                if (error) return res.status(500).json({ message: error.message });
-
-                return res.status(201).json({ message: "Successfully saved story." });
-            });
+            const q = `INSERT INTO mi_historia.saves (save_username, story_username)
+                        VALUES ($1, $2)`;
+            await db.query(q, [username, story_username]);
+            return res.status(201).json({ message: "Successfully saved story." });
         }
     } catch (error) {
         res.status(400).json({ error: "Invalid token." });

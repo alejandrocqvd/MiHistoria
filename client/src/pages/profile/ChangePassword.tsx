@@ -8,6 +8,7 @@
  */
 
 import axios from "axios";
+import api from "../../services/api";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -82,7 +83,7 @@ const ChangePassword: React.FC = () => {
         const data = {
           password: password
         }
-        await axios.post("/api/users/password", data, {
+        await api.post("/api/users/password", data, {
           withCredentials: true
         });
         navigate("/profile/edit");

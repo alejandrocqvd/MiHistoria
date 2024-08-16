@@ -11,6 +11,7 @@
 import { useEffect, useState } from "react";
 import SearchResult from "../../components/SearchResult";
 import axios from "axios";
+import api from "../../services/api";
 import ErrorDisplay from "../../components/ErrorDisplay";
 
 /**
@@ -57,15 +58,16 @@ const Saved: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const countRes = await axios.post("/api/searches/saved/count");
+        const countRes = await api.post("/api/searches/saved/count");
         const count = countRes.data.data.count;
         setResultCount(count);
 
-        const res = await axios.post("/api/searches/saved", {
+        const res = await api.post("/api/searches/saved", {
           data: { page: currentResultPage, limit: 50 },
           withCredentials: true
         });
         // Fill the data array with new data from the API request
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const newData = res.data.data.map((story: any) => ({
           title: story.title,
           username: story.username,

@@ -12,6 +12,7 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash, faEnvelope, faUser } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
+import api from "../../services/api"
 import { Link, useNavigate } from "react-router-dom";
 import ErrorDisplay from "../../components/ErrorDisplay";
 
@@ -124,7 +125,7 @@ const Register: React.FC = () => {
 
     // Attempt form submission and display error if any
     try {
-      await axios.post("/api/auth/register", inputs);
+      await api.post(`/api/auth/register`, inputs);
       navigate("/login");
     } catch (error) {
       setError(true);

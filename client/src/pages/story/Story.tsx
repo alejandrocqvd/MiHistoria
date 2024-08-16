@@ -17,6 +17,7 @@ import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
 import Comment from "../../components/Comment.tsx";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import api from "../../services/api";
 import { AuthContext } from "../../context/authContext.tsx";
 import ErrorDisplay from "../../components/ErrorDisplay.tsx";
 
@@ -162,7 +163,7 @@ const Story: React.FC = () => {
    */
   const handleLike = async () => {
     try {
-      await axios.post("/api/users/like", {
+      await api.post("/api/users/like", {
         data: { liked, story_username: params.id },
         withCredentials: true
       });
@@ -180,7 +181,7 @@ const Story: React.FC = () => {
    */
   const handleSave = async () => {
     try {
-      await axios.post("/api/users/save", {
+      await api.post("/api/users/save", {
         data: { saved, story_username: params.id },
         withCredentials: true
       });
@@ -202,7 +203,7 @@ const Story: React.FC = () => {
 
     if (isConfirmed) {
       try {
-         await axios.delete("/api/stories/delete", {
+         await api.delete("/api/stories/delete", {
           data: { story_username: params.id },
           withCredentials: true
          });
@@ -221,12 +222,13 @@ const Story: React.FC = () => {
    */
   const fetchComments = async (page: number) => {
     try {
-      const res = await axios.post("/api/comments/get", {
+      const res = await api.post("/api/comments/get", {
         story_username: params.id,
         page: page,
         limit: 50
       });
       // Fill the comments array with data from the API request
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const newComments = res.data.data.map((comment: any) => ({
         comment_id: comment.comment_id,
         username: comment.username,
@@ -268,7 +270,7 @@ const Story: React.FC = () => {
    */
   const handleComment = async () => {
     try {
-      await axios.post("/api/comments/create", {
+      await api.post("/api/comments/create", {
         data: { story_username: params.id, text: comment },
         withCredentials: true
       });
@@ -322,16 +324,16 @@ const Story: React.FC = () => {
         if (sessionUsername == params.id) setIsEditable(true);
 
         // API Request to get the data of the story
-        const storyRes = await axios.post("/api/stories/story", { username: id });
+        const storyRes = await api.post("/api/stories/story", { username: id });
         
         if (sessionUsername) {
           // API Request to get the stories the current user has liked
-          const likeRes = await axios.get("/api/users/liked", {
+          const likeRes = await api.get("/api/users/liked", {
             withCredentials: true
           });
 
           // API Request to get the stories the current user has saved
-          const saveRes = await axios.get("/api/users/saved", {
+          const saveRes = await api.get("/api/users/saved", {
             withCredentials: true
           });
 
@@ -345,7 +347,7 @@ const Story: React.FC = () => {
         }
 
         // API Request to get the total number of comments made on the story
-        const countRes = await axios.post("/api/comments/count", { story_username: id });
+        const countRes = await api.post("/api/comments/count", { story_username: id });
         setTotalComments(countRes.data.data.count);
 
         // API Request to get the first page of comments on the story
