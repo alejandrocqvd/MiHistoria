@@ -13,6 +13,8 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import sanitizeHtml from "sanitize-html";
 import { JSDOM } from 'jsdom';
 import { PoolClient } from "pg";
+import { supabase } from "../supabaseClient";
+import { v4 as uuidv4 } from "uuid";
 
 /**
  * Handles fetching a story's page contents.
@@ -156,7 +158,24 @@ export const getStory = async (req: Request, res: Response) => {
         `;
         const result = await db.query(q, [username]);
 
-        return res.status(200).json({ message: "Successfully fetched story information. ", data: result.rows[0] });
+        const story = result.rows[0];
+
+        // Get the public URLs for the images
+        if (story.user_image) {
+            const { data: userImageUrlData } = supabase.storage
+                .from('uploads')
+                .getPublicUrl(story.user_image);
+            story.user_image = userImageUrlData.publicUrl;
+        }
+
+        if (story.story_image) {
+            const { data: storyImageUrlData } = supabase.storage
+                .from('uploads')
+                .getPublicUrl(story.story_image);
+            story.story_image = storyImageUrlData.publicUrl;
+        }
+
+        return res.status(200).json({ message: "Successfully fetched story information.", data: story });
     } catch (error) {
         return res.status(500).json({ error: (error as Error).message });
     }
@@ -261,9 +280,53 @@ export const saveBanner = async (req: Request, res: Response) => {
         if (!decoded.username) return res.status(401).json({ error: "Invalid token." });
         const username = decoded.username;
 
-        // Query to update the story's banner image
-        const q = `UPDATE mi_historia.story SET image = $1 WHERE username = $2`;
-        await db.query(q, [image, username]);
+        // Query to get the current image URL from the database
+        const getImageQuery = `SELECT image FROM mi_historia.story WHERE username = $1`;
+        const result = await db.query(getImageQuery, [username]);
+
+        const currentImageUrl = result.rows[0]?.image;
+        if (currentImageUrl) {
+            // Extract the file path from the current image URL
+            const currentFilePath = currentImageUrl.split('/').pop();
+
+            // Delete the current image from Supabase storage
+            const { error: deleteError } = await supabase.storage
+                .from('uploads')
+                .remove([currentFilePath]);
+
+            if (deleteError) {
+                throw deleteError;
+            }
+        }
+
+        // Generate a unique filename using UUID
+        const uniqueFilename = `${uuidv4()}-${image.originalname}`;
+
+        // Upload the new image to Supabase storage
+        const { data, error: uploadError } = await supabase.storage
+            .from('uploads')
+            .upload(uniqueFilename, image.buffer, {
+                contentType: image.mimetype,
+            });
+
+        if (uploadError) {
+            throw uploadError;
+        }
+
+        // Generate a public URL for the uploaded image
+        const publicUrlData = supabase.storage
+            .from('uploads')
+            .getPublicUrl(uniqueFilename);
+
+        if (!publicUrlData.data || !publicUrlData.data.publicUrl) {
+            throw new Error("Failed to generate public URL for the image.");
+        }
+
+        const imageUrl = publicUrlData.data.publicUrl;
+
+        // Update the story's banner image in the database with the new public URL
+        const updateQuery = `UPDATE mi_historia.story SET image = $1 WHERE username = $2`;
+        await db.query(updateQuery, [imageUrl, username]);
 
         return res.status(200).json({ message: "Successfully updated story banner image." });
     } catch (error) {
@@ -289,9 +352,30 @@ export const deleteBanner = async (req: Request, res: Response) => {
         if (!decoded.username) return res.status(401).json({ error: "Invalid token." });
         const username = decoded.username;
 
-        // Query to delete the story's banner image
-        const q = `UPDATE mi_historia.story SET image = NULL WHERE username = $1`;
-        await db.query(q, [username]);
+        // Query to get the current image URL from the database
+        const getImageQuery = `SELECT image FROM mi_historia.story WHERE username = $1`;
+        const result = await db.query(getImageQuery, [username]);
+
+        const imageUrl = result.rows[0]?.image;
+        if (!imageUrl) {
+            return res.status(404).json({ error: "No image found for this story." });
+        }
+
+        // Extract the file path from the image URL
+        const filePath = imageUrl.split('/').pop();
+
+        // Delete the file from Supabase storage
+        const { error: supabaseError } = await supabase.storage
+            .from('uploads')
+            .remove([filePath]);
+
+        if (supabaseError) {
+            throw supabaseError;
+        }
+
+        // Query to delete the story's banner image reference in the database
+        const updateQuery = `UPDATE mi_historia.story SET image = NULL WHERE username = $1`;
+        await db.query(updateQuery, [username]);
 
         return res.status(200).json({ message: "Successfully deleted story banner image." });
     } catch (error) {
@@ -326,6 +410,25 @@ export const deleteStory = async (req: Request, res: Response) => {
         // Start a transaction
         await client.query('BEGIN');
 
+        // Query to get the current banner image URL from the database
+        const getImageQuery = `SELECT image FROM mi_historia.story WHERE username = $1`;
+        const result = await client.query(getImageQuery, [username]);
+
+        const currentImageUrl = result.rows[0]?.image;
+        if (currentImageUrl) {
+            // Extract the file path from the current image URL
+            const currentFilePath = currentImageUrl.split('/').pop();
+
+            // Delete the banner image from Supabase storage
+            const { error: deleteError } = await supabase.storage
+                .from('uploads')
+                .remove([currentFilePath]);
+
+            if (deleteError) {
+                throw deleteError;
+            }
+        }
+
         // Delete associated data and the story
         await client.query(`DELETE FROM mi_historia.page WHERE username = $1`, [username]);
         await client.query(`DELETE FROM mi_historia.comment WHERE story_username = $1`, [username]);
@@ -335,7 +438,7 @@ export const deleteStory = async (req: Request, res: Response) => {
 
         // Commit the transaction
         await client.query('COMMIT');
-        return res.status(200).json({ message: "Successfully deleted story and all its pages." });
+        return res.status(200).json({ message: "Successfully deleted story, its pages, and its banner image." });
     } catch (error) {
         await client.query('ROLLBACK');
         res.status(400).json({ error: "An error occurred while deleting the story." });
