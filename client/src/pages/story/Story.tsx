@@ -371,7 +371,7 @@ const Story: React.FC = () => {
     }
     fetchData();
     console.log(story?.story_image)
-  }, [params, currentCommentPage, comments, sessionUsername, fetchComments, exists]);
+  }, [params, currentCommentPage, comments, sessionUsername]);
 
   return (
     <div className="flex flex-col justify-center items-center mt-20 w-9/12">
