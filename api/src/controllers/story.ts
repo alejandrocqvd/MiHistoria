@@ -165,14 +165,18 @@ export const getStory = async (req: Request, res: Response) => {
             const { data: userImageUrlData } = supabase.storage
                 .from('uploads')
                 .getPublicUrl(story.user_image);
-            story.user_image = userImageUrlData.publicUrl;
+            if (userImageUrlData) {
+                story.user_image = userImageUrlData.publicUrl;
+            }
         }
 
         if (story.story_image) {
             const { data: storyImageUrlData } = supabase.storage
                 .from('uploads')
                 .getPublicUrl(story.story_image);
-            story.story_image = storyImageUrlData.publicUrl;
+            if (storyImageUrlData) {
+                story.story_image = storyImageUrlData.publicUrl;
+            }
         }
 
         return res.status(200).json({ message: "Successfully fetched story information.", data: story });
@@ -180,6 +184,7 @@ export const getStory = async (req: Request, res: Response) => {
         return res.status(500).json({ error: (error as Error).message });
     }
 }
+
 
 /**
  * Handles creating or updating a story.
