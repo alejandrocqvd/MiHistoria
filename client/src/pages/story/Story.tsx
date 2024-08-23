@@ -396,7 +396,7 @@ const Story: React.FC = () => {
 
             <p className="text-5xl text-center font-bold my-12 rounded-xl">{story?.title}</p>
             <img 
-              src={story?.story_image} 
+              src={`https://ojfessrwpkkqljbturrx.supabase.co/storage/v1/object/public/uploads/${story?.story_image}`} 
               className={story?.story_image ? "max-h-96 w-auto h-auto rounded-xl mb-6 object-contain" : "hidden"} 
             />
 
@@ -404,7 +404,7 @@ const Story: React.FC = () => {
               <p className="text-3xl text-center font-bold mb-6">By {story?.username}</p>
               <div className={story?.is_private ? "hidden" : "flex-1 flex flex-row justify-center items-center rounded-xl mb-8"}>
                 <img 
-                  src={story?.user_image} 
+                  src={`https://ojfessrwpkkqljbturrx.supabase.co/storage/v1/object/public/uploads/${story?.user_image}`} 
                   className={story?.user_image !== null ? "h-12 rounded-xl w-12 object-cover mr-8" : "hidden"} 
                 />
                 <p className="text-xl mr-4 font-semibold">{(story?.first_name || "") + " " + (story?.last_name || "")}</p>

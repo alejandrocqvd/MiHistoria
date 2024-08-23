@@ -12,6 +12,7 @@ import { db } from "../db";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { supabase } from "../supabaseClient";
+import { v4 as uuidv4 } from "uuid";
 
 /**
  * Handles fetching the user's profile information.
@@ -36,11 +37,23 @@ export const getProfile = async (req: Request, res: Response) => {
                     FROM mi_historia.user 
                     WHERE username = $1`;
         const { rows } = await db.query(q, [username]);
-        return res.status(200).json({ message: "Successfully fetched user profile information", data: rows[0] });
+        const userProfile = rows[0];
+
+        // Generate the public URL for the user's profile image from Supabase
+        if (userProfile.image) {
+            const { data: { publicUrl } } = supabase
+                .storage
+                .from('uploads')
+                .getPublicUrl(userProfile.image);
+
+            userProfile.imageUrl = publicUrl;
+        }
+
+        return res.status(200).json({ message: "Successfully fetched user profile information", data: userProfile });
     } catch (error) {
         res.status(400).json({ error: "Invalid token." });
     }
-}
+};
 
 /**
  * Handles updating the user's profile information.
@@ -116,7 +129,7 @@ export const updatePassword = async (req: Request, res: Response) => {
  * @returns A response and if successful, updates the user's profile picture.
  */
 export const updatePicture = async (req: Request, res: Response) => {
-    const { image } = req.body;
+    const { image } = req.body; // Assuming 'image' is a file buffer
 
     try {
         // Get JWT
@@ -128,12 +141,51 @@ export const updatePicture = async (req: Request, res: Response) => {
         if (!decoded.username) return res.status(401).json({ error: "Invalid token." });
         const username = decoded.username;
 
-        // Query to update the user's profile picture
-        const q = `UPDATE mi_historia.user SET image = $1 WHERE username = $2`;
-        await db.query(q, [image, username]);
-        return res.status(200).json({ message: "Successfully updated user's profile picture." });
+        // Query to get the current profile picture filename
+        const selectQuery = `SELECT image FROM mi_historia.user WHERE username = $1`;
+        const { rows } = await db.query(selectQuery, [username]);
+        const currentImage = rows[0]?.image;
+
+        // Delete the old image from Supabase storage if it exists
+        if (currentImage) {
+            const { error: deleteError } = await supabase.storage
+                .from('uploads')
+                .remove([currentImage]);
+
+            if (deleteError) {
+                console.error("Error deleting old image:", deleteError.message);
+                return res.status(500).json({ error: "Failed to delete old image from Supabase." });
+            }
+        }
+
+        // Generate a unique filename for the new image
+        const imageFilename = `${uuidv4()}-${image.originalname}`;
+
+        // Upload the new image to Supabase storage
+        const { data, error: uploadError } = await supabase.storage
+            .from('uploads')
+            .upload(imageFilename, image.buffer, {
+                contentType: image.mimetype,
+            });
+
+        if (uploadError) {
+            console.error("Error uploading new image:", uploadError.message);
+            return res.status(500).json({ error: "Failed to upload new image to Supabase." });
+        }
+
+        // Generate the public URL for the uploaded image
+        const { data: publicUrlData } = supabase.storage
+            .from('uploads')
+            .getPublicUrl(imageFilename);
+
+        // Update the user's profile picture filename in the database
+        const updateQuery = `UPDATE mi_historia.user SET image = $1 WHERE username = $2`;
+        await db.query(updateQuery, [imageFilename, username]);
+
+        return res.status(200).json({ message: "Successfully updated user's profile picture.", imageUrl: publicUrlData.publicUrl });
     } catch (error) {
-        res.status(400).json({ error: "Invalid token." });
+        console.error("Error updating profile picture:", (error as Error).message);
+        return res.status(400).json({ error: "Invalid token." });
     }
 }
 
@@ -164,8 +216,11 @@ export const deletePicture = async (req: Request, res: Response) => {
             return res.status(404).json({ error: "No image found for this user." });
         }
 
-        // Extract the file path from the image URL
+        // Extract the file name from the image URL
         const filePath = imageUrl.split('/').pop();
+        if (!filePath) {
+            return res.status(400).json({ error: "Invalid image URL." });
+        }
 
         // Delete the file from Supabase storage
         const { error: supabaseError } = await supabase.storage
@@ -182,10 +237,10 @@ export const deletePicture = async (req: Request, res: Response) => {
 
         return res.status(200).json({ message: "Successfully deleted user's profile picture." });
     } catch (error) {
+        console.error("Error deleting profile picture:", error);
         res.status(500).json({ error: (error as Error).message });
     }
 }
-
 
 /**
  * Handles deleting the user's account.
@@ -209,6 +264,26 @@ export const deleteProfile = async (req: Request, res: Response) => {
         // Start transaction
         await client.query('BEGIN');
 
+        // Retrieve user's image URL
+        const getImageQuery = `SELECT image FROM mi_historia.user WHERE username = $1`;
+        const result = await client.query(getImageQuery, [username]);
+
+        const imageUrl = result.rows[0]?.image;
+        if (imageUrl) {
+            // Extract the file name from the image URL
+            const filePath = imageUrl.split('/').pop();
+            if (filePath) {
+                // Delete the file from Supabase storage
+                const { error: supabaseError } = await supabase.storage
+                    .from('uploads')
+                    .remove([filePath]);
+
+                if (supabaseError) {
+                    throw supabaseError;
+                }
+            }
+        }
+
         // Delete related data
         await client.query(`DELETE FROM mi_historia.comment WHERE comment_username = $1`, [username]);
         await client.query(`DELETE FROM mi_historia.likes WHERE like_username = $1`, [username]);
@@ -225,7 +300,8 @@ export const deleteProfile = async (req: Request, res: Response) => {
         return res.status(200).json({ message: "Successfully deleted user." });
     } catch (error) {
         await client.query('ROLLBACK');
-        res.status(400).json({ error: "Invalid token." });
+        console.error("Error deleting profile:", error);
+        res.status(500).json({ error: "Failed to delete user." });
     } finally {
         client.release();
     }
