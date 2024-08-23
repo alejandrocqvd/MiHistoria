@@ -370,6 +370,7 @@ const Story: React.FC = () => {
       }
     }
     fetchData();
+    console.log(story?.story_image)
   }, [params, currentCommentPage, comments, sessionUsername, fetchComments, exists]);
 
   return (

@@ -178,7 +178,6 @@ export const getStory = async (req: Request, res: Response) => {
                 story.story_image = storyImageUrlData.publicUrl;
             }
         }
-        console.log(story.story_image)
 
         return res.status(200).json({ message: "Successfully fetched story information.", data: story });
     } catch (error) {
