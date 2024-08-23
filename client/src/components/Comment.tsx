@@ -110,7 +110,7 @@ const Comment: React.FC<CommentProps> = ({ commentData }) => {
     <div className={isDeleted ? "hidden" : "flex flex-col justify-items-center bg-secondary rounded-xl p-4 mb-2"}>
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row justify-start items-center mb-2">
-              <img src={`/public/uploads/${commentData.image}`} className={commentData.image !== null ? "h-8 rounded-xl w-8 object-cover mr-3" : "hidden"} />
+              <img src={`https://ojfessrwpkkqljbturrx.supabase.co/storage/v1/object/public/uploads/${commentData.image}`} className={commentData.image !== null ? "h-8 rounded-xl w-8 object-cover mr-3" : "hidden"} />
               <Link to={`/story/${commentData.username}/page/1`} className="text-md md:text-lg font-semibold ml-1">{commentData.username}</Link>
           </div>
           <div className="flex flex-row justify-end items-center">
