@@ -160,25 +160,7 @@ export const getStory = async (req: Request, res: Response) => {
 
         const story = result.rows[0];
 
-        // Get the public URLs for the images
-        if (story.user_image) {
-            const { data: userImageUrlData } = supabase.storage
-                .from('uploads')
-                .getPublicUrl(story.user_image);
-            if (userImageUrlData?.publicUrl) {
-                story.user_image = userImageUrlData.publicUrl;
-            }
-        }
-
-        if (story.story_image) {
-            const { data: storyImageUrlData } = supabase.storage
-                .from('uploads')
-                .getPublicUrl(story.story_image);
-            if (storyImageUrlData?.publicUrl) {
-                story.story_image = storyImageUrlData.publicUrl;
-            }
-        }
-
+        // Directly return the image URLs stored in the database
         return res.status(200).json({ message: "Successfully fetched story information.", data: story });
     } catch (error) {
         return res.status(500).json({ error: (error as Error).message });
