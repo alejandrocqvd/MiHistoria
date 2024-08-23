@@ -370,7 +370,7 @@ const Story: React.FC = () => {
       }
     }
     fetchData();
-  }, [params, currentCommentPage, comments]);
+  }, [params, currentCommentPage, comments, sessionUsername, fetchComments, exists]);
 
   return (
     <div className="flex flex-col justify-center items-center mt-20 w-9/12">
